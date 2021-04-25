@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react'
+import { sortData } from '../const/constance'
 import firebase, { db } from '../firebase'
+
 
 
 const PriceShowAll = () => {
     const [showData, setShowData] = useState([])
     const [showTop200, setShowTop200] = useState([])
     const [showDown200, setShowDown200] = useState([])
+    const [showTop, setShowTop] = useState([])
+    const [showDown, setShowDown] = useState([])
     useEffect(() => {
 
         db.collection("lotto").onSnapshot((querySnapshot) => {
@@ -31,6 +35,8 @@ const PriceShowAll = () => {
 
             let lottoTop200 = []
             let lottoDown200 = []
+            let lottoTop = []
+            let lottoDown = []
             lotto.map((eleLotto) => {
                 let sumTop = 0
                 let sumDown = 0
@@ -42,26 +48,42 @@ const PriceShowAll = () => {
                         sumDown += eleData.priceLotto
                     }
                 })
-                if (sumTop >= 200) {
-                    lottoTop200.push({
+                if (sumTop > 0) {
+                    lottoTop.push({
                         numLotto: eleLotto,
                         sumPrice: sumTop
                     })
                 }
-                if (sumDown >= 200) {
-                    lottoDown200.push({
+                if (sumDown > 0) {
+                    lottoDown.push({
                         numLotto: eleLotto,
                         sumPrice: sumDown
                     })
                 }
+                // if (sumTop >= 200) {
+                //     lottoTop200.push({
+                //         numLotto: eleLotto,
+                //         sumPrice: sumTop
+                //     })
+                // }
+                // if (sumDown >= 200) {
+                //     lottoDown200.push({
+                //         numLotto: eleLotto,
+                //         sumPrice: sumDown
+                //     })
+                // }
 
 
             })
             // console.log("lotto", lotto200)
             // console.log("Data", shData)
             setShowData(shData)
-            setShowTop200(lottoTop200)
-            setShowDown200(lottoDown200)
+            // setShowTop200(lottoTop200)
+            // setShowDown200(lottoDown200)
+            sortData(lottoTop, "sumPrice", true)
+            sortData(lottoDown, "sumPrice", true)
+            setShowTop(lottoTop)
+            setShowDown(lottoDown)
 
         });
 
@@ -80,9 +102,25 @@ const PriceShowAll = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {showTop200.map((element, index) => {
+                        {showTop.map((element, index) => {
+                            let bgColors = ""
+                            if (element.sumPrice >= 500) {
+                                bgColors = "table-danger"
+                            }
+                            else if (element.sumPrice >= 400) {
+                                bgColors = "table-warning"
+                            }
+                            else if (element.sumPrice >= 300) {
+                                bgColors = "table-success"
+                            }
+                            else if(element.sumPrice >= 200){
+                                bgColors = "table-primary"
+                            }
+                            else {
+                                bgColors = ""
+                            }
                             return (
-                                <tr key={index}>
+                                <tr key={index} className={bgColors}>
                                     <td>{index + 1}</td>
                                     <td>{element.numLotto}</td>
                                     <td>{element.sumPrice}</td>
@@ -105,9 +143,25 @@ const PriceShowAll = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {showDown200.map((element, index) => {
+                        {showDown.map((element, index) => {
+                            let bgColorsD = ""
+                            if (element.sumPrice >= 500) {
+                                bgColorsD = "table-danger"
+                            }
+                            else if (element.sumPrice >= 400) {
+                                bgColorsD = "table-warning"
+                            }
+                            else if (element.sumPrice >= 300) {
+                                bgColorsD = "table-success"
+                            }
+                            else if(element.sumPrice >= 200){
+                                bgColorsD = "table-primary"
+                            }
+                            else {
+                                bgColorsD = ""
+                            }
                             return (
-                                <tr key={index}>
+                                <tr key={index} className={bgColorsD}>
                                     <td>{index + 1}</td>
                                     <td>{element.numLotto}</td>
                                     <td>{element.sumPrice}</td>
