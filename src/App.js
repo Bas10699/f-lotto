@@ -11,6 +11,7 @@ function App() {
   const [priceLotto1, setPriceLoto1] = useState('')
   const [priceLotto2, setPriceLoto2] = useState('')
   const [name, setName] = useState('')
+  const [show, setShow] = useState(0)
 
   const reversedNum = num => num.toString().split('').reverse().join('')
 
@@ -107,6 +108,7 @@ function App() {
                   id="nav-home-tab"
                   data-toggle="tab"
                   href="#nav-home"
+                  onClick={()=>setShow(0)}
                   role="tab"
                   aria-controls="nav-home"
                   aria-selected="true">
@@ -116,6 +118,7 @@ function App() {
                   id="nav-profile-tab"
                   data-toggle="tab"
                   href="#nav-profile"
+                  onClick={()=>setShow(1)}
                   role="tab"
                   aria-controls="nav-profile"
                   aria-selected="false">
@@ -205,7 +208,7 @@ function App() {
         </div >
         <div className="col-lg-6">
           <h4>แสดงข้อมูล</h4>
-          <PriceShowAll />
+          <PriceShowAll show={show}/>
         </div>
       </div >
     </div >

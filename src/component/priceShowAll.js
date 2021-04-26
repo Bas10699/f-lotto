@@ -4,12 +4,13 @@ import firebase, { db } from '../firebase'
 
 
 
-const PriceShowAll = () => {
+const PriceShowAll = (props) => {
     const [showData, setShowData] = useState([])
     const [showTop200, setShowTop200] = useState([])
     const [showDown200, setShowDown200] = useState([])
     const [showTop, setShowTop] = useState([])
     const [showDown, setShowDown] = useState([])
+    console.log(props.show)
     useEffect(() => {
 
         db.collection("lotto").onSnapshot((querySnapshot) => {
@@ -80,8 +81,8 @@ const PriceShowAll = () => {
             setShowData(shData)
             // setShowTop200(lottoTop200)
             // setShowDown200(lottoDown200)
-            sortData(lottoTop, "sumPrice", true)
-            sortData(lottoDown, "sumPrice", true)
+            sortData(lottoTop, "numLotto", false)
+            sortData(lottoDown, "numLotto", false)
             setShowTop(lottoTop)
             setShowDown(lottoDown)
 
@@ -89,122 +90,167 @@ const PriceShowAll = () => {
 
 
     }, [])
-    return (
-        <div className="row">
-            <div className="col-sm-6">
-                {/* <h6>รายการตัวเลขราคารวมเกิน 200 บาท</h6> */}
-                <table className="table table-sm">
-                    <thead className="thead-dark">
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">2ตัวบน</th>
-                            <th scope="col">ราคา</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {showTop.map((element, index) => {
-                            let bgColors = ""
-                            if (element.sumPrice >= 500) {
-                                bgColors = "table-danger"
-                            }
-                            else if (element.sumPrice >= 400) {
-                                bgColors = "table-warning"
-                            }
-                            else if (element.sumPrice >= 300) {
-                                bgColors = "table-success"
-                            }
-                            else if(element.sumPrice >= 200){
-                                bgColors = "table-primary"
-                            }
-                            else {
-                                bgColors = ""
-                            }
-                            return (
-                                <tr key={index} className={bgColors}>
-                                    <td>{index + 1}</td>
-                                    <td>{element.numLotto}</td>
-                                    <td>{element.sumPrice}</td>
-                                </tr>
-                            )
-                        })}
+    if (props.show === 1) {
+        return (
+            <div className="row">
+                <div className="col-sm-6">
+                    <h6>รายการตัวเลขราคารวมเกิน 200 บาท</h6>
+                    <table className="table table-sm">
+                        <thead className="thead-dark">
+                            <tr>
+                                {/* <th scope="col">#</th> */}
+                                <th scope="col">2ตัวล่าง</th>
+                                <th scope="col">ราคา</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {showDown.map((element, index) => {
+                                let bgColors = "table-danger"
+                                // if (element.sumPrice >= 500) {
+                                //     bgColors = "table-danger"
+                                // }
+                                // else if (element.sumPrice >= 400) {
+                                //     bgColors = "table-warning"
+                                // }
+                                // else if (element.sumPrice >= 300) {
+                                //     bgColors = "table-success"
+                                // }
+                                // else if (element.sumPrice >= 200) {
+                                //     bgColors = "table-primary"
+                                // }
+                                // else {
+                                //     bgColors = ""
+                                // }
+                                if (element.sumPrice - 200 > 0) {
+                                    return (
+                                        <tr key={index} className={bgColors}>
+                                            {/* <td>{index + 1}</td> */}
+                                            <td>{element.numLotto}</td>
+                                            <td>{element.sumPrice-200}</td>
+                                        </tr>
+                                    )
+                                }
+                            })}
 
 
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div className="col-sm-6">
+                    <h6>รายการตัวเลขทั้งหมด</h6>
+                    <table className="table table-sm">
+                        <thead className="thead-dark">
+                            <tr>
+                                {/* <th scope="col">#</th> */}
+                                <th scope="col">2ตัวล่าง</th>
+                                <th scope="col">ราคา</th>
+                                {/* <th scope="col">ชื่อ</th> */}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {showDown.map((element, index) => {
+                                return (
+                                    <tr key={index}>
+                                        {/* <td>{index + 1}</td> */}
+                                        <td>{element.numLotto}</td>
+                                        <td>{element.sumPrice}</td>
+                                        {/* <td>{element.name}</td> */}
+                                    </tr>
+                                )
+                            })}
+
+
+                        </tbody>
+                    </table>
+                </div>
+
+
+
             </div>
-            <div className="col-sm-6">
-                {/* <h6>รายการตัวเลขราคารวมเกิน 200 บาท</h6> */}
-                <table className="table table-sm">
-                    <thead className="thead-dark">
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">2ตัวล่าง</th>
-                            <th scope="col">ราคา</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {showDown.map((element, index) => {
-                            let bgColorsD = ""
-                            if (element.sumPrice >= 500) {
-                                bgColorsD = "table-danger"
-                            }
-                            else if (element.sumPrice >= 400) {
-                                bgColorsD = "table-warning"
-                            }
-                            else if (element.sumPrice >= 300) {
-                                bgColorsD = "table-success"
-                            }
-                            else if(element.sumPrice >= 200){
-                                bgColorsD = "table-primary"
-                            }
-                            else {
-                                bgColorsD = ""
-                            }
-                            return (
-                                <tr key={index} className={bgColorsD}>
-                                    <td>{index + 1}</td>
-                                    <td>{element.numLotto}</td>
-                                    <td>{element.sumPrice}</td>
-                                </tr>
-                            )
-                        })}
+        )
+    }
+    else {
+        return (
+            <div className="row">
+                <div className="col-sm-6">
+                    <h6>รายการตัวเลขราคารวมเกิน 200 บาท</h6>
+                    <table className="table table-sm">
+                        <thead className="thead-dark">
+                            <tr>
+                                {/* <th scope="col">#</th> */}
+                                <th scope="col">2ตัวบน</th>
+                                <th scope="col">ราคา</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {showTop.map((element, index) => {
+                                let bgColors = "table-primary"
+                                // if (element.sumPrice >= 500) {
+                                //     bgColors = "table-danger"
+                                // }
+                                // else if (element.sumPrice >= 400) {
+                                //     bgColors = "table-warning"
+                                // }
+                                // else if (element.sumPrice >= 300) {
+                                //     bgColors = "table-success"
+                                // }
+                                // else if (element.sumPrice >= 200) {
+                                //     bgColors = "table-primary"
+                                // }
+                                // else {
+                                //     bgColors = ""
+                                // }
+                                if (element.sumPrice - 200 > 0) {
+                                    return (
+                                        <tr key={index} className={bgColors}>
+                                            {/* <td>{index + 1}</td> */}
+                                            <td>{element.numLotto}</td>
+                                            <td>{element.sumPrice - 200}</td>
+                                        </tr>
+                                    )
+                                }
+
+                            })}
 
 
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div className="col-sm-6">
+                    <h6>รายการตัวเลขทั้งหมด</h6>
+                    <table className="table table-sm">
+                        <thead className="thead-dark">
+                            <tr>
+                                {/* <th scope="col">#</th> */}
+                                <th scope="col">2ตัวบน</th>
+                                <th scope="col">ราคา</th>
+                                {/* <th scope="col">ชื่อ</th> */}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {showTop.map((element, index) => {
+                                return (
+                                    <tr key={index}>
+                                        {/* <td>{index + 1}</td> */}
+                                        <td>{element.numLotto}</td>
+                                        <td>{element.sumPrice}</td>
+                                        {/* <td>{element.name}</td> */}
+                                    </tr>
+                                )
+                            })}
+
+
+                        </tbody>
+                    </table>
+                </div>
+
+
+
             </div>
+        )
+    }
 
-            {/* <div className="col-sm-6">
-                <h6>รายการตัวเลขทั้งหมด</h6>
-                <table className="table table-sm">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">ตัวเลข</th>
-                            <th scope="col">ราคา</th>
-                            <th scope="col">ชื่อ</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {showData.map((element, index) => {
-                            return (
-                                <tr key={index}>
-                                    <td>{index + 1}</td>
-                                    <td>{element.numLotto}</td>
-                                    <td>{element.priceLotto}</td>
-                                    <td>{element.name}</td>
-                                </tr>
-                            )
-                        })}
-
-
-                    </tbody>
-                </table>
-            </div> */}
-
-
-
-        </div>
-    )
 }
 export default PriceShowAll
