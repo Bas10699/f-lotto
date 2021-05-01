@@ -3,6 +3,8 @@ import moment from 'moment';
 import firebase, { db } from './firebase'
 import './App.css';
 import PriceShowAll from './component/priceShowAll';
+import Login from './component/login';
+import Swal from 'sweetalert2'
 
 function App() {
   const [timeshow, setTime] = useState('')
@@ -12,11 +14,31 @@ function App() {
   const [priceLotto2, setPriceLoto2] = useState('')
   const [name, setName] = useState('')
   const [show, setShow] = useState(0)
+  const [uid, setuid] = useState('')
+  const [loading, setloading] = useState(false)
+  const [loadInput, setloadInput] = useState(false)
 
   const reversedNum = num => num.toString().split('').reverse().join('')
 
+  useEffect(() => {
+    console.log("token", localStorage.getItem('user_token'))
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        // User is signed in.
+        setuid(user.uid)
+        setloading(true)
+      } else {
+        setuid('')
+      }
+    });
+  }, [])
 
+  const logout = () => {
+    localStorage.removeItem('user_token')
+    window.location.reload()
+  }
   const send_click = async (typeLotto) => {
+    setloadInput(true)
     setTime(moment().format("YYYY-MM-DDTHH:mm:ss.SSS"))
     console.log(moment().format("YYYY-MM-DDTHH:mm:ss.SSS"))
     let dateNow = moment().format("DD/MM/YYYY")
@@ -49,6 +71,7 @@ function App() {
                 setNumLoto('')
                 setPriceLoto1('')
                 setPriceLoto2('')
+                setloading(false)
               })
               .catch((error) => {
                 console.error("Error writing document: ", error);
@@ -56,6 +79,14 @@ function App() {
           })
           .catch((error) => {
             console.error("Error writing document: ", error);
+            console.log("Error code: ", error.code);
+            if (error.code == "permission-denied") {
+              Swal.fire(
+                'แหนะ!',
+                'บอกแล้วใช่ไหม ดูได้อย่างเดียว',
+                'error'
+              )
+            }
           });
 
       }
@@ -72,9 +103,18 @@ function App() {
             console.log("Document successfully written!");
             setNumLoto('')
             setPriceLoto1('')
+            setloading(false)
           })
           .catch((error) => {
             console.error("Error writing document: ", error);
+            console.log("Error code: ", error.code);
+            if (error.code == "permission-denied") {
+              Swal.fire(
+                'แหนะ!',
+                'บอกแล้วใช่ไหม ดูได้อย่างเดียว',
+                'error'
+              )
+            }
           });
       }
     }
@@ -83,136 +123,186 @@ function App() {
     }
 
   }
-
-  return (
-    <div className="container">
-      <h3 className="pt-5">ระบบการจัดการตัวเลขของเอฟโอเวอร์</h3>
-      <div className="row pt-3">
-        <div className="col-lg-6">
-          <div className="row">
-            <div className="col-6">
-              <h4>บันทึกข้อมูล</h4>
-            </div>
-            <div className="col-6">
-              <input type="text"
-                className="form-control form-control-sm"
-                placeholder="ชื่อ"
-                onChange={(e) => setName((e.target.value))}>
-              </input>
-            </div>
-          </div>
-          <div>
-            <nav>
-              <div className="nav nav-tabs" id="nav-tab" role="tablist">
-                <a className="nav-link active"
-                  id="nav-home-tab"
-                  data-toggle="tab"
-                  href="#nav-home"
-                  onClick={()=>setShow(0)}
-                  role="tab"
-                  aria-controls="nav-home"
-                  aria-selected="true">
-                  2ตัวบน
-                  </a>
-                <a className="nav-link"
-                  id="nav-profile-tab"
-                  data-toggle="tab"
-                  href="#nav-profile"
-                  onClick={()=>setShow(1)}
-                  role="tab"
-                  aria-controls="nav-profile"
-                  aria-selected="false">
-                  2ตัวล่าง
-                  </a>
-              </div>
-            </nav>
-            <div className="tab-content" id="nav-tabContent">
-              <div className="tab-pane fade show active"
-                id="nav-home"
-                role="tabpanel"
-                aria-labelledby="nav-home-tab">
-
-                <div className="form-row">
-                  <div className="form-group col-4">
-                    <label htmlFor="numlotto1">ตัวเลข</label>
-                    <input
-                      type="text"
-                      maxLength="2"
-                      id="numlotto1"
-                      className="form-control form-control-sm"
-                      onChange={(e) => setNumLoto((e.target.value))}
-                      value={numLotto}></input>
-                  </div>
-                  <div className="form-group col-7">
-                    <label htmlFor="pricelotto1">ราคา</label>
-                    <div className="row">
-                      <div className="col-5">
-                        <input type="number"
-                          className="form-control form-control-sm"
-                          onChange={(e) => setPriceLoto1((e.target.value) * 1)}
-                          value={priceLotto1}></input>
-                      </div>
-                      x
-                      <div className="col-5">
-                        <input type="number"
-                          className="form-control form-control-sm"
-                          onChange={(e) => setPriceLoto2((e.target.value) * 1)}
-                          value={priceLotto2}></input>
-                      </div>
-                      <div className="col-1">
-                        <button className="btn btn-outline-success btn-sm" onClick={() => send_click(0)}>บันทึก</button>
-                      </div>
-                    </div>
-
-                  </div>
-
+  const admin = () => {
+    return (
+      loadInput ?
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div> :
+        <div className="container">
+          <h3 className="pt-5">ระบบการจัดการตัวเลขของเอฟโอเวอร์</h3>
+          <div className="row pt-3">
+            <div className="col-lg-6">
+              <div className="row">
+                <div className="col-6">
+                  <h4>บันทึกข้อมูล</h4>
+                </div>
+                <div className="col-6">
+                  <input type="text"
+                    className="form-control form-control-sm"
+                    placeholder="ชื่อ"
+                    onChange={(e) => setName((e.target.value))}>
+                  </input>
                 </div>
               </div>
-              <div className="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                <div className="form-row">
-                  <div className="form-group col-4">
-                    <label htmlFor="numlotto2">ตัวเลข</label>
-                    <input
-                      type="text"
-                      maxLength="2"
-                      id="numlotto2"
-                      className="form-control form-control-sm"
-                      onChange={(e) => setNumLoto((e.target.value))}
-                      value={numLotto}></input>
+              <div>
+                <nav>
+                  <div className="nav nav-tabs" id="nav-tab" role="tablist">
+                    <a className="nav-link active"
+                      id="nav-home-tab"
+                      data-toggle="tab"
+                      href="#nav-home"
+                      onClick={() => setShow(0)}
+                      role="tab"
+                      aria-controls="nav-home"
+                      aria-selected="true">
+                      2ตัวบน
+                  </a>
+                    <a className="nav-link"
+                      id="nav-profile-tab"
+                      data-toggle="tab"
+                      href="#nav-profile"
+                      onClick={() => setShow(1)}
+                      role="tab"
+                      aria-controls="nav-profile"
+                      aria-selected="false">
+                      2ตัวล่าง
+                  </a>
                   </div>
-                  <div className="form-group col-7">
-                    <label htmlFor="pricelotto2">ราคา</label>
-                    <div className="row">
-                      <div className="col-5">
-                        <input type="number"
+                </nav>
+                <div className="tab-content" id="nav-tabContent">
+                  <div className="tab-pane fade show active"
+                    id="nav-home"
+                    role="tabpanel"
+                    aria-labelledby="nav-home-tab">
+
+                    <div className="form-row">
+                      <div className="form-group col-4">
+                        <label htmlFor="numlotto1">ตัวเลข</label>
+                        <input
+                          type="text"
+                          maxLength="2"
+                          id="numlotto1"
                           className="form-control form-control-sm"
-                          onChange={(e) => setPriceLoto1((e.target.value) * 1)}
-                          value={priceLotto1}></input>
+                          onChange={(e) => setNumLoto((e.target.value))}
+                          value={numLotto}></input>
                       </div>
+                      <div className="form-group col-7">
+                        <label htmlFor="pricelotto1">ราคา</label>
+                        <div className="row">
+                          <div className="col-5">
+                            <input type="number"
+                              className="form-control form-control-sm"
+                              onChange={(e) => setPriceLoto1((e.target.value) * 1)}
+                              value={priceLotto1}></input>
+                          </div>
                       x
                       <div className="col-5">
-                        <input type="number"
-                          className="form-control form-control-sm"
-                          onChange={(e) => setPriceLoto2((e.target.value) * 1)}
-                          value={priceLotto2}></input>
+                            <input type="number"
+                              className="form-control form-control-sm"
+                              onChange={(e) => setPriceLoto2((e.target.value) * 1)}
+                              value={priceLotto2}></input>
+                          </div>
+                          <div className="col-1">
+                            <button className="btn btn-outline-success btn-sm" onClick={() => send_click(0)}>บันทึก</button>
+                          </div>
+                        </div>
+
                       </div>
-                      <div className="col-1">
-                        <button className="btn btn-outline-success btn-sm" onClick={() => send_click(1)}>บันทึก</button>
+
+                    </div>
+                  </div>
+                  <div className="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                    <div className="form-row">
+                      <div className="form-group col-4">
+                        <label htmlFor="numlotto2">ตัวเลข</label>
+                        <input
+                          type="text"
+                          maxLength="2"
+                          id="numlotto2"
+                          className="form-control form-control-sm"
+                          onChange={(e) => setNumLoto((e.target.value))}
+                          value={numLotto}></input>
+                      </div>
+                      <div className="form-group col-7">
+                        <label htmlFor="pricelotto2">ราคา</label>
+                        <div className="row">
+                          <div className="col-5">
+                            <input type="number"
+                              className="form-control form-control-sm"
+                              onChange={(e) => setPriceLoto1((e.target.value) * 1)}
+                              value={priceLotto1}></input>
+                          </div>
+                      x
+                      <div className="col-5">
+                            <input type="number"
+                              className="form-control form-control-sm"
+                              onChange={(e) => setPriceLoto2((e.target.value) * 1)}
+                              value={priceLotto2}></input>
+                          </div>
+                          <div className="col-1">
+                            <button className="btn btn-outline-success btn-sm" onClick={() => send_click(1)}>บันทึก</button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+            </div >
+            <div className="col-lg-6">
+              <h4>แสดงข้อมูล</h4>
+              <PriceShowAll show={show} />
             </div>
-          </div>
+          </div >
         </div >
-        <div className="col-lg-6">
-          <h4>แสดงข้อมูล</h4>
-          <PriceShowAll show={show}/>
-        </div>
-      </div >
-    </div >
-  );
+    );
+  }
+  if (localStorage.getItem('user_token') == "test") {
+    return (
+      <div>
+        <nav className="navbar bg-dark navbar-dark">
+          <a className="navbar-brand">ดูเฉยๆ นะ</a>
+          <div className="form-inline">
+            <button className="form-control mr-sm-2" onClick={logout}>ไปเข้าสู่ระบบดีกว่า</button>
+          </div>
+
+        </nav>
+        {admin()}
+      </div>
+    )
+  }
+  else if (localStorage.getItem('user_token') !== null) {
+    console.log(uid)
+    if (loading) {
+      if (uid) {
+        // User is signed in.
+        return (
+          admin()
+        )
+      } else {
+        // No user is signed in.
+        return (
+          <Login />
+        )
+      }
+    } else {
+      return (
+        <div></div>
+      )
+    }
+
+
+
+  }
+  else {
+
+    return (
+      <Login />
+    )
+
+  }
+
 }
 
 export default App;

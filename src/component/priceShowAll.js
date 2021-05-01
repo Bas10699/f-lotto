@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { sortData } from '../const/constance'
 import firebase, { db } from '../firebase'
 import icon from '../const/icon/list.svg'
-import ModalShowNum from './modalShowNum'
+import Swal from 'sweetalert2'
 
 
 const PriceShowAll = (props) => {
@@ -14,15 +14,76 @@ const PriceShowAll = (props) => {
     const [limitPrice, setLimitPrice] = useState(200)
     const [dataNumber, setdataNumber] = useState([])
 
-    const numberLottoTop = (number) => {
-        db.collection("lotto").where("numLotto", "==", number).onSnapshot((querySnapshot) => {
+    const deletePriceLotto = (id, lotto, price) => {
+
+        Swal.fire({
+            title: "แน่ใจนะ!",
+            text: 'เลข ' + lotto + " ราคา " + price + ".-",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'ยกเลิก',
+            confirmButtonText: 'ลบเลย'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                db.collection("lotto").doc(id).delete().then(() => {
+                    console.log("Document successfully deleted!");
+                    // Swal.fire(
+                    //     'Deleted!',
+                    //     'Your file has been deleted.',
+                    //     'success'
+                    // )
+                }).catch((error) => {
+                    console.error("Error removing document: ", error);
+                    if (error.code == "permission-denied") {
+                        Swal.fire(
+                            'แหนะ!',
+                            'บอกแล้วใช่ไหม ดูได้อย่างเดียว',
+                            'error'
+                        )
+                    }
+                });
+
+            }
+        })
+
+
+    }
+
+    const numberLottoTop = (number, typeLotto) => {
+        db.collection("lotto").where("numLotto", "==", number).where("typeLotto", "==", typeLotto).onSnapshot((querySnapshot) => {
             let shData = []
             let lotto = []
             querySnapshot.forEach((doc) => {
                 // doc.data() is never undefined for query doc snapshots
                 console.log(doc.id, " => ", doc.data());
-                shData.unshift(doc.data())
-            
+                shData.unshift({ id: doc.id, ...doc.data() })
+
+
+            });
+            // console.log("lotto", lotto200)
+            console.log("Data number", shData)
+            setdataNumber(shData)
+            // // setShowTop200(lottoTop200)
+            // // setShowDown200(lottoDown200)
+            // sortData(lottoTop, "numLotto", false)
+            // sortData(lottoDown, "numLotto", false)
+            // setShowTop(lottoTop)
+            // setShowDown(lottoDown)
+
+        });
+    }
+
+    const numberLottoDown = (number, typeLotto) => {
+        db.collection("lotto").where("numLotto", "==", number).where("typeLotto", "==", typeLotto).onSnapshot((querySnapshot) => {
+            let shData = []
+            let lotto = []
+            querySnapshot.forEach((doc) => {
+                // doc.data() is never undefined for query doc snapshots
+                console.log(doc.id, " => ", doc.data());
+                shData.unshift({ id: doc.id, ...doc.data() })
+
 
             });
             // console.log("lotto", lotto200)
@@ -191,7 +252,10 @@ const PriceShowAll = (props) => {
                                         {/* <td>{index + 1}</td> */}
                                         <td>{element.numLotto}</td>
                                         <td>{element.sumPrice}</td>
-                                        <td><button className="btn btn-warning btn-sm">แก้ไข</button></td>
+                                        <td><button className="btn btn-warning btn-sm"
+                                            data-toggle="modal"
+                                            data-target="#exampleModal"
+                                            onClick={() => numberLottoDown(element.numLotto, props.show)}>แก้ไข</button></td>
                                         {/* <td>{element.name}</td> */}
                                     </tr>
                                 )
@@ -202,7 +266,56 @@ const PriceShowAll = (props) => {
                     </table>
                 </div>
 
-
+                {/* <!-- Modal --> */}
+                <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="exampleModalLabel">รายละเอียด 2ตัวล่าง </h5>
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">ชื่อ</th>
+                                            <th scope="col">2ตัวล่าง</th>
+                                            <th scope="col">ราคา</th>
+                                            <th scope="col">วันที่</th>
+                                            <th scope="col">เวลา</th>
+                                            <th scope="col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {dataNumber.map((ele_num, index) => {
+                                            return (
+                                                <tr>
+                                                    <td>{ele_num.name}</td>
+                                                    <td>{ele_num.numLotto}</td>
+                                                    <td>{ele_num.priceLotto}</td>
+                                                    <td>{ele_num.date}</td>
+                                                    <td>{ele_num.time}</td>
+                                                    <td><button className="btn btn-danger btn-sm"
+                                                        onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto)}>
+                                                        ลบ
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                // <div>{ele_num.numLotto} = {ele_num.priceLotto} บาท ลงวันที่ {ele_num.date} เวลา {ele_num.time} <button className="btn btn-danger btn-sm" onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto)}>ลบ</button></div>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {/* <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" className="btn btn-primary">Save changes</button>
+                            </div> */}
+                        </div>
+                    </div>
+                </div>
 
             </div>
         )
@@ -286,7 +399,7 @@ const PriceShowAll = (props) => {
                                         <td><button className="btn btn-warning btn-sm"
                                             data-toggle="modal"
                                             data-target="#exampleModal"
-                                            onClick={() => numberLottoTop(element.numLotto)}>แก้ไข</button></td>
+                                            onClick={() => numberLottoTop(element.numLotto, props.show)}>แก้ไข</button></td>
                                         {/* <td>{element.name}</td> */}
                                     </tr>
                                 )
@@ -308,11 +421,37 @@ const PriceShowAll = (props) => {
                                 </button>
                             </div>
                             <div className="modal-body">
-                               {dataNumber.map((ele_num,index)=>{
-                                   return(
-                                       <div>{ele_num.numLotto} = {ele_num.priceLotto} บาท ลงวันที่ {ele_num.date} เวลา {ele_num.time} <button className="btn btn-danger" onClick={()=>alert('ยังไม่เสร็จ! ใจเย็นน้าาาาาา')}>ลบ</button></div>
-                                   )
-                               })}
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">ชื่อ</th>
+                                            <th scope="col">2ตัวบน</th>
+                                            <th scope="col">ราคา</th>
+                                            <th scope="col">วันที่</th>
+                                            <th scope="col">เวลา</th>
+                                            <th scope="col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {dataNumber.map((ele_num, index) => {
+                                            return (
+                                                <tr>
+                                                    <td>{ele_num.name}</td>
+                                                    <td>{ele_num.numLotto}</td>
+                                                    <td>{ele_num.priceLotto}</td>
+                                                    <td>{ele_num.date}</td>
+                                                    <td>{ele_num.time}</td>
+                                                    <td><button className="btn btn-danger btn-sm"
+                                                        onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto)}>
+                                                        ลบ
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                // <div>{ele_num.numLotto} = {ele_num.priceLotto} บาท ลงวันที่ {ele_num.date} เวลา {ele_num.time} <button className="btn btn-danger btn-sm" onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto)}>ลบ</button></div>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
                             </div>
                             {/* <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
