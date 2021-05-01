@@ -98,6 +98,7 @@ const PriceShowAll = (props) => {
 
         });
     }
+    const count = (storage,typeLot) => {return storage.filter(item => item.typeLotto === typeLot).length}
     useEffect(() => {
 
         db.collection("lotto").onSnapshot((querySnapshot) => {
@@ -234,7 +235,7 @@ const PriceShowAll = (props) => {
                 </div>
 
                 <div className="col-sm-6">
-                    <h6>รายการตัวเลขทั้งหมด</h6>
+                    <h6>ตัวเลขทั้งหมด {count(showData,props.show)} รายการ</h6>
                     <table className="table table-sm">
                         <thead className="thead-dark">
                             <tr>
@@ -378,7 +379,7 @@ const PriceShowAll = (props) => {
                 </div>
 
                 <div className="col-sm-6">
-                    <h6>รายการตัวเลขทั้งหมด</h6>
+                    <h6>ตัวเลขทั้งหมด {count(showData,props.show)} รายการ</h6>
                     <table className="table table-sm">
                         <thead className="thead-dark">
                             <tr>
