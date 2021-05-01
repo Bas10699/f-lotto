@@ -20,7 +20,7 @@ function App() {
   const reversedNum = num => num.toString().split('').reverse().join('')
 
   useEffect(() => {
-    console.log("token", localStorage.getItem('user_token'))
+    // console.log("token", localStorage.getItem('user_token'))
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         // User is signed in.
@@ -42,7 +42,7 @@ function App() {
     console.log(moment().format("YYYY-MM-DDTHH:mm:ss.SSS"))
     let dateNow = moment().format("DD/MM/YYYY")
     let timeNow = moment().format("HH:mm")
-    console.log(typeLotto)
+    // console.log(typeLotto)
     if (numLotto !== "") {
       if (priceLotto2 > 0) {
         let numLottoRev = reversedNum(numLotto)
@@ -266,7 +266,7 @@ function App() {
     )
   }
   else if (localStorage.getItem('user_token') !== null) {
-    console.log(uid)
+    // console.log(uid)
     if (loading) {
       if (uid) {
         // User is signed in.

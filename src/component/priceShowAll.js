@@ -57,13 +57,13 @@ const PriceShowAll = (props) => {
             let lotto = []
             querySnapshot.forEach((doc) => {
                 // doc.data() is never undefined for query doc snapshots
-                console.log(doc.id, " => ", doc.data());
+                // console.log(doc.id, " => ", doc.data());
                 shData.unshift({ id: doc.id, ...doc.data() })
 
 
             });
             // console.log("lotto", lotto200)
-            console.log("Data number", shData)
+            // console.log("Data number", shData)
             setdataNumber(shData)
             // // setShowTop200(lottoTop200)
             // // setShowDown200(lottoDown200)
@@ -81,13 +81,13 @@ const PriceShowAll = (props) => {
             let lotto = []
             querySnapshot.forEach((doc) => {
                 // doc.data() is never undefined for query doc snapshots
-                console.log(doc.id, " => ", doc.data());
+                // console.log(doc.id, " => ", doc.data());
                 shData.unshift({ id: doc.id, ...doc.data() })
 
 
             });
             // console.log("lotto", lotto200)
-            console.log("Data number", shData)
+            // console.log("Data number", shData)
             setdataNumber(shData)
             // // setShowTop200(lottoTop200)
             // // setShowDown200(lottoDown200)
@@ -106,7 +106,7 @@ const PriceShowAll = (props) => {
             let lotto = []
             querySnapshot.forEach((doc) => {
                 // doc.data() is never undefined for query doc snapshots
-                console.log(doc.id, " => ", doc.data());
+                // console.log(doc.id, " => ", doc.data());
                 shData.unshift(doc.data())
 
 
