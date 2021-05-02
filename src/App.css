@@ -36,3 +36,46 @@
     transform: rotate(360deg);
   }
 }
+
+.headerTable {
+  position: sticky;
+  top:0;
+  
+}
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #343a40;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+/* thead {
+  display:block;
+}
+tbody {
+  display:block;
+  overflow-y:scroll;
+  height:200px;
+}
+td, th {
+  width: 100px;
+}
+table {
+  width: 100% !important;
+}
+ */
+
+

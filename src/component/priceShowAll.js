@@ -98,7 +98,7 @@ const PriceShowAll = (props) => {
 
         });
     }
-    const count = (storage,typeLot) => {return storage.filter(item => item.typeLotto === typeLot).length}
+    const count = (storage, typeLot) => { return storage.filter(item => item.typeLotto === typeLot).length }
     useEffect(() => {
 
         db.collection("lotto").onSnapshot((querySnapshot) => {
@@ -235,36 +235,38 @@ const PriceShowAll = (props) => {
                 </div>
 
                 <div className="col-sm-6">
-                    <h6>ตัวเลขทั้งหมด {count(showData,props.show)} รายการ</h6>
-                    <table className="table table-sm">
-                        <thead className="thead-dark">
-                            <tr>
-                                {/* <th scope="col">#</th> */}
-                                <th scope="col">2ตัวล่าง</th>
-                                <th scope="col">ราคา</th>
-                                <th scope="col"></th>
-                                {/* <th scope="col">ชื่อ</th> */}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {showDown.map((element, index) => {
-                                return (
-                                    <tr key={index}>
-                                        {/* <td>{index + 1}</td> */}
-                                        <td>{element.numLotto}</td>
-                                        <td>{element.sumPrice}</td>
-                                        <td><button className="btn btn-warning btn-sm"
-                                            data-toggle="modal"
-                                            data-target="#exampleModal"
-                                            onClick={() => numberLottoDown(element.numLotto, props.show)}>แก้ไข</button></td>
-                                        {/* <td>{element.name}</td> */}
-                                    </tr>
-                                )
-                            })}
+                    <h6>ตัวเลขทั้งหมด {count(showData, props.show)} รายการ</h6>
+                    <div style={{ overflow: "auto", height: "480px" }}>
+                        <table className="table table-sm">
+                            <thead className="thead-dark headerTable">
+                                <tr>
+                                    {/* <th scope="col">#</th> */}
+                                    <th className="headerTable" scope="col">2ตัวล่าง</th>
+                                    <th className="headerTable" scope="col">ราคา</th>
+                                    <th className="headerTable" scope="col"></th>
+                                    {/* <th scope="col">ชื่อ</th> */}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {showDown.map((element, index) => {
+                                    return (
+                                        <tr key={index}>
+                                            {/* <td>{index + 1}</td> */}
+                                            <td>{element.numLotto}</td>
+                                            <td>{element.sumPrice}</td>
+                                            <td><button className="btn btn-warning btn-sm"
+                                                data-toggle="modal"
+                                                data-target="#exampleModal"
+                                                onClick={() => numberLottoDown(element.numLotto, props.show)}>แก้ไข</button></td>
+                                            {/* <td>{element.name}</td> */}
+                                        </tr>
+                                    )
+                                })}
 
 
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 {/* <!-- Modal --> */}
@@ -379,36 +381,38 @@ const PriceShowAll = (props) => {
                 </div>
 
                 <div className="col-sm-6">
-                    <h6>ตัวเลขทั้งหมด {count(showData,props.show)} รายการ</h6>
-                    <table className="table table-sm">
-                        <thead className="thead-dark">
-                            <tr>
-                                {/* <th scope="col">#</th> */}
-                                <th scope="col">2ตัวบน</th>
-                                <th scope="col">ราคา</th>
-                                <th scope="col"></th>
-                                {/* <th scope="col">ชื่อ</th> */}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {showTop.map((element, index) => {
-                                return (
-                                    <tr key={index}>
-                                        {/* <td>{index + 1}</td> */}
-                                        <td>{element.numLotto}</td>
-                                        <td>{element.sumPrice}</td>
-                                        <td><button className="btn btn-warning btn-sm"
-                                            data-toggle="modal"
-                                            data-target="#exampleModal"
-                                            onClick={() => numberLottoTop(element.numLotto, props.show)}>แก้ไข</button></td>
-                                        {/* <td>{element.name}</td> */}
-                                    </tr>
-                                )
-                            })}
+                    <h6>ตัวเลขทั้งหมด {count(showData, props.show)} รายการ</h6>
+                    <div style={{ overflow: "auto", height: "480px" }}>
+                        <table className="table table-sm">
+                            <thead className="thead-dark headerTable">
+                                <tr>
+                                    {/* <th scope="col">#</th> */}
+                                    <th className="headerTable" scope="col">2ตัวบน</th>
+                                    <th className="headerTable" scope="col">ราคา</th>
+                                    <th className="headerTable" scope="col"></th>
+                                    {/* <th scope="col">ชื่อ</th> */}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {showTop.map((element, index) => {
+                                    return (
+                                        <tr key={index}>
+                                            {/* <td>{index + 1}</td> */}
+                                            <td>{element.numLotto}</td>
+                                            <td>{element.sumPrice}</td>
+                                            <td><button className="btn btn-warning btn-sm"
+                                                data-toggle="modal"
+                                                data-target="#exampleModal"
+                                                onClick={() => numberLottoTop(element.numLotto, props.show)}>แก้ไข</button></td>
+                                            {/* <td>{element.name}</td> */}
+                                        </tr>
+                                    )
+                                })}
 
 
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 {/* <!-- Modal --> */}
