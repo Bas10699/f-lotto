@@ -31,11 +31,14 @@ const PriceShowAll = (props) => {
             confirmButtonText: 'ลบเลย'
         }).then((result) => {
             if (result.isConfirmed) {
+                // let data = dataNum.splice(index, 1)
                 db.collection("lotto").doc(id).delete().then(() => {
                     console.log("Document successfully deleted!");
-                    dataNum.splice(index, 1)
+                    // numberLottoTop(lotto, props.show)
+                    // setdataNumber(data)
+                    // dataNum.splice(index, 1)
                     // console.log("1", dataNum)
-                    setdataNumber(dataNum)
+                    // setdataNumber(dataNum)
                     // console.log("2", dataNum)
                     // setdataNumber(data)
                     // Swal.fire(
@@ -61,13 +64,36 @@ const PriceShowAll = (props) => {
     }
 
     const numberLottoTop = (number, typeLotto) => {
-        db.collection("lotto").where("numLotto", "==", number).where("typeLotto", "==", typeLotto).get().then((querySnapshot) => {
+        db.collection("lotto").where("numLotto", "==", number).where("typeLotto", "==", typeLotto).onSnapshot((querySnapshot) => {
             let shData = []
             let lotto = []
             querySnapshot.forEach((doc) => {
                 // doc.data() is never undefined for query doc snapshots
                 // console.log(doc.id, " => ", doc.data());
-                shData.unshift({ id: doc.id, ...doc.data() })
+                // console.log("num: ", number)
+                // if (change.type === "added") {
+                    if ((doc.data().numLotto === number) && (doc.data().typeLotto === typeLotto)) {
+                        // console.log("num1: ", doc.data().numLotto)
+                        // console.log("New city: ", doc.data());
+                        shData.unshift({ id: doc.id, ...doc.data() })
+                    }else{
+                        console.log("update: ", doc)
+                    }
+                    
+
+                // }
+                // if (change.type === "modified") {
+                //     console.log("Modified city: ", change.doc.data());
+                //     shData.unshift({ id: change.doc.id, ...change.doc.data() })
+                // }
+                // if (change.type === "removed") {
+                //     console.log("Removed city: ", change.doc.data());
+                //     shData.unshift({ id: change.doc.id, ...change.doc.data() })
+                // }
+                // shData.unshift({ id: doc.id, ...doc.data() })
+                // else{
+                //     console.log("else : ",change)
+                // }
 
 
             });
@@ -82,19 +108,24 @@ const PriceShowAll = (props) => {
             // setShowDown(lottoDown)
 
         })
-            .catch((error) => {
-                console.log("Error getting documents: ", error);
-            });
+        // .catch((error) => {
+        //     console.log("Error getting documents: ", error);
+        // });
     }
 
     const numberLottoDown = (number, typeLotto) => {
-        db.collection("lotto").where("numLotto", "==", number).where("typeLotto", "==", typeLotto).get().then((querySnapshot) => {
+        db.collection("lotto").where("numLotto", "==", number).where("typeLotto", "==", typeLotto).onSnapshot((querySnapshot) => {
             let shData = []
             let lotto = []
             querySnapshot.forEach((doc) => {
                 // doc.data() is never undefined for query doc snapshots
                 // console.log(doc.id, " => ", doc.data());
-                shData.unshift({ id: doc.id, ...doc.data() })
+                // shData.unshift({ id: doc.id, ...doc.data() })
+                if ((doc.data().numLotto === number) && (doc.data().typeLotto === typeLotto)) {
+                    shData.unshift({ id: doc.id, ...doc.data() })
+                }else{
+                    console.log("update: ", doc)
+                }
 
 
             });
