@@ -62,6 +62,10 @@
   background: #555; 
 }
 
+.bg-body-table tr:nth-child(odd) {
+  background: #b8daff!important;
+}
+
 /* thead {
   display:block;
 }

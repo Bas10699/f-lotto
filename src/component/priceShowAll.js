@@ -4,6 +4,7 @@ import firebase, { db } from '../firebase'
 import icon from '../const/icon/list.svg'
 import Swal from 'sweetalert2'
 import ExportExcel from './exportExcel'
+import '../App.css'
 
 
 const PriceShowAll = (props) => {
@@ -15,7 +16,9 @@ const PriceShowAll = (props) => {
     const [limitPrice, setLimitPrice] = useState(200)
     const [dataNumber, setdataNumber] = useState([])
 
-    const deletePriceLotto = (id, lotto, price) => {
+    const deletePriceLotto = (id, lotto, price, index) => {
+        let dataNum = dataNumber
+        console.log("0", dataNum)
 
         Swal.fire({
             title: "แน่ใจนะ!",
@@ -30,6 +33,11 @@ const PriceShowAll = (props) => {
             if (result.isConfirmed) {
                 db.collection("lotto").doc(id).delete().then(() => {
                     console.log("Document successfully deleted!");
+                    dataNum.splice(index, 1)
+                    // console.log("1", dataNum)
+                    setdataNumber(dataNum)
+                    // console.log("2", dataNum)
+                    // setdataNumber(data)
                     // Swal.fire(
                     //     'Deleted!',
                     //     'Your file has been deleted.',
@@ -53,7 +61,7 @@ const PriceShowAll = (props) => {
     }
 
     const numberLottoTop = (number, typeLotto) => {
-        db.collection("lotto").where("numLotto", "==", number).where("typeLotto", "==", typeLotto).onSnapshot((querySnapshot) => {
+        db.collection("lotto").where("numLotto", "==", number).where("typeLotto", "==", typeLotto).get().then((querySnapshot) => {
             let shData = []
             let lotto = []
             querySnapshot.forEach((doc) => {
@@ -73,11 +81,14 @@ const PriceShowAll = (props) => {
             // setShowTop(lottoTop)
             // setShowDown(lottoDown)
 
-        });
+        })
+            .catch((error) => {
+                console.log("Error getting documents: ", error);
+            });
     }
 
     const numberLottoDown = (number, typeLotto) => {
-        db.collection("lotto").where("numLotto", "==", number).where("typeLotto", "==", typeLotto).onSnapshot((querySnapshot) => {
+        db.collection("lotto").where("numLotto", "==", number).where("typeLotto", "==", typeLotto).get().then((querySnapshot) => {
             let shData = []
             let lotto = []
             querySnapshot.forEach((doc) => {
@@ -194,7 +205,7 @@ const PriceShowAll = (props) => {
                         </select>
                     </div>
                     <div style={{ overflow: "auto", height: "480px" }}>
-                        <table className="table table-sm">
+                        <table className="table table-sm table-striped">
                             <thead className="thead-dark headerTable">
                                 <tr>
                                     {/* <th scope="col">#</th> */}
@@ -238,10 +249,10 @@ const PriceShowAll = (props) => {
                 </div>
 
                 <div className="col-sm-6">
-                    <ExportExcel data={showData} typeLotto={props.show}/>
+                    <ExportExcel data={showData} typeLotto={props.show} />
                     <h6>ตัวเลขทั้งหมด {count(showData, props.show)} รายการ</h6>
                     <div style={{ overflow: "auto", height: "480px" }}>
-                        <table className="table table-sm">
+                        <table className="table table-sm table-striped">
                             <thead className="thead-dark headerTable">
                                 <tr>
                                     {/* <th scope="col">#</th> */}
@@ -342,7 +353,7 @@ const PriceShowAll = (props) => {
                         </select>
                     </div>
                     <div style={{ overflow: "auto", height: "480px" }}>
-                        <table className="table table-sm">
+                        <table className="table table-sm table-striped ">
                             <thead className="thead-dark headerTable">
                                 <tr>
                                     {/* <th scope="col">#</th> */}
@@ -350,27 +361,12 @@ const PriceShowAll = (props) => {
                                     <th className="headerTable" scope="col">ราคา</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody className="bg-body-table">
                                 {showTop.map((element, index) => {
-                                    let bgColors = "table-primary"
-                                    // if (element.sumPrice >= 500) {
-                                    //     bgColors = "table-danger"
-                                    // }
-                                    // else if (element.sumPrice >= 400) {
-                                    //     bgColors = "table-warning"
-                                    // }
-                                    // else if (element.sumPrice >= 300) {
-                                    //     bgColors = "table-success"
-                                    // }
-                                    // else if (element.sumPrice >= 200) {
-                                    //     bgColors = "table-primary"
-                                    // }
-                                    // else {
-                                    //     bgColors = ""
-                                    // }
+
                                     if (element.sumPrice - limitPrice > 0) {
                                         return (
-                                            <tr key={index} className={bgColors}>
+                                            <tr key={index} className="">
                                                 {/* <td>{index + 1}</td> */}
                                                 <td>{element.numLotto}</td>
                                                 <td>{element.sumPrice - limitPrice}</td>
@@ -387,10 +383,10 @@ const PriceShowAll = (props) => {
                 </div>
 
                 <div className="col-sm-6">
-                    <ExportExcel data={showData} typeLotto={props.show}/>
+                    <ExportExcel data={showData} typeLotto={props.show} />
                     <h6>ตัวเลขทั้งหมด {count(showData, props.show)} รายการ</h6>
                     <div style={{ overflow: "auto", height: "480px" }}>
-                        <table className="table table-sm">
+                        <table className="table table-sm table-striped">
                             <thead className="thead-dark headerTable">
                                 <tr>
                                     {/* <th scope="col">#</th> */}
@@ -454,7 +450,7 @@ const PriceShowAll = (props) => {
                                                     <td>{ele_num.date}</td>
                                                     <td>{ele_num.time}</td>
                                                     <td><button className="btn btn-danger btn-sm"
-                                                        onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto)}>
+                                                        onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto, index)}>
                                                         ลบ
                                                         </button>
                                                     </td>
