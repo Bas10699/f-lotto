@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import moment from 'moment';
 import firebase, { db } from './firebase'
 import './App.css';
@@ -16,8 +16,18 @@ function App() {
   const [show, setShow] = useState(0)
   const [uid, setuid] = useState('')
   const [loading, setloading] = useState(false)
+  const inputNumLottoUp = useRef(null)
+  const inputPriceUp1 = useRef(null)
+  const inputPriceUp2 = useRef(null)
+  const buttonSendUp = useRef(null)
+  const inputNumLotto = useRef(null)
+  const inputPrice1 = useRef(null)
+  const inputPrice2 = useRef(null)
+  const buttonSend = useRef(null)
 
   const reversedNum = num => num.toString().split('').reverse().join('')
+
+  const nextInput = nextIn => nextIn.current.focus()
 
   useEffect(() => {
     // console.log("token", localStorage.getItem('user_token'))
@@ -36,6 +46,8 @@ function App() {
     localStorage.removeItem('user_token')
     window.location.reload()
   }
+
+  
   const send_click = async (typeLotto) => {
 
     setTime(moment().format("YYYY-MM-DDTHH:mm:ss.SSS"))
@@ -43,7 +55,7 @@ function App() {
     let dateNow = moment().format("DD/MM/YYYY")
     let timeNow = moment().format("HH:mm")
     // console.log(typeLotto)
-    if (numLotto !== "") {
+    if (numLotto !== "" && priceLotto1 > 0) {
       if (priceLotto2 > 0) {
         let numLottoRev = reversedNum(numLotto)
         await db.collection("lotto").doc(moment().format("YYYYMMDDHHmmssSSS")).set({
@@ -174,30 +186,39 @@ function App() {
                       <label htmlFor="numlotto1">ตัวเลข</label>
                       <input
                         type="text"
+                        ref={inputNumLottoUp}
                         maxLength="2"
-                        id="numlotto1"
+                        // id="numlotto1"
                         className="form-control form-control-sm"
+                        onKeyDown={e => e.key === 'Enter' && nextInput(inputPriceUp1)}
                         onChange={(e) => setNumLoto((e.target.value))}
-                        value={numLotto}></input>
+                        value={numLotto}
+                      ></input>
                     </div>
                     <div className="form-group col-7">
                       <label htmlFor="pricelotto1">ราคา</label>
                       <div className="row">
                         <div className="col-5">
                           <input type="number"
+                            ref={inputPriceUp1}
                             className="form-control form-control-sm"
                             onChange={(e) => setPriceLoto1((e.target.value) * 1)}
-                            value={priceLotto1}></input>
+                            onKeyDown={e => e.key === 'Enter' && nextInput(inputPriceUp2)}
+                            value={priceLotto1}
+                          ></input>
                         </div>
                       x
                       <div className="col-5">
                           <input type="number"
+                            ref={inputPriceUp2}
                             className="form-control form-control-sm"
                             onChange={(e) => setPriceLoto2((e.target.value) * 1)}
-                            value={priceLotto2}></input>
+                            onKeyDown={e => e.key === 'Enter' && nextInput(buttonSendUp)}
+                            value={priceLotto2}
+                          ></input>
                         </div>
                         <div className="col-1">
-                          <button className="btn btn-outline-success btn-sm" onClick={() => send_click(0)}>บันทึก</button>
+                          <button className="btn btn-outline-success btn-sm" ref={buttonSendUp} onClick={() => send_click(0) && nextInput(inputNumLottoUp)}>บันทึก</button>
                         </div>
                       </div>
 
@@ -214,7 +235,9 @@ function App() {
                         maxLength="2"
                         id="numlotto2"
                         className="form-control form-control-sm"
+                        ref={inputNumLotto}
                         onChange={(e) => setNumLoto((e.target.value))}
+                        onKeyDown={e => e.key === 'Enter' && nextInput(inputPrice1)}
                         value={numLotto}></input>
                     </div>
                     <div className="form-group col-7">
@@ -223,18 +246,22 @@ function App() {
                         <div className="col-5">
                           <input type="number"
                             className="form-control form-control-sm"
+                            ref={inputPrice1}
                             onChange={(e) => setPriceLoto1((e.target.value) * 1)}
+                            onKeyDown={e => e.key === 'Enter' && nextInput(inputPrice2)}
                             value={priceLotto1}></input>
                         </div>
                       x
                       <div className="col-5">
                           <input type="number"
                             className="form-control form-control-sm"
+                            ref={inputPrice2}
                             onChange={(e) => setPriceLoto2((e.target.value) * 1)}
+                            onKeyDown={e => e.key === 'Enter' && nextInput(buttonSend)}
                             value={priceLotto2}></input>
                         </div>
                         <div className="col-1">
-                          <button className="btn btn-outline-success btn-sm" onClick={() => send_click(1)}>บันทึก</button>
+                          <button className="btn btn-outline-success btn-sm" ref={buttonSend} onClick={() => send_click(1) && nextInput(inputNumLotto)}>บันทึก</button>
                         </div>
                       </div>
                     </div>
@@ -279,8 +306,8 @@ function App() {
           <Login />
         )
       }
-    }else{
-      return(
+    } else {
+      return (
         <div></div>
       )
     }
@@ -299,3 +326,27 @@ function App() {
 }
 
 export default App;
+
+
+// import React, { useEffect, useRef } from "react";
+
+// function App() {
+//   const searchInput = useRef(null)
+//   const searchInput1 = useRef(null)
+
+//   const handle = () => searchInput1.current.focus();
+
+//   function handleFocus(){
+//     searchInput.current.focus()
+//   }
+
+//   return (
+//     <div>
+//       <label>Search </label>
+//       <input ref={searchInput} onKeyDown={e => e.key === 'Enter' && handle()}  />
+//       <input ref={searchInput1} />
+//       <button onClick={handleFocus}>Set focus</button>
+//     </div>
+//   );
+// }
+// export default App

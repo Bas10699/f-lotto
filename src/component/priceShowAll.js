@@ -142,6 +142,7 @@ const PriceShowAll = (props) => {
         });
     }
     const count = (storage, typeLot) => { return storage.filter(item => item.typeLotto === typeLot).length }
+    
     useEffect(() => {
 
         db.collection("lotto").onSnapshot((querySnapshot) => {
@@ -340,7 +341,7 @@ const PriceShowAll = (props) => {
                                     <tbody>
                                         {dataNumber.map((ele_num, index) => {
                                             return (
-                                                <tr>
+                                                <tr key={index}>
                                                     <td>{ele_num.name}</td>
                                                     <td>{ele_num.numLotto}</td>
                                                     <td>{ele_num.priceLotto}</td>
@@ -474,7 +475,7 @@ const PriceShowAll = (props) => {
                                     <tbody>
                                         {dataNumber.map((ele_num, index) => {
                                             return (
-                                                <tr>
+                                                <tr key={index}>
                                                     <td>{ele_num.name}</td>
                                                     <td>{ele_num.numLotto}</td>
                                                     <td>{ele_num.priceLotto}</td>
