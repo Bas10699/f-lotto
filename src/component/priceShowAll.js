@@ -64,88 +64,95 @@ const PriceShowAll = (props) => {
     }
 
     const numberLottoTop = (number, typeLotto) => {
-        db.collection("lotto").where("numLotto", "==", number).where("typeLotto", "==", typeLotto).onSnapshot((querySnapshot) => {
-            let shData = []
-            let lotto = []
-            querySnapshot.forEach((doc) => {
-                // doc.data() is never undefined for query doc snapshots
-                // console.log(doc.id, " => ", doc.data());
-                // console.log("num: ", number)
-                // if (change.type === "added") {
+        db.collection("lotto")
+            .where("numLotto", "==", number)
+            .where("typeLotto", "==", typeLotto)
+            .where("drawDate", "==", props.dDate).onSnapshot((querySnapshot) => {
+                let shData = []
+                let lotto = []
+                querySnapshot.forEach((doc) => {
+                    // doc.data() is never undefined for query doc snapshots
+                    // console.log(doc.id, " => ", doc.data());
+                    // console.log("num: ", number)
+                    // if (change.type === "added") {
                     if ((doc.data().numLotto === number) && (doc.data().typeLotto === typeLotto)) {
                         // console.log("num1: ", doc.data().numLotto)
                         // console.log("New city: ", doc.data());
                         shData.unshift({ id: doc.id, ...doc.data() })
-                    }else{
+                    } else {
                         console.log("update: ", doc)
                     }
-                    
-
-                // }
-                // if (change.type === "modified") {
-                //     console.log("Modified city: ", change.doc.data());
-                //     shData.unshift({ id: change.doc.id, ...change.doc.data() })
-                // }
-                // if (change.type === "removed") {
-                //     console.log("Removed city: ", change.doc.data());
-                //     shData.unshift({ id: change.doc.id, ...change.doc.data() })
-                // }
-                // shData.unshift({ id: doc.id, ...doc.data() })
-                // else{
-                //     console.log("else : ",change)
-                // }
 
 
-            });
-            // console.log("lotto", lotto200)
-            // console.log("Data number", shData)
-            setdataNumber(shData)
-            // // setShowTop200(lottoTop200)
-            // // setShowDown200(lottoDown200)
-            // sortData(lottoTop, "numLotto", false)
-            // sortData(lottoDown, "numLotto", false)
-            // setShowTop(lottoTop)
-            // setShowDown(lottoDown)
+                    // }
+                    // if (change.type === "modified") {
+                    //     console.log("Modified city: ", change.doc.data());
+                    //     shData.unshift({ id: change.doc.id, ...change.doc.data() })
+                    // }
+                    // if (change.type === "removed") {
+                    //     console.log("Removed city: ", change.doc.data());
+                    //     shData.unshift({ id: change.doc.id, ...change.doc.data() })
+                    // }
+                    // shData.unshift({ id: doc.id, ...doc.data() })
+                    // else{
+                    //     console.log("else : ",change)
+                    // }
 
-        })
+
+                });
+                // console.log("lotto", lotto200)
+                // console.log("Data number", shData)
+                setdataNumber(shData)
+                // // setShowTop200(lottoTop200)
+                // // setShowDown200(lottoDown200)
+                // sortData(lottoTop, "numLotto", false)
+                // sortData(lottoDown, "numLotto", false)
+                // setShowTop(lottoTop)
+                // setShowDown(lottoDown)
+
+            })
         // .catch((error) => {
         //     console.log("Error getting documents: ", error);
         // });
     }
 
     const numberLottoDown = (number, typeLotto) => {
-        db.collection("lotto").where("numLotto", "==", number).where("typeLotto", "==", typeLotto).onSnapshot((querySnapshot) => {
-            let shData = []
-            let lotto = []
-            querySnapshot.forEach((doc) => {
-                // doc.data() is never undefined for query doc snapshots
-                // console.log(doc.id, " => ", doc.data());
-                // shData.unshift({ id: doc.id, ...doc.data() })
-                if ((doc.data().numLotto === number) && (doc.data().typeLotto === typeLotto)) {
-                    shData.unshift({ id: doc.id, ...doc.data() })
-                }else{
-                    console.log("update: ", doc)
-                }
+        db.collection("lotto")
+            .where("numLotto", "==", number)
+            .where("typeLotto", "==", typeLotto)
+            .where("drawDate", "==", props.dDate)
+            .onSnapshot((querySnapshot) => {
+                let shData = []
+                let lotto = []
+                querySnapshot.forEach((doc) => {
+                    // doc.data() is never undefined for query doc snapshots
+                    // console.log(doc.id, " => ", doc.data());
+                    // shData.unshift({ id: doc.id, ...doc.data() })
+                    if ((doc.data().numLotto === number) && (doc.data().typeLotto === typeLotto)) {
+                        shData.unshift({ id: doc.id, ...doc.data() })
+                    } else {
+                        console.log("update: ", doc)
+                    }
 
+
+                });
+                // console.log("lotto", lotto200)
+                // console.log("Data number", shData)
+                setdataNumber(shData)
+                // // setShowTop200(lottoTop200)
+                // // setShowDown200(lottoDown200)
+                // sortData(lottoTop, "numLotto", false)
+                // sortData(lottoDown, "numLotto", false)
+                // setShowTop(lottoTop)
+                // setShowDown(lottoDown)
 
             });
-            // console.log("lotto", lotto200)
-            // console.log("Data number", shData)
-            setdataNumber(shData)
-            // // setShowTop200(lottoTop200)
-            // // setShowDown200(lottoDown200)
-            // sortData(lottoTop, "numLotto", false)
-            // sortData(lottoDown, "numLotto", false)
-            // setShowTop(lottoTop)
-            // setShowDown(lottoDown)
-
-        });
     }
     const count = (storage, typeLot) => { return storage.filter(item => item.typeLotto === typeLot).length }
-    
+
     useEffect(() => {
 
-        db.collection("lotto").onSnapshot((querySnapshot) => {
+        db.collection("lotto").where("drawDate", "==", props.dDate).onSnapshot((querySnapshot) => {
             let shData = []
             let lotto = []
             querySnapshot.forEach((doc) => {
@@ -236,7 +243,7 @@ const PriceShowAll = (props) => {
                             <option value={500}>500</option>
                         </select>
                     </div>
-                    <div style={{ overflow: "auto", height: "480px" }}>
+                    <div style={{ overflow: "auto", maxHeight: "480px" }}>
                         <table className="table table-sm table-striped">
                             <thead className="thead-dark headerTable">
                                 <tr>
@@ -245,27 +252,12 @@ const PriceShowAll = (props) => {
                                     <th className="headerTable" scope="col">ราคา</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody className="bg-body-table">
                                 {showDown.map((element, index) => {
-                                    let bgColors = "table-info"
-                                    // if (element.sumPrice >= 500) {
-                                    //     bgColors = "table-danger"
-                                    // }
-                                    // else if (element.sumPrice >= 400) {
-                                    //     bgColors = "table-warning"
-                                    // }
-                                    // else if (element.sumPrice >= 300) {
-                                    //     bgColors = "table-success"
-                                    // }
-                                    // else if (element.sumPrice >= 200) {
-                                    //     bgColors = "table-primary"
-                                    // }
-                                    // else {
-                                    //     bgColors = ""
-                                    // }
+
                                     if (element.sumPrice - limitPrice > 0) {
                                         return (
-                                            <tr key={index} className={bgColors}>
+                                            <tr key={index} >
                                                 {/* <td>{index + 1}</td> */}
                                                 <td>{element.numLotto}</td>
                                                 <td>{element.sumPrice - limitPrice}</td>
@@ -283,7 +275,7 @@ const PriceShowAll = (props) => {
                 <div className="col-sm-6">
                     <ExportExcel data={showData} typeLotto={props.show} />
                     <h6>ตัวเลขทั้งหมด {count(showData, props.show)} รายการ</h6>
-                    <div style={{ overflow: "auto", height: "480px" }}>
+                    <div style={{ overflow: "auto", maxHeight: "480px" }}>
                         <table className="table table-sm table-striped">
                             <thead className="thead-dark headerTable">
                                 <tr>
@@ -384,7 +376,7 @@ const PriceShowAll = (props) => {
                             <option value={500}>500</option>
                         </select>
                     </div>
-                    <div style={{ overflow: "auto", height: "480px" }}>
+                    <div style={{ overflow: "auto", maxHeight: "480px" }}>
                         <table className="table table-sm table-striped ">
                             <thead className="thead-dark headerTable">
                                 <tr>

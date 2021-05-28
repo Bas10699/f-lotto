@@ -5,6 +5,7 @@ import './App.css';
 import PriceShowAll from './component/priceShowAll';
 import Login from './component/login';
 import Swal from 'sweetalert2'
+import PriceShowName from './component/priceShowName';
 
 function App() {
   const [timeshow, setTime] = useState('')
@@ -29,6 +30,15 @@ function App() {
 
   const nextInput = nextIn => nextIn.current.focus()
 
+  const drawDate = () => {
+    if (moment().format("DD") <= 16) {
+      return "16/" + moment().format("MM/YYYY")
+    }
+    else {
+      return "01/" + moment().add(1, 'months').format("MM/YYYY")
+    }
+  }
+
   useEffect(() => {
     // console.log("token", localStorage.getItem('user_token'))
     firebase.auth().onAuthStateChanged(user => {
@@ -47,7 +57,7 @@ function App() {
     window.location.reload()
   }
 
-  
+
   const send_click = async (typeLotto) => {
 
     setTime(moment().format("YYYY-MM-DDTHH:mm:ss.SSS"))
@@ -64,7 +74,8 @@ function App() {
           priceLotto: priceLotto1,
           date: dateNow,
           time: timeNow,
-          typeLotto: typeLotto
+          typeLotto: typeLotto,
+          drawDate: drawDate()
 
         })
           .then(() => {
@@ -75,7 +86,8 @@ function App() {
               priceLotto: priceLotto2,
               date: dateNow,
               time: timeNow,
-              typeLotto: typeLotto
+              typeLotto: typeLotto,
+              drawDate: drawDate()
             })
               .then(() => {
                 console.log("Document successfully written!");
@@ -85,6 +97,11 @@ function App() {
               })
               .catch((error) => {
                 console.error("Error writing document: ", error);
+                Swal.fire(
+                  'เกิดข้อผิดพลาด!',
+                  'บันทึกข้อมูลไม่สำเร็จ',
+                  'error'
+                )
               });
           })
           .catch((error) => {
@@ -94,6 +111,13 @@ function App() {
               Swal.fire(
                 'แหนะ!',
                 'บอกแล้วใช่ไหม ดูได้อย่างเดียว',
+                'error'
+              )
+            }
+            else {
+              Swal.fire(
+                'เกิดข้อผิดพลาด!',
+                'บันทึกข้อมูลไม่สำเร็จ',
                 'error'
               )
             }
@@ -107,7 +131,8 @@ function App() {
           priceLotto: priceLotto1,
           date: dateNow,
           time: timeNow,
-          typeLotto: typeLotto
+          typeLotto: typeLotto,
+          drawDate: drawDate()
         })
           .then(() => {
             console.log("Document successfully written!");
@@ -124,6 +149,13 @@ function App() {
                 'error'
               )
             }
+            else {
+              Swal.fire(
+                'เกิดข้อผิดพลาด!',
+                'บันทึกข้อมูลไม่สำเร็จ',
+                'error'
+              )
+            }
           });
       }
     }
@@ -136,6 +168,7 @@ function App() {
     return (
       <div className="container">
         <h3 className="pt-5">ระบบการจัดการตัวเลขของเอฟโอเวอร์</h3>
+        <div className="bg-sacendary">งวดวันที่ {drawDate()}</div>
         <div className="row pt-3">
           <div className="col-lg-6">
             <div className="row">
@@ -150,6 +183,7 @@ function App() {
                 </input>
               </div>
             </div>
+
             <div>
               <nav>
                 <div className="nav nav-tabs" id="nav-tab" role="tablist">
@@ -269,10 +303,16 @@ function App() {
                 </div>
               </div>
             </div>
+            <div className="row">
+              <div>
+                <PriceShowName dDate={drawDate()} />
+              </div>
+
+            </div>
           </div >
           <div className="col-lg-6">
-            <h4>แสดงข้อมูล</h4>
-            <PriceShowAll show={show} />
+            <h4>แสดงข้อมูลรวม</h4>
+            <PriceShowAll show={show} dDate={drawDate()} />
           </div>
         </div >
       </div >
