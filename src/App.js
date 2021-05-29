@@ -303,12 +303,11 @@ function App() {
                 </div>
               </div>
             </div>
-            <div className="row">
+            
               <div>
-                <PriceShowName dDate={drawDate()} />
+                <PriceShowName show={show} dDate={drawDate()} />
               </div>
 
-            </div>
           </div >
           <div className="col-lg-6">
             <h4>แสดงข้อมูลรวม</h4>
