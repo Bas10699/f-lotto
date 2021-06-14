@@ -150,6 +150,21 @@ const PriceShowAll = (props) => {
     }
     const count = (storage, typeLot) => { return storage.filter(item => item.typeLotto === typeLot).length }
 
+    // const updatedd = () => {
+    //     db.collection("lotto").where("drawDate", "==", props.dDate).get().then((querySnapshot) => {
+
+    //         querySnapshot.forEach((doc) => {
+    //             db.collection("lotto").doc(doc.id).update({ drawDate: "01/06/2021" })
+    //             console.log("success")
+    //         })
+
+    //     })
+    //         .catch((error) => {
+    //             console.log("Error getting documents: ", error);
+    //         });
+
+    // }
+
     useEffect(() => {
 
         db.collection("lotto").where("drawDate", "==", props.dDate).onSnapshot((querySnapshot) => {
@@ -158,6 +173,7 @@ const PriceShowAll = (props) => {
             querySnapshot.forEach((doc) => {
                 // doc.data() is never undefined for query doc snapshots
                 // console.log(doc.id, " => ", doc.data());
+
                 shData.unshift(doc.data())
 
 
