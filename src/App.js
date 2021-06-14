@@ -31,7 +31,10 @@ function App() {
   const nextInput = nextIn => nextIn.current.focus()
 
   const drawDate = () => {
-    if (moment().format("DD") <= 16) {
+    if (moment().format("DD") <= 2) {
+      return "01/" + moment().format("MM/YYYY")
+    }
+    else if (2 < moment().format("DD") < 18) {
       return "16/" + moment().format("MM/YYYY")
     }
     else {
@@ -303,10 +306,10 @@ function App() {
                 </div>
               </div>
             </div>
-            
-              <div>
-                <PriceShowName show={show} dDate={drawDate()} />
-              </div>
+
+            <div>
+              <PriceShowName show={show} dDate={drawDate()} />
+            </div>
 
           </div >
           <div className="col-lg-6">
