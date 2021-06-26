@@ -5,7 +5,7 @@ export const addComma = (x) => {
 }
 
 export const sortData = (data, property, proviso) => {
-    
+
     if (proviso === true) {
         function compare(a, b) {
             const data_idA = a[property]
@@ -38,5 +38,24 @@ export const sortData = (data, property, proviso) => {
         let sort_data = data.sort(compare)
         return sort_data
     }
+
+}
+
+export const sortReversedData = (data) => {
+    let mySet = new Set();
+
+    const reversedNum = num => num.toString().split('').reverse().join('')
+    // let dataset = []
+    data.map((element) => {
+        mySet.add(element)
+        mySet.add(reversedNum(element))
+        // dataset.push(element)
+        // dataset.push(reversedNum(element))
+    })
+
+    // console.log("set",Array.from(mySet))
+    // let sort_data = new Set(dataset)
+
+    return Array.from(mySet)
 
 }

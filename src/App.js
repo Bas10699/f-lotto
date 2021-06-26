@@ -31,15 +31,16 @@ function App() {
   const nextInput = nextIn => nextIn.current.focus()
 
   const drawDate = () => {
-    if (moment().format("DD") <= 2) {
+    if ((moment().format("DD") * 1) <= 2) {
       return "01/" + moment().format("MM/YYYY")
     }
-    else if (2 < moment().format("DD") < 18) {
+    else if ((moment().format("DD") * 1 > 2) && (moment().format("DD") * 1 < 18)) {
       return "16/" + moment().format("MM/YYYY")
     }
     else {
       return "01/" + moment().add(1, 'months').format("MM/YYYY")
     }
+    // return "16/06/2021"
   }
 
   useEffect(() => {
@@ -244,8 +245,8 @@ function App() {
                             value={priceLotto1}
                           ></input>
                         </div>
-                      x
-                      <div className="col-5">
+                        x
+                        <div className="col-5">
                           <input type="number"
                             ref={inputPriceUp2}
                             className="form-control form-control-sm"
@@ -288,8 +289,8 @@ function App() {
                             onKeyDown={e => e.key === 'Enter' && nextInput(inputPrice2)}
                             value={priceLotto1}></input>
                         </div>
-                      x
-                      <div className="col-5">
+                        x
+                        <div className="col-5">
                           <input type="number"
                             className="form-control form-control-sm"
                             ref={inputPrice2}
@@ -308,7 +309,7 @@ function App() {
             </div>
 
             <div>
-              <PriceShowName show={show} dDate={drawDate()} />
+              {/* <PriceShowName show={show} dDate={drawDate()} /> */}
             </div>
 
           </div >

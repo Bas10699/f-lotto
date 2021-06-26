@@ -44,7 +44,7 @@ const PriceShowName = (props) => {
                 let lotto = []
                 querySnapshot.forEach((doc) => {
 
-                    if ((doc.data().name === nameSel) ) {
+                    if ((doc.data().name === nameSel)) {
                         // console.log("num1: ", doc.data().numLotto)
                         // console.log("New city: ", doc.data());
                         // shData.unshift({ id: doc.id, ...doc.data() })
@@ -149,7 +149,7 @@ const PriceShowName = (props) => {
                                     <tr>
                                         {/* <th scope="col">#</th> */}
                                         <th className="headerTable" scope="col">2ตัวล่าง</th>
-                                        <th className="headerTable" scope="col">ราคา >{limitPrice}</th>
+                                        <th className="headerTable" scope="col">ราคา &gt;{limitPrice}</th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-body-table">
@@ -261,7 +261,7 @@ const PriceShowName = (props) => {
                                     <tr>
                                         {/* <th scope="col">#</th> */}
                                         <th className="headerTable" scope="col">2ตัวล่าง</th>
-                                        <th className="headerTable" scope="col">ราคา >{limitPrice}</th>
+                                        <th className="headerTable" scope="col">ราคา &gt;{limitPrice}</th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-body-table">

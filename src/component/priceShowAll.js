@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { sortData } from '../const/constance'
+import { sortData,sortReversedData } from '../const/constance'
 import firebase, { db } from '../firebase'
 import icon from '../const/icon/list.svg'
 import Swal from 'sweetalert2'
@@ -15,6 +15,8 @@ const PriceShowAll = (props) => {
     const [showDown, setShowDown] = useState([])
     const [limitPrice, setLimitPrice] = useState(200)
     const [dataNumber, setdataNumber] = useState([])
+
+    // const reversedNum = num => num.toString().split('').reverse().join('')
 
     const deletePriceLotto = (id, lotto, price, index) => {
         let dataNum = dataNumber
@@ -193,7 +195,10 @@ const PriceShowAll = (props) => {
             let lottoDown200 = []
             let lottoTop = []
             let lottoDown = []
-            lotto.map((eleLotto) => {
+
+            let lottoset = sortReversedData(lotto.sort())
+            console.log("lot",lottoset)
+            lottoset.map((eleLotto) => {
                 let sumTop = 0
                 let sumDown = 0
                 shData.map((eleData) => {
@@ -236,8 +241,8 @@ const PriceShowAll = (props) => {
             setShowData(shData)
             // setShowTop200(lottoTop200)
             // setShowDown200(lottoDown200)
-            sortData(lottoTop, "numLotto", false)
-            sortData(lottoDown, "numLotto", false)
+            // sortReversedData(lottoTop, "numLotto")
+            // sortData(lottoDown, "numLotto", false)
             setShowTop(lottoTop)
             setShowDown(lottoDown)
 
