@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { sortData,sortReversedData } from '../const/constance'
+import { sortData, sortReversedData } from '../const/constance'
 import firebase, { db } from '../firebase'
 import icon from '../const/icon/list.svg'
 import Swal from 'sweetalert2'
 import ExportExcel from './exportExcel'
+import ShowLotto3 from './showLotto3'
 import '../App.css'
 
 
@@ -197,7 +198,7 @@ const PriceShowAll = (props) => {
             let lottoDown = []
 
             let lottoset = sortReversedData(lotto.sort())
-            console.log("lot",lottoset)
+            console.log("lot", lottoset)
             lottoset.map((eleLotto) => {
                 let sumTop = 0
                 let sumDown = 0
@@ -363,7 +364,7 @@ const PriceShowAll = (props) => {
                                                     <td><button className="btn btn-danger btn-sm"
                                                         onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto)}>
                                                         ลบ
-                                                        </button>
+                                                    </button>
                                                     </td>
                                                 </tr>
                                                 // <div>{ele_num.numLotto} = {ele_num.priceLotto} บาท ลงวันที่ {ele_num.date} เวลา {ele_num.time} <button className="btn btn-danger btn-sm" onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto)}>ลบ</button></div>
@@ -383,7 +384,7 @@ const PriceShowAll = (props) => {
             </div>
         )
     }
-    else {
+    else if (props.show === 0) {
         return (
             <div className="row">
                 <div className="col-sm-6">
@@ -497,7 +498,7 @@ const PriceShowAll = (props) => {
                                                     <td><button className="btn btn-danger btn-sm"
                                                         onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto, index)}>
                                                         ลบ
-                                                        </button>
+                                                    </button>
                                                     </td>
                                                 </tr>
                                                 // <div>{ele_num.numLotto} = {ele_num.priceLotto} บาท ลงวันที่ {ele_num.date} เวลา {ele_num.time} <button className="btn btn-danger btn-sm" onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto)}>ลบ</button></div>
@@ -516,6 +517,12 @@ const PriceShowAll = (props) => {
 
             </div>
         )
+    }
+    else {
+        return (
+            <ShowLotto3 dDate={props.dDate} />
+        )
+
     }
 
 }

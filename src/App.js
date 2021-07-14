@@ -6,6 +6,7 @@ import PriceShowAll from './component/priceShowAll';
 import Login from './component/login';
 import Swal from 'sweetalert2'
 import PriceShowName from './component/priceShowName';
+import Lotto3 from './component/lotto3';
 
 function App() {
   const [timeshow, setTime] = useState('')
@@ -211,6 +212,16 @@ function App() {
                     aria-selected="false">
                     2ตัวล่าง
                   </a>
+                  <a className="nav-link"
+                    id="nav-profile-tab"
+                    data-toggle="tab"
+                    href="#nav-lotto"
+                    onClick={() => setShow(3)}
+                    role="tab"
+                    aria-controls="nav-lotto"
+                    aria-selected="false">
+                    3ตัวบน
+                  </a>
                 </div>
               </nav>
               <div className="tab-content" id="nav-tabContent">
@@ -304,6 +315,9 @@ function App() {
                       </div>
                     </div>
                   </div>
+                </div>
+                <div className="tab-pane fade" id="nav-lotto" role="tabpanel" aria-labelledby="nav-profile-tab">
+                  <Lotto3 drawDate={drawDate()} name={name}/>
                 </div>
               </div>
             </div>
