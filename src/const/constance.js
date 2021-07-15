@@ -59,3 +59,27 @@ export const sortReversedData = (data) => {
     return Array.from(mySet)
 
 }
+
+export function swapLotto3(textnum) {
+    // var num = 123; //ตัวเลขที่ต้องการหาโต๊ด
+    // var textnum = num.toString(); //แปลงตัวเลขเป็นตัวอักษร
+    var numlv1 = []; //ประกาศตัวแปลให้เป็น Array
+    var numlv2 = [];
+    //จัดการ level 1 โดยการสลับตัวเลข 2 หลักซ้ายสุด
+    numlv1[0] = textnum.substr(0, 1) + textnum.substr(1, 1);
+    numlv1[1] = textnum.substr(1, 1) + textnum.substr(0, 1);
+    //จัดการ level 2
+    var endnum = textnum.substr(2, 1); //จำเลขตัวสุดท้าย
+    let mySet = new Set();
+    // mySet.add(textnum)
+    for (var i = 0; i <= 2 - 1; i++) { //วนลูปการแทรกตัวเลข ทั้ง 2 ตัวเลขจาก level 1
+        numlv2[0] = numlv1[i].substr(0, 1); //แยกตัวเลข หลักแรกออกมา จากตัวเลข level 1
+        numlv2[1] = numlv1[i].substr(1, 1); //แยกตัวเลข หลักที่ 2 ออกมา จากตัวเลข level 1
+        //แทรกตัวเลขตัวสุดท้าย หน้า กลาง หลัง
+        let str = endnum + numlv2[0] + numlv2[1] + " " + numlv2[0] + endnum + numlv2[1] + " " + numlv2[0] + numlv2[1] + endnum //แสดงผล
+        let myArr = str.split(" ");
+        myArr.map(element => mySet.add(element))
+    }
+    // console.log(mySet)
+    return Array.from(mySet)
+}

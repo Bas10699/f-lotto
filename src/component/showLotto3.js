@@ -158,7 +158,7 @@ const ShowLotto3 = (props) => {
             // setShowTop200(lottoTop200)
             // setShowDown200(lottoDown200)
             // sortReversedData(lottoTop, "numLotto")
-            // sortData(lottoDown, "numLotto", false)
+            sortData(lottoT3, "numLotto", false)
             setShowT3(lottoT3)
 
         });

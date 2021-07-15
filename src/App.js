@@ -73,7 +73,8 @@ function App() {
     if (numLotto !== "" && priceLotto1 > 0) {
       if (priceLotto2 > 0) {
         let numLottoRev = reversedNum(numLotto)
-        await db.collection("lotto").doc(moment().format("YYYYMMDDHHmmssSSS")).set({
+
+        await db.collection("lotto").doc().set({
           name: name,
           numLotto: numLotto,
           priceLotto: priceLotto1,
@@ -85,7 +86,7 @@ function App() {
         })
           .then(() => {
             console.log("Document successfully written!");
-            db.collection("lotto").doc(moment().format("YYYYMMDDHHmmssSSS")).set({
+            db.collection("lotto").doc().set({
               name: name,
               numLotto: numLottoRev,
               priceLotto: priceLotto2,
@@ -130,7 +131,7 @@ function App() {
 
       }
       else {
-        db.collection("lotto").doc(moment().format("YYYYMMDDHHmmssSSS")).set({
+        db.collection("lotto").doc().set({
           name: name,
           numLotto: numLotto,
           priceLotto: priceLotto1,
