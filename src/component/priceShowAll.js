@@ -295,7 +295,7 @@ const PriceShowAll = (props) => {
                 </div>
 
                 <div className="col-sm-6">
-                    <ExportExcel data={showData} typeLotto={props.show} />
+                    <ExportExcel data={sortData(showData, "name", false)} typeLotto={props.show} />
                     <h6>ตัวเลขทั้งหมด {count(showData, props.show)} รายการ</h6>
                     <div style={{ overflow: "auto", maxHeight: "480px" }}>
                         <table className="table table-sm table-striped">
@@ -429,7 +429,7 @@ const PriceShowAll = (props) => {
                 </div>
 
                 <div className="col-sm-6">
-                    <ExportExcel data={showData} typeLotto={props.show} />
+                    <ExportExcel data={sortData(showData, "name", false)} typeLotto={props.show} />
                     <h6>ตัวเลขทั้งหมด {count(showData, props.show)} รายการ</h6>
                     <div style={{ overflow: "auto", height: "480px" }}>
                         <table className="table table-sm table-striped">

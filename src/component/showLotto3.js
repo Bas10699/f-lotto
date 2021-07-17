@@ -9,7 +9,7 @@ import printJS from "print-js";
 const ShowLotto3 = (props) => {
     const [showData, setShowData] = useState([])
     const [showT3, setShowT3] = useState([])
-    const [limitPrice, setLimitPrice] = useState(200)
+    const [limitPrice, setLimitPrice] = useState(100)
     const [dataNumber, setdataNumber] = useState([])
 
     // const reversedNum = num => num.toString().split('').reverse().join('')
@@ -88,12 +88,6 @@ const ShowLotto3 = (props) => {
                 });
 
                 setdataNumber(shData)
-                // // setShowTop200(lottoTop200)
-                // // setShowDown200(lottoDown200)
-                // sortData(lottoTop, "numLotto", false)
-                // sortData(lottoDown, "numLotto", false)
-                // setShowTop(lottoTop)
-                // setShowDown(lottoDown)
 
             })
         // .catch((error) => {
@@ -152,12 +146,9 @@ const ShowLotto3 = (props) => {
 
 
             })
-            // console.log("lotto", lotto200)
-            // console.log("Data", shData)
+
             setShowData(shData)
-            // setShowTop200(lottoTop200)
-            // setShowDown200(lottoDown200)
-            // sortReversedData(lottoTop, "numLotto")
+
             sortData(lottoT3, "numLotto", false)
             setShowT3(lottoT3)
 
@@ -173,6 +164,7 @@ const ShowLotto3 = (props) => {
                     <div className="input-group-prepend">
                         <span className="input-group-text" id="inputGroup-sizing-default">ราคารวมเกิน</span></div>
                     <select className="custom-select" onChange={(e) => setLimitPrice(e.target.value)}>
+                        <option value={100}>100</option>
                         <option value={200}>200</option>
                         <option value={300}>300</option>
                         <option value={400}>400</option>
@@ -189,7 +181,8 @@ const ShowLotto3 = (props) => {
                             ],
                             header: '<h3 class="custom-h3">ระบบการจัดการตัวเลขของเอฟโอเวอร์</h3>',
                             style: '.custom-h3 { color: red; }',
-                            font_size: '18pt'
+                            font_size: '18pt',
+                            documentTitle: `ราคาเกิน ${limitPrice}บาท`
                         })}>print</button>
                     </div>
                 </div>
@@ -199,7 +192,8 @@ const ShowLotto3 = (props) => {
                         <thead className="thead-dark headerTable">
                             <tr>
                                 <th className="headerTable" scope="col">3ตัวบน</th>
-                                <th className="headerTable" scope="col">ราคา</th>
+                                <th className="headerTable" scope="col">ตรง</th>
+                                <th className="headerTable" scope="col">โต๊ด</th>
                             </tr>
                         </thead>
                         <tbody className="bg-body-table">
@@ -209,7 +203,8 @@ const ShowLotto3 = (props) => {
                                     return (
                                         <tr key={index} className="">
                                             <td>{element.numLotto}</td>
-                                            <td>{element.sumTrong - limitPrice} * {(element.sumTodd - limitPrice) > 0 ? element.sumTodd - limitPrice : 0} </td>
+                                            <td>{element.sumTrong - limitPrice}</td>
+                                            <td>{(element.sumTodd - limitPrice) > 0 ? element.sumTodd - limitPrice : 0} </td>
                                         </tr>
                                     )
                                 }
@@ -231,7 +226,8 @@ const ShowLotto3 = (props) => {
                         <thead className="thead-dark headerTable">
                             <tr>
                                 <th className="headerTable" scope="col">3ตัวบน</th>
-                                <th className="headerTable" scope="col">ราคา</th>
+                                <th className="headerTable" scope="col">ตรง</th>
+                                <th className="headerTable" scope="col">โต๊ด</th>
                                 <th className="headerTable" scope="col"></th>
                             </tr>
                         </thead>
@@ -241,7 +237,8 @@ const ShowLotto3 = (props) => {
                                     <tr key={index}>
                                         {/* <td>{index + 1}</td> */}
                                         <td>{element.numLotto}</td>
-                                        <td>{element.sumTrong} * {element.sumTodd}</td>
+                                        <td>{element.sumTrong}</td>
+                                        <td>{element.sumTodd}</td>
                                         <td><button className="btn btn-warning btn-sm"
                                             data-toggle="modal"
                                             data-target="#exampleModal"
