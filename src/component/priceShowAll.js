@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { sortData, sortReversedData } from '../const/constance'
+import { addComma, sortData, sortReversedData } from '../const/constance'
 import firebase, { db } from '../firebase'
 import icon from '../const/icon/list.svg'
 import Swal from 'sweetalert2'
 import ExportExcel from './exportExcel'
 import ShowLotto3 from './showLotto3'
+import printJS from "print-js";
 import '../App.css'
 
 
@@ -18,6 +19,28 @@ const PriceShowAll = (props) => {
     const [dataNumber, setdataNumber] = useState([])
 
     const reversedNum = num => num.toString().split('').reverse().join('')
+
+    const sumAllPrice = (item) => {
+
+    }
+
+    const LottoPintter = (item) => {
+        let dataPinter = []
+
+        item.map((element, index) => {
+
+            if (element.sumTrong - limitPrice > 0 || element.sumTodd - limitPrice > 0) {
+                dataPinter.push({
+                    numLotto: element.numLotto,
+                    sumTrong: (element.sumTrong - limitPrice) > 0 ? element.sumTrong - limitPrice : 0,
+                    sumTodd: (element.sumTodd - limitPrice) > 0 ? element.sumTodd - limitPrice : 0
+                })
+
+            }
+
+        })
+        return dataPinter
+    }
 
     const deletePriceLotto = (id, lotto, price, index) => {
         let dataNum = dataNumber
@@ -168,6 +191,45 @@ const PriceShowAll = (props) => {
 
     // }
 
+    const sortLotto = (data) => {
+        let dataOut = []
+        let lotto = []
+
+        const filterLotto = num => data.find(item => { return item.numLotto === num })
+
+        data.map((element) => {
+            let index = lotto.findIndex((elem) => (elem === element.numLotto || elem === reversedNum(element.numLotto)))
+            if (index < 0) {
+                if (element.numLotto !== null && element.numLotto !== undefined) {
+                    // console.log(ele_data.plant)
+                    lotto.push(
+                        element.numLotto
+                    )
+                    let sumTodd = filterLotto(reversedNum(element.numLotto))
+                    dataOut.push({
+                        numLotto: element.numLotto,
+                        sumTrong: element.sumPrice,
+                        sumTodd: sumTodd ? sumTodd.sumPrice : 0
+                    })
+
+                }
+            }
+            // data.map((elementTodd) => {
+            //     if (element.numLotto === reversedNum(elementTodd.numLotto)) {
+            //         console.log(element.numLotto + ":" + elementTodd.numLotto + " = " + element.sumPrice + "*" + elementTodd.sumPrice)
+            //         dataOut.push({
+            //             numLotto: element.numLotto,
+            //             trong: element.sumPrice,
+            //             todd: elementTodd.sumPrice
+            //         })
+            //     }
+            // })
+
+        })
+        // console.log("lotto", dataOut)
+        return dataOut
+    }
+
     useEffect(() => {
 
         db.collection("lotto").where("drawDate", "==", props.dDate).onSnapshot((querySnapshot) => {
@@ -198,7 +260,7 @@ const PriceShowAll = (props) => {
             let lottoDown = []
 
             let lottoset = sortReversedData(lotto.sort())
-            console.log("lot", lottoset)
+            // console.log("lot", lottoset)
             lottoset.map((eleLotto) => {
                 let sumTop = 0
                 let sumDown = 0
@@ -244,67 +306,50 @@ const PriceShowAll = (props) => {
             // setShowDown200(lottoDown200)
             // sortReversedData(lottoTop, "numLotto")
             // sortData(lottoDown, "numLotto", false)
+
             setShowTop(lottoTop)
             setShowDown(lottoDown)
+
+            setShowDown200(sortLotto(lottoDown))
+            setShowTop200(sortLotto(lottoTop))
+
 
         });
 
 
     }, [])
 
-    const sortLotto = (data) => {
-        let dataOut = []
-        let lotto = []
 
-        const filterLotto = num => data.find(item => { return item.numLotto === num })
-
-        data.map((element) => {
-            let index = lotto.findIndex((elem) => (elem === element.numLotto || elem === reversedNum(element.numLotto)))
-            if (index < 0) {
-                if (element.numLotto !== null && element.numLotto !== undefined) {
-                    // console.log(ele_data.plant)
-                    lotto.push(
-                        element.numLotto
-                    )
-                    let sumTodd = filterLotto(reversedNum(element.numLotto))
-                    dataOut.push({
-                        numLotto: element.numLotto,
-                        sumTrong: element.sumPrice,
-                        sumTodd: sumTodd ? sumTodd.sumPrice : 0
-                    })
-
-                }
-            }
-            // data.map((elementTodd) => {
-            //     if (element.numLotto === reversedNum(elementTodd.numLotto)) {
-            //         console.log(element.numLotto + ":" + elementTodd.numLotto + " = " + element.sumPrice + "*" + elementTodd.sumPrice)
-            //         dataOut.push({
-            //             numLotto: element.numLotto,
-            //             trong: element.sumPrice,
-            //             todd: elementTodd.sumPrice
-            //         })
-            //     }
-            // })
-
-        })
-        console.log("lotto", dataOut)
-        return dataOut
-    }
     if (props.show === 1) {
         return (
             <div className="row">
                 <div className="col-sm-6">
                     <div className="input-group mb-3">
                         <div className="input-group-prepend">
-                            <span className="input-group-text" id="inputGroup-sizing-default">รายการราคารวมเกิน</span></div>
+                            <span className="input-group-text" id="inputGroup-sizing-default">ราคารวมเกิน</span></div>
                         <select className="custom-select" onChange={(e) => setLimitPrice(e.target.value)}>
                             <option value={200}>200</option>
                             <option value={300}>300</option>
                             <option value={400}>400</option>
                             <option value={500}>500</option>
                         </select>
+                        <div className="input-group-append">
+                            <button className="btn btn-outline-info" onClick={() => printJS({
+                                printable: LottoPintter(showDown200),
+                                type: 'json',
+                                properties: [
+                                    { field: 'numLotto', displayName: '2ตัวล่าง' },
+                                    { field: 'sumTrong', displayName: 'ตรง' },
+                                    { field: 'sumTodd', displayName: 'โต๊ด' }
+                                ],
+                                header: '<h3 class="custom-h3">ระบบการจัดการตัวเลขของเอฟโอเวอร์</h3>',
+                                style: '.custom-h3 { color: red; }',
+                                font_size: '18pt',
+                                documentTitle: `ราคาเกิน ${limitPrice}บาท`
+                            })}>print</button>
+                        </div>
                     </div>
-                    <div style={{ overflow: "auto", maxHeight: "480px" }}>
+                    <div style={{ overflow: "auto", maxHeight: "450px" }}>
                         <table className="table table-sm table-striped">
                             <thead className="thead-dark headerTable">
                                 <tr>
@@ -315,7 +360,7 @@ const PriceShowAll = (props) => {
                                 </tr>
                             </thead>
                             <tbody className="bg-body-table">
-                                {sortLotto(showDown).map((element, index) => {
+                                {showDown200.map((element, index) => {
 
                                     if (element.sumTrong - limitPrice > 0 || element.sumTodd - limitPrice > 0) {
                                         let todd = element.sumTodd - limitPrice
@@ -339,8 +384,8 @@ const PriceShowAll = (props) => {
 
                 <div className="col-sm-6">
                     <ExportExcel data={sortData(showData, "name", false)} typeLotto={props.show} />
-                    <h6>ตัวเลขทั้งหมด {count(showData, props.show)} รายการ</h6>
-                    <div style={{ overflow: "auto", maxHeight: "480px" }}>
+                    <h6>ทั้งหมด {count(showData, props.show)} รายการ  <div className="float-right">{addComma(showDown.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0))} บาท</div></h6>
+                    <div style={{ overflow: "auto", maxHeight: "450px" }}>
                         <table className="table table-sm table-striped">
                             <thead className="thead-dark headerTable">
                                 <tr>
@@ -366,8 +411,6 @@ const PriceShowAll = (props) => {
                                         </tr>
                                     )
                                 })}
-
-
                             </tbody>
                         </table>
                     </div>
@@ -433,13 +476,28 @@ const PriceShowAll = (props) => {
                 <div className="col-sm-6">
                     <div className="input-group mb-3">
                         <div className="input-group-prepend">
-                            <span className="input-group-text" id="inputGroup-sizing-default">รายการราคารวมเกิน</span></div>
+                            <span className="input-group-text" id="inputGroup-sizing-default">ราคารวมเกิน</span></div>
                         <select className="custom-select" onChange={(e) => setLimitPrice(e.target.value)}>
                             <option value={200}>200</option>
                             <option value={300}>300</option>
                             <option value={400}>400</option>
                             <option value={500}>500</option>
                         </select>
+                        <div className="input-group-append">
+                            <button className="btn btn-outline-info" onClick={() => printJS({
+                                printable: LottoPintter(showTop200),
+                                type: 'json',
+                                properties: [
+                                    { field: 'numLotto', displayName: '2ตัวบน' },
+                                    { field: 'sumTrong', displayName: 'ตรง' },
+                                    { field: 'sumTodd', displayName: 'โต๊ด' }
+                                ],
+                                header: '<h3 class="custom-h3">ระบบการจัดการตัวเลขของเอฟโอเวอร์</h3>',
+                                style: '.custom-h3 { color: red; }',
+                                font_size: '18pt',
+                                documentTitle: `ราคาเกิน ${limitPrice}บาท`
+                            })}>print</button>
+                        </div>
                     </div>
                     <div style={{ overflow: "auto", maxHeight: "480px" }}>
                         <table className="table table-sm table-striped ">
@@ -447,18 +505,20 @@ const PriceShowAll = (props) => {
                                 <tr>
                                     {/* <th scope="col">#</th> */}
                                     <th className="headerTable" scope="col">2ตัวบน</th>
-                                    <th className="headerTable" scope="col">ราคา</th>
+                                    <th className="headerTable" scope="col">ตรง</th>
+                                    <th className="headerTable" scope="col">โต๊ด</th>
                                 </tr>
                             </thead>
                             <tbody className="bg-body-table">
-                                {showTop.map((element, index) => {
+                                {showTop200.map((element, index) => {
 
-                                    if (element.sumPrice - limitPrice > 0) {
+                                    if (element.sumTrong - limitPrice > 0 || element.sumTodd - limitPrice > 0) {
                                         return (
                                             <tr key={index} className="">
                                                 {/* <td>{index + 1}</td> */}
                                                 <td>{element.numLotto}</td>
-                                                <td>{element.sumPrice - limitPrice}</td>
+                                                <td>{element.sumTrong - limitPrice > 0 ? element.sumTrong : 0}</td>
+                                                <td>{element.sumTodd - limitPrice > 0 ? element.sumTodd : 0}</td>
                                             </tr>
                                         )
                                     }
@@ -473,7 +533,10 @@ const PriceShowAll = (props) => {
 
                 <div className="col-sm-6">
                     <ExportExcel data={sortData(showData, "name", false)} typeLotto={props.show} />
-                    <h6>ตัวเลขทั้งหมด {count(showData, props.show)} รายการ</h6>
+                    <h6>ทั้งหมด {count(showData, props.show)} รายการ
+                        <div className="float-right">
+                            {addComma(showTop.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0))} บาท</div>
+                    </h6>
                     <div style={{ overflow: "auto", height: "480px" }}>
                         <table className="table table-sm table-striped">
                             <thead className="thead-dark headerTable">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { sortData } from '../const/constance'
+import { sortData, swapLotto3 } from '../const/constance'
 import firebase, { db } from '../firebase'
 import Swal from 'sweetalert2'
 import ExportExcel from './exportExcel'
@@ -9,6 +9,7 @@ import printJS from "print-js";
 const ShowLotto3 = (props) => {
     const [showData, setShowData] = useState([])
     const [showT3, setShowT3] = useState([])
+    const [showT3S100, setShowT3S100] = useState([])
     const [limitPrice, setLimitPrice] = useState(100)
     const [dataNumber, setdataNumber] = useState([])
 
@@ -17,7 +18,7 @@ const ShowLotto3 = (props) => {
     const LottoPintter = () => {
         let dataPinter = []
 
-        showT3.map((element, index) => {
+        showT3S100.map((element, index) => {
 
             if (element.sumTrong - limitPrice > 0) {
                 dataPinter.push({
@@ -98,6 +99,32 @@ const ShowLotto3 = (props) => {
 
     const count = (storage, typeLot) => { return storage.filter(item => item.typeLotto === typeLot).length }
 
+    const LottosumTodd = (item) => {
+        let lotto = []
+        item.map((element) => {
+            let sumToddAll = swapLotto3(element.numLotto).sort()[0]
+            let index = lotto.findIndex((elem) => (elem.numLotto === sumToddAll))
+            if (index < 0) {
+                lotto.push({
+                    numLotto: sumToddAll,
+                    sumTrong: element.sumTrong,
+                    sumTodd: element.sumTodd
+                })
+            }
+            else {
+                lotto[index].sumTodd += element.sumTodd
+                lotto.push({
+                    numLotto: element.numLotto,
+                    sumTrong: element.sumTrong,
+                    sumTodd: 0
+                })
+            }
+            console.log("index", swapLotto3(element.numLotto).sort())
+        })
+        console.log("lotto", lotto)
+        return lotto
+    }
+
     useEffect(() => {
 
         db.collection("lotto3").where("drawDate", "==", props.dDate).onSnapshot((querySnapshot) => {
@@ -151,6 +178,7 @@ const ShowLotto3 = (props) => {
 
             sortData(lottoT3, "numLotto", false)
             setShowT3(lottoT3)
+            setShowT3S100(LottosumTodd(lottoT3))
 
         });
 
@@ -170,7 +198,7 @@ const ShowLotto3 = (props) => {
                         <option value={400}>400</option>
                         <option value={500}>500</option>
                     </select>
-                    <div class="input-group-append">
+                    <div className="input-group-append">
                         <button className="btn btn-outline-info" onClick={() => printJS({
                             printable: LottoPintter(),
                             type: 'json',
@@ -197,7 +225,7 @@ const ShowLotto3 = (props) => {
                             </tr>
                         </thead>
                         <tbody className="bg-body-table">
-                            {showT3.map((element, index) => {
+                            {showT3S100.map((element, index) => {
 
                                 if (element.sumTrong - limitPrice > 0) {
                                     return (
