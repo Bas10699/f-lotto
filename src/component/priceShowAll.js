@@ -17,7 +17,7 @@ const PriceShowAll = (props) => {
     const [limitPrice, setLimitPrice] = useState(200)
     const [dataNumber, setdataNumber] = useState([])
 
-    // const reversedNum = num => num.toString().split('').reverse().join('')
+    const reversedNum = num => num.toString().split('').reverse().join('')
 
     const deletePriceLotto = (id, lotto, price, index) => {
         let dataNum = dataNumber
@@ -251,6 +251,45 @@ const PriceShowAll = (props) => {
 
 
     }, [])
+
+    const sortLotto = (data) => {
+        let dataOut = []
+        let lotto = []
+
+        const filterLotto = num => data.find(item => { return item.numLotto === num })
+
+        data.map((element) => {
+            let index = lotto.findIndex((elem) => (elem === element.numLotto || elem === reversedNum(element.numLotto)))
+            if (index < 0) {
+                if (element.numLotto !== null && element.numLotto !== undefined) {
+                    // console.log(ele_data.plant)
+                    lotto.push(
+                        element.numLotto
+                    )
+                    let sumTodd = filterLotto(reversedNum(element.numLotto))
+                    dataOut.push({
+                        numLotto: element.numLotto,
+                        sumTrong: element.sumPrice,
+                        sumTodd: sumTodd ? sumTodd.sumPrice : 0
+                    })
+
+                }
+            }
+            // data.map((elementTodd) => {
+            //     if (element.numLotto === reversedNum(elementTodd.numLotto)) {
+            //         console.log(element.numLotto + ":" + elementTodd.numLotto + " = " + element.sumPrice + "*" + elementTodd.sumPrice)
+            //         dataOut.push({
+            //             numLotto: element.numLotto,
+            //             trong: element.sumPrice,
+            //             todd: elementTodd.sumPrice
+            //         })
+            //     }
+            // })
+
+        })
+        console.log("lotto", dataOut)
+        return dataOut
+    }
     if (props.show === 1) {
         return (
             <div className="row">
@@ -271,18 +310,22 @@ const PriceShowAll = (props) => {
                                 <tr>
                                     {/* <th scope="col">#</th> */}
                                     <th className="headerTable" scope="col">2ตัวล่าง</th>
-                                    <th className="headerTable" scope="col">ราคา</th>
+                                    <th className="headerTable" scope="col">ตรง</th>
+                                    <th className="headerTable" scope="col">โต๊ด</th>
                                 </tr>
                             </thead>
                             <tbody className="bg-body-table">
-                                {showDown.map((element, index) => {
+                                {sortLotto(showDown).map((element, index) => {
 
-                                    if (element.sumPrice - limitPrice > 0) {
+                                    if (element.sumTrong - limitPrice > 0 || element.sumTodd - limitPrice > 0) {
+                                        let todd = element.sumTodd - limitPrice
+                                        let trong = element.sumTrong - limitPrice
                                         return (
                                             <tr key={index} >
                                                 {/* <td>{index + 1}</td> */}
                                                 <td>{element.numLotto}</td>
-                                                <td>{element.sumPrice - limitPrice}</td>
+                                                <td>{trong > 0 ? trong : 0}</td>
+                                                <td>{todd > 0 ? todd : 0}</td>
                                             </tr>
                                         )
                                     }
