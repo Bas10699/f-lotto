@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { NavLink } from "react-router-dom";
 import { auth, db } from "../firebase";
 
 const Navbar = () => {
@@ -25,8 +26,8 @@ const Navbar = () => {
 
         //     </nav>
         // </div>
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a className="navbar-brand" href="#">F-Lotto</a>
+        <nav className="navbar navbar-expand-md navbar-dark bg-dark">
+            <NavLink to="/" className="navbar-brand" >F-Lotto</NavLink>
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon" />
             </button>
@@ -34,12 +35,13 @@ const Navbar = () => {
                 <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
                     {/* <li className="nav-item active">
                         <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link" href="#">Link</a>
                     </li> */}
+
                     <li className="nav-item">
                         <a className="nav-link disabled" href="#" tabIndex={-1} aria-disabled="true">รายงานสรุป</a>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink to="/check_result" className="nav-link" >ผลรางวัล</NavLink>
                     </li>
                 </ul>
                 <form className="form-inline my-2 my-lg-0">

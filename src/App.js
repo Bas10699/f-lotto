@@ -8,6 +8,8 @@ import Swal from 'sweetalert2'
 import PriceShowName from './component/priceShowName';
 import Lotto3 from './component/lotto3';
 import Navbar from './component/navbar';
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import CheckResults from './component/checkResults';
 
 function App() {
   const [timeshow, setTime] = useState('')
@@ -174,7 +176,7 @@ function App() {
   const admin = () => {
     return (
       <div className="container">
-        <h3 className="pt-5">ระบบการจัดการตัวเลขของเอฟโอเวอร์</h3>
+        <h3 className="pt-3">ระบบการจัดการตัวเลขของเอฟโอเวอร์</h3>
         <div className="bg-sacendary">งวดวันที่ {drawDate()}</div>
         <div className="row pt-3">
           <div className="col-lg-6">
@@ -358,10 +360,18 @@ function App() {
       if (uid) {
         // User is signed in.
         return (
-          <div>
+
+          <Router>
+            <div>
             <Navbar />
-            {admin()}
-          </div>
+              <Route exact path="/">
+                {admin()}
+              </Route>
+              <Route path="/check_result">
+                <CheckResults />
+              </Route>
+            </div>
+          </Router>
 
         )
       } else {
