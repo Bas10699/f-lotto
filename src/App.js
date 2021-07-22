@@ -7,7 +7,7 @@ import Login from './component/login';
 import Swal from 'sweetalert2'
 import PriceShowName from './component/priceShowName';
 import Lotto3 from './component/lotto3';
-import Navber from './component/navber';
+import Navbar from './component/navbar';
 
 function App() {
   const [timeshow, setTime] = useState('')
@@ -359,7 +359,7 @@ function App() {
         // User is signed in.
         return (
           <div>
-            <Navber />
+            <Navbar />
             {admin()}
           </div>
 

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { auth, db } from "../firebase";
 
-const Navber = () => {
+const Navbar = () => {
     const logout = () => {
 
         auth.signOut().then(() => {
@@ -52,4 +52,4 @@ const Navber = () => {
 
     )
 }
-export default Navber
+export default Navbar
