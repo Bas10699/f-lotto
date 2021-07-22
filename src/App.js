@@ -7,6 +7,7 @@ import Login from './component/login';
 import Swal from 'sweetalert2'
 import PriceShowName from './component/priceShowName';
 import Lotto3 from './component/lotto3';
+import Navber from './component/navber';
 
 function App() {
   const [timeshow, setTime] = useState('')
@@ -318,7 +319,7 @@ function App() {
                   </div>
                 </div>
                 <div className="tab-pane fade" id="nav-lotto" role="tabpanel" aria-labelledby="nav-profile-tab">
-                  <Lotto3 drawDate={drawDate()} name={name}/>
+                  <Lotto3 drawDate={drawDate()} name={name} />
                 </div>
               </div>
             </div>
@@ -336,27 +337,32 @@ function App() {
       </div >
     );
   }
-  if (localStorage.getItem('user_token') == "test") {
-    return (
-      <div>
-        <nav className="navbar bg-dark navbar-dark">
-          <a className="navbar-brand">ดูเฉยๆ นะ</a>
-          <div className="form-inline">
-            <button className="form-control mr-sm-2" onClick={logout}>ไปเข้าสู่ระบบดีกว่า</button>
-          </div>
+  // if (localStorage.getItem('user_token') == "test") {
+  //   return (
+  //     <div>
+  //       <nav className="navbar bg-dark navbar-dark">
+  //         <a className="navbar-brand">ดูเฉยๆ นะ</a>
+  //         <div className="form-inline">
+  //           <button className="form-control mr-sm-2" onClick={logout}>ไปเข้าสู่ระบบดีกว่า</button>
+  //         </div>
 
-        </nav>
-        {admin()}
-      </div>
-    )
-  }
-  else if (localStorage.getItem('user_token') !== null) {
+  //       </nav>
+  //       {admin()}
+  //     </div>
+  //   )
+  // }
+  // else 
+  if (localStorage.getItem('user_token') !== null) {
     // console.log(uid)
     if (loading) {
       if (uid) {
         // User is signed in.
         return (
-          admin()
+          <div>
+            <Navber />
+            {admin()}
+          </div>
+
         )
       } else {
         // No user is signed in.

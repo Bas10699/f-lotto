@@ -50,7 +50,7 @@ const Login = () => {
                 <div className="row">
                     <div className="col-sm-6">
                         <button className="btn btn-primary" onClick={handleLogin}>เข้าสู่ระบบ</button>
-                        <button className="btn btn-outline-primary float-right" onClick={userTest}>ขอเข้าไปดูเฉยๆนะ</button>
+                        {/* <button className="btn btn-outline-primary float-right" onClick={userTest}>ขอเข้าไปดูเฉยๆนะ</button> */}
                     </div>
                 </div>
             </div>
