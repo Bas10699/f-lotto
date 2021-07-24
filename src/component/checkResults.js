@@ -10,6 +10,19 @@ const CheckResults = () => {
     const [loading, setLoading] = useState(true)
     const [resultLotto, setresultLotto] = useState([])
     const lottoinput = useRef(null)
+    const buttonSendUp = useRef(null)
+
+    const nextInput = nextIn => nextIn.current.focus()
+
+    const drawDate = () => {
+        if ((moment().format("DD") * 1) > 16) {
+          return "16" + moment().add(543,"years").format("MMYYYY")
+        }
+        else {
+          return "01" + moment().add(543,"years").format("MMYYYY")
+        }
+        // return "16/06/2021"
+      }
 
     const checkLotto = async (date) => {
         console.log("date", date)
@@ -56,9 +69,10 @@ const CheckResults = () => {
             }
         })
         let item = {
-            date: moment().add(543, 'years').format("DDMMyyyy"),
+            date: drawDate(),
             lotto: lottoinput.current.value
         }
+        
         await post(item, "verify").then((result) => {
             if (result.code == 200) {
                 console.log(result)
@@ -66,13 +80,26 @@ const CheckResults = () => {
                     Swal.fire({
                         icon: 'error',
                         title: 'เสียใจด้วย',
-                        text: 'คุณไม่ถูกรางวัล งวดหน้าเอาใหม่!',
+                        text: 'คุณไม่ถูกรางวัล งวดหน้าเอาใหม่นะ!',
                         confirmButtonText: 'OK',
                         confirmButtonColor: 'rgb(221, 107, 85)',
                         backdrop: `
                           rgba(0,0,0,0.4)
                           url(https://media.giphy.com/media/fxZeSkds6bcWGlgevx/giphy-downsized.gif)
-                          
+                          left top
+                        `
+                      })
+                }
+                else{
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'ยินดีด้วย',
+                        text: result.result.map((element)=> element.name),
+                        confirmButtonText: 'OK',
+                        backdrop: `
+                          rgba(0,0,0,0.4)
+                          url(https://media.giphy.com/media/3NtY188QaxDdC/giphy-downsized.gif)
+                          left top
                           no-repeat
                         `
                       })
@@ -154,12 +181,14 @@ const CheckResults = () => {
                                 aria-label="กรอกเลขสลาก"
                                 aria-describedby="button-addon2"
                                 ref={lottoinput}
+                                onKeyDown={e => e.key === 'Enter' && nextInput(buttonSendUp)}
                             />
                             <div className="input-group-append">
                                 <button className="btn btn-outline-secondary"
                                     type="button"
                                     id="button-addon2"
                                     onClick={() => verifyLotto()}
+                                    ref={buttonSendUp}
                                 >ตรวจหวย</button>
                             </div>
                         </div>
