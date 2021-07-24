@@ -1,4 +1,5 @@
-export const ip = "https://cors-anywhere.herokuapp.com/https://api.krupreecha.com/"
+// export const ip = "https://cors-anywhere.herokuapp.com/https://api.krupreecha.com/"
+export const ip = "https://f-lotto.herokuapp.com/"
 
 export const get = (path) => new Promise((resolve, reject) => {
     fetch(ip + path, {
@@ -6,7 +7,6 @@ export const get = (path) => new Promise((resolve, reject) => {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'x-api-key': '8bebfb75a931bd796d5678a93f8064bc'
 
         }
     }).then(res => {
@@ -23,7 +23,6 @@ export const post = (object, path) => new Promise((resolve, reject) => {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'x-api-key': '8bebfb75a931bd796d5678a93f8064bc'
         },
         body: JSON.stringify(object)
     }).then(res => {

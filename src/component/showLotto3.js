@@ -119,9 +119,9 @@ const ShowLotto3 = (props) => {
                     sumTodd: 0
                 })
             }
-            console.log("index", swapLotto3(element.numLotto).sort())
+            // console.log("index", swapLotto3(element.numLotto).sort())
         })
-        console.log("lotto", lotto)
+        // console.log("lotto", lotto)
         return lotto
     }
 

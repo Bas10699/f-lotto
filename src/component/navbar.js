@@ -41,7 +41,7 @@ const Navbar = () => {
                         <a className="nav-link disabled" href="#" tabIndex={-1} aria-disabled="true">รายงานสรุป</a>
                     </li>
                     <li className="nav-item">
-                        <NavLink to="/check_result" className="nav-link" >ผลรางวัล</NavLink>
+                        <NavLink to="/check_result" className="nav-link" >ผลสลากกินแบ่งรัฐบาล</NavLink>
                     </li>
                 </ul>
                 <form className="form-inline my-2 my-lg-0">
