@@ -38,7 +38,7 @@ const Navbar = () => {
                     </li> */}
 
                     <li className="nav-item">
-                        <a className="nav-link disabled" href="#" tabIndex={-1} aria-disabled="true">รายงานสรุป</a>
+                        <NavLink to="/report" className="nav-link">รายงานสรุป</NavLink>
                     </li>
                     <li className="nav-item">
                         <NavLink to="/check_result" className="nav-link" >ผลสลากกินแบ่งรัฐบาล</NavLink>

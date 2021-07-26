@@ -56,14 +56,11 @@ function App() {
         setloading(true)
       } else {
         setuid('')
+        localStorage.removeItem('user_token')
       }
     });
   }, [])
 
-  const logout = () => {
-    localStorage.removeItem('user_token')
-    window.location.reload()
-  }
 
 
   const send_click = async (typeLotto) => {
@@ -339,88 +336,42 @@ function App() {
       </div >
     );
   }
-  // if (localStorage.getItem('user_token') == "test") {
-  //   return (
-  //     <div>
-  //       <nav className="navbar bg-dark navbar-dark">
-  //         <a className="navbar-brand">ดูเฉยๆ นะ</a>
-  //         <div className="form-inline">
-  //           <button className="form-control mr-sm-2" onClick={logout}>ไปเข้าสู่ระบบดีกว่า</button>
-  //         </div>
-
-  //       </nav>
-  //       {admin()}
-  //     </div>
-  //   )
-  // }
-  // else 
   if (localStorage.getItem('user_token') !== null) {
-    // console.log(uid)
     if (loading) {
-      if (uid) {
-        // User is signed in.
-        return (
-
-          <Router>
-            <div>
+      return (
+        <Router>
+          <div>
             <Navbar />
-              <Route exact path="/">
-                {admin()}
-              </Route>
-              <Route path="/check_result">
-                <CheckResults />
-              </Route>
-            </div>
-          </Router>
-
-        )
-      } else {
-        // No user is signed in.
-        return (
-          <Login />
-        )
-      }
+            <Route exact path="/">
+              {admin()}
+            </Route>
+            <Route path="/check_result">
+              <CheckResults />
+            </Route>
+          </div>
+        </Router>
+      )
     } else {
       return (
-        <div></div>
+        <div className="loading">
+          <h2>pushing pixels</h2>
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
+
       )
     }
-
-
-
   }
   else {
-
     return (
       <Login />
     )
-
   }
-
 }
 
 export default App;
-
-
-// import React, { useEffect, useRef } from "react";
-
-// function App() {
-//   const searchInput = useRef(null)
-//   const searchInput1 = useRef(null)
-
-//   const handle = () => searchInput1.current.focus();
-
-//   function handleFocus(){
-//     searchInput.current.focus()
-//   }
-
-//   return (
-//     <div>
-//       <label>Search </label>
-//       <input ref={searchInput} onKeyDown={e => e.key === 'Enter' && handle()}  />
-//       <input ref={searchInput1} />
-//       <button onClick={handleFocus}>Set focus</button>
-//     </div>
-//   );
-// }
-// export default App

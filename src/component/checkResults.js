@@ -16,13 +16,13 @@ const CheckResults = () => {
 
     const drawDate = () => {
         if ((moment().format("DD") * 1) > 16) {
-          return "16" + moment().add(543,"years").format("MMYYYY")
+            return "16" + moment().add(543, "years").format("MMYYYY")
         }
         else {
-          return "01" + moment().add(543,"years").format("MMYYYY")
+            return "01" + moment().add(543, "years").format("MMYYYY")
         }
         // return "16/06/2021"
-      }
+    }
 
     const checkLotto = async (date) => {
         console.log("date", date)
@@ -72,7 +72,7 @@ const CheckResults = () => {
             date: drawDate(),
             lotto: lottoinput.current.value
         }
-        
+
         await post(item, "verify").then((result) => {
             if (result.code == 200) {
                 console.log(result)
@@ -88,13 +88,13 @@ const CheckResults = () => {
                           url(https://media.giphy.com/media/fxZeSkds6bcWGlgevx/giphy-downsized.gif)
                           left top
                         `
-                      })
+                    })
                 }
-                else{
+                else {
                     Swal.fire({
                         icon: 'success',
                         title: 'ยินดีด้วย',
-                        text: result.result.map((element)=> element.name),
+                        text: result.result.map((element) => element.name),
                         confirmButtonText: 'OK',
                         backdrop: `
                           rgba(0,0,0,0.4)
@@ -102,7 +102,7 @@ const CheckResults = () => {
                           left top
                           no-repeat
                         `
-                      })
+                    })
                 }
             }
             else {
@@ -115,57 +115,69 @@ const CheckResults = () => {
     }, [])
     return (
         loading ?
-            <div className="container pt-5 text-center">
-                <div className="spinner-grow text-dark" role="status">
-                    <span className="sr-only">Loading...</span>
-                </div>
-                <div className="spinner-grow text-light" role="status">
-                    <span className="sr-only">Loading...</span>
-                </div>
-                <div className="spinner-grow text-info" role="status">
-                    <span className="sr-only">Loading...</span>
-                </div>
-                <div className="spinner-grow text-warning" role="status">
-                    <span className="sr-only">Loading...</span>
-                </div>
-                <div className="spinner-grow text-danger" role="status">
-                    <span className="sr-only">Loading...</span>
-                </div>
-                <div className="spinner-grow text-success" role="status">
-                    <span className="sr-only">Loading...</span>
-                </div>
-                <div className="spinner-grow text-secondary" role="status">
-                    <span className="sr-only">Loading...</span>
-                </div>
-                <div className="spinner-grow text-primary" role="status">
-                    <span className="sr-only">Loading...</span>
-                </div>
-                <div className="spinner-grow text-secondary" role="status">
-                    <span className="sr-only">Loading...</span>
-                </div>
-                <div className="spinner-grow text-success" role="status">
-                    <span className="sr-only">Loading...</span>
-                </div>
-                <div className="spinner-grow text-danger" role="status">
-                    <span className="sr-only">Loading...</span>
-                </div>
-                <div className="spinner-grow text-warning" role="status">
-                    <span className="sr-only">Loading...</span>
-                </div>
-                <div className="spinner-grow text-info" role="status">
-                    <span className="sr-only">Loading...</span>
-                </div>
-                <div className="spinner-grow text-light" role="status">
-                    <span className="sr-only">Loading...</span>
-                </div>
-                <div className="spinner-grow text-dark" role="status">
-                    <span className="sr-only">Loading...</span>
-                </div>
-                <div>
-                    Loading...
-                </div>
+            // <div className="container pt-5 text-center">
+            //     <div className="spinner-grow text-dark" role="status">
+            //         <span className="sr-only">Loading...</span>
+            //     </div>
+            //     <div className="spinner-grow text-light" role="status">
+            //         <span className="sr-only">Loading...</span>
+            //     </div>
+            //     <div className="spinner-grow text-info" role="status">
+            //         <span className="sr-only">Loading...</span>
+            //     </div>
+            //     <div className="spinner-grow text-warning" role="status">
+            //         <span className="sr-only">Loading...</span>
+            //     </div>
+            //     <div className="spinner-grow text-danger" role="status">
+            //         <span className="sr-only">Loading...</span>
+            //     </div>
+            //     <div className="spinner-grow text-success" role="status">
+            //         <span className="sr-only">Loading...</span>
+            //     </div>
+            //     <div className="spinner-grow text-secondary" role="status">
+            //         <span className="sr-only">Loading...</span>
+            //     </div>
+            //     <div className="spinner-grow text-primary" role="status">
+            //         <span className="sr-only">Loading...</span>
+            //     </div>
+            //     <div className="spinner-grow text-secondary" role="status">
+            //         <span className="sr-only">Loading...</span>
+            //     </div>
+            //     <div className="spinner-grow text-success" role="status">
+            //         <span className="sr-only">Loading...</span>
+            //     </div>
+            //     <div className="spinner-grow text-danger" role="status">
+            //         <span className="sr-only">Loading...</span>
+            //     </div>
+            //     <div className="spinner-grow text-warning" role="status">
+            //         <span className="sr-only">Loading...</span>
+            //     </div>
+            //     <div className="spinner-grow text-info" role="status">
+            //         <span className="sr-only">Loading...</span>
+            //     </div>
+            //     <div className="spinner-grow text-light" role="status">
+            //         <span className="sr-only">Loading...</span>
+            //     </div>
+            //     <div className="spinner-grow text-dark" role="status">
+            //         <span className="sr-only">Loading...</span>
+            //     </div>
+            //     <div>
+            //         Loading...
+            //     </div>
 
-            </div>
+            // </div>
+            <div>
+                <div align="center" className="fond">
+                    <div className="contener_general">
+                        <div className="contener_mixte"><div className="ballcolor ball_1">&nbsp;</div></div>
+                        <div className="contener_mixte"><div className="ballcolor ball_2">&nbsp;</div></div>
+                        <div className="contener_mixte"><div className="ballcolor ball_3">&nbsp;</div></div>
+                        <div className="contener_mixte"><div className="ballcolor ball_4">&nbsp;</div></div>
+                    </div>
+                    <div style={{ paddingTop: 35 }}>
+                        <div style={{ color: '#999999', fontWeight: 300, fontSize: 30, fontFamily: '"Roboto"', paddingTop: 20 }}>PURE CSS <font style={{ fontWeight: 400 }}>LOADER</font></div>
+                        <div style={{ color: '#999999', fontWeight: 300, fontSize: 20, fontFamily: '"Roboto"' }}>กำลังโหลด...</div>
+                    </div></div></div>
             :
             <div className="container">
                 <h3 className="pt-3">ผลสลากกินแบ่งรัฐบาล</h3>
