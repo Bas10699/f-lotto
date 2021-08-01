@@ -10,6 +10,7 @@ import Lotto3 from './component/lotto3';
 import Navbar from './component/navbar';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import CheckResults from './component/checkResults';
+import Report from './component/report';
 
 function App() {
   const [timeshow, setTime] = useState('')
@@ -348,13 +349,16 @@ function App() {
             <Route path="/check_result">
               <CheckResults />
             </Route>
+            <Route path="/report">
+              <Report />
+            </Route>
           </div>
         </Router>
       )
     } else {
       return (
         <div className="loading">
-          <h2>pushing pixels</h2>
+          <h2>F Lotto Loading...</h2>
           <span />
           <span />
           <span />
@@ -363,7 +367,6 @@ function App() {
           <span />
           <span />
         </div>
-
       )
     }
   }

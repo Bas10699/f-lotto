@@ -175,8 +175,8 @@ const CheckResults = () => {
                         <div className="contener_mixte"><div className="ballcolor ball_4">&nbsp;</div></div>
                     </div>
                     <div style={{ paddingTop: 35 }}>
-                        <div style={{ color: '#999999', fontWeight: 300, fontSize: 30, fontFamily: '"Roboto"', paddingTop: 20 }}>PURE CSS <font style={{ fontWeight: 400 }}>LOADER</font></div>
-                        <div style={{ color: '#999999', fontWeight: 300, fontSize: 20, fontFamily: '"Roboto"' }}>กำลังโหลด...</div>
+                        <div style={{ color: '#999999', fontWeight: 300, fontSize: 30, fontFamily: '"Roboto"', paddingTop: 20 }}><font style={{ fontWeight: 400 }}>F lottory</font></div>
+                        <div style={{ color: '#999999', fontWeight: 300, fontSize: 20, fontFamily: '"Roboto"' }}>Loading...</div>
                     </div></div></div>
             :
             <div className="container">

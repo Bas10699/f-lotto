@@ -106,8 +106,13 @@ const ShowLotto3 = (props) => {
             let index = lotto.findIndex((elem) => (elem.numLotto === sumToddAll))
             if (index < 0) {
                 lotto.push({
-                    numLotto: sumToddAll,
+                    numLotto: element.numLotto,
                     sumTrong: element.sumTrong,
+                    sumTodd: 0
+                })
+                lotto.push({
+                    numLotto: sumToddAll,
+                    sumTrong: 0,
                     sumTodd: element.sumTodd
                 })
             }
@@ -227,11 +232,11 @@ const ShowLotto3 = (props) => {
                         <tbody className="bg-body-table">
                             {showT3S100.map((element, index) => {
 
-                                if (element.sumTrong - limitPrice > 0) {
+                                if (element.sumTrong - limitPrice > 0 || element.sumTodd - limitPrice > 0) {
                                     return (
                                         <tr key={index} className="">
                                             <td>{element.numLotto}</td>
-                                            <td>{element.sumTrong - limitPrice}</td>
+                                            <td>{(element.sumTrong - limitPrice) > 0 ? element.sumTrong - limitPrice : 0}</td>
                                             <td>{(element.sumTodd - limitPrice) > 0 ? element.sumTodd - limitPrice : 0} </td>
                                         </tr>
                                     )
