@@ -5,6 +5,7 @@ import Swal from 'sweetalert2'
 import ExportExcel from './exportExcel'
 import '../App.css'
 import printJS from "print-js";
+import ExportExcel3 from "./exportExcel3";
 
 const ShowLotto3 = (props) => {
     const [showData, setShowData] = useState([])
@@ -15,16 +16,16 @@ const ShowLotto3 = (props) => {
 
     // const reversedNum = num => num.toString().split('').reverse().join('')
 
-    const LottoPintter = () => {
+    const LottoPintter = (item, limit) => {
         let dataPinter = []
 
-        showT3S100.map((element, index) => {
+        item.map((element, index) => {
 
-            if (element.sumTrong - limitPrice > 0) {
+            if (element.sumTrong - limit > 0 || element.sumTodd - limit > 0) {
                 dataPinter.push({
                     numLotto: element.numLotto,
-                    sumTrong: element.sumTrong - limitPrice,
-                    sumTodd: (element.sumTodd - limitPrice) > 0 ? element.sumTodd - limitPrice : 0
+                    sumTrong: (element.sumTrong - limit) > 0 ? element.sumTrong - limit : 0,
+                    sumTodd: (element.sumTodd - limit) > 0 ? element.sumTodd - limit : 0
                 })
 
             }
@@ -205,7 +206,7 @@ const ShowLotto3 = (props) => {
                     </select>
                     <div className="input-group-append">
                         <button className="btn btn-outline-info" onClick={() => printJS({
-                            printable: LottoPintter(),
+                            printable: LottoPintter(showT3S100, limitPrice),
                             type: 'json',
                             properties: [
                                 { field: 'numLotto', displayName: '3ตัวบน' },
@@ -251,7 +252,22 @@ const ShowLotto3 = (props) => {
             </div>
 
             <div className="col-sm-6">
-                {/* <ExportExcel data={showData} typeLotto={props.show} /> */}
+                <ExportExcel3 data={sortData(showData, "name", false)} typeLotto={props.show} />
+
+                <button className="btn btn-outline-info btn-sm " onClick={() => printJS({
+                    printable: LottoPintter(showT3, 0),
+                    type: 'json',
+                    properties: [
+                        { field: 'numLotto', displayName: '3ตัวบน' },
+                        { field: 'sumTrong', displayName: 'ตรง' },
+                        { field: 'sumTodd', displayName: 'โต๊ด' }
+                    ],
+                    header: '<h3 class="custom-h3">ระบบการจัดการตัวเลขของเอฟโอเวอร์</h3>',
+                    style: '.custom-h3 { color: red; column-count: 2; column-gap: 40px;}',
+                    font_size: '18pt',
+                    // style:'column-count: 2; column-gap: 40px;',
+                    documentTitle: `ราคาเกิน ${limitPrice}บาท`
+                })}>print</button>
 
                 <h6>ตัวเลขทั้งหมด {count(showData, props.show)} รายการ</h6>
                 <div style={{ overflow: "auto", height: "480px" }}>

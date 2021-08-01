@@ -15,7 +15,7 @@ const CheckResults = () => {
     const nextInput = nextIn => nextIn.current.focus()
 
     const drawDate = () => {
-        if ((moment().format("DD") * 1) > 16) {
+        if ((moment().format("DD") * 1) >= 16) {
             return "16" + moment().add(543, "years").format("MMYYYY")
         }
         else {
