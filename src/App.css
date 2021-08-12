@@ -255,3 +255,38 @@ h2 {
   50%{transform:rotate(360deg) scale(1.3);}
   100%{transform:rotate(720deg) scale(1);}
 }
+
+
+
+/* sidebar */
+.sidenav {
+  height: 100%;
+  width: 240px;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  background-color: #345381!important;
+  overflow-x: hidden;
+  padding-top: 20px;
+  color: #ffffff;
+}
+
+.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  color: #ffffff;
+  display: block;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.page-sh{
+  margin-left: 240px; /* Same as the width of the sidenav */
+  padding: 0px 10px;
+}
+hr {
+  color: #ffffff;
+  background-color: #ffffff;
+}

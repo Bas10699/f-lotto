@@ -253,6 +253,54 @@ const CheckResults = () => {
 
                     </div>
                 </div>
+                <div className="row  justify-content-sm-center">
+                    <div className="col pt-3">
+                        <div className="card border-secondary " >
+                            <div className="card-header border-secondary ">
+                                {resultLotto[4].name}
+                            </div>
+                            <div className="card-body">
+                                <h1 className="font-weight-bolder display-4 text-center">{resultLotto[4].number.join(' ')}</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="row  justify-content-sm-center">
+                    <div className="col pt-3">
+                        <div className="card border-secondary " >
+                            <div className="card-header border-secondary ">
+                                {resultLotto[5].name}
+                            </div>
+                            <div className="card-body">
+                                <h1 className="font-weight-bolder display-5 text-center">{resultLotto[5].number.join(' ')}</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="row  justify-content-sm-center">
+                    <div className="col pt-3">
+                        <div className="card border-secondary " >
+                            <div className="card-header border-secondary ">
+                                {resultLotto[6].name}
+                            </div>
+                            <div className="card-body">
+                                <h1 className="font-weight-bolder display-5 ">{resultLotto[6].number.join(' ')}</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <div className="row  justify-content-sm-center">
+                 <div className="col pt-3">
+                     <div className="card border-secondary " >
+                         <div className="card-header border-secondary ">
+                             {resultLotto[7].name}
+                         </div>
+                         <div className="card-body">
+                             <h1 className="font-weight-bolder  ">{resultLotto[7].number.join(' ')}</h1>
+                         </div>
+                     </div>
+                 </div>
+             </div>
 
             </div>
 

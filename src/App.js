@@ -36,10 +36,10 @@ function App() {
   const nextInput = nextIn => nextIn.current.focus()
 
   const drawDate = () => {
-    if ((moment().format("DD") * 1) <= 2) {
+    if ((moment().format("DD") * 1) <= 10) {
       return "01/" + moment().format("MM/YYYY")
     }
-    else if ((moment().format("DD") * 1 > 2) && (moment().format("DD") * 1 < 18)) {
+    else if ((moment().format("DD") * 1 > 10) && (moment().format("DD") * 1 < 20)) {
       return "16/" + moment().format("MM/YYYY")
     }
     else {
