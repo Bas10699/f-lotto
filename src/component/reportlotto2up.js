@@ -1,6 +1,6 @@
 import React, { useState, useEffect,use } from 'react'
 
-const ReportLotto3 = (item) => {
+const ReportLotto2Up = (item) => {
     return (
         <div>
             <h1>3ตัวบน</h1>
@@ -9,4 +9,4 @@ const ReportLotto3 = (item) => {
         </div>
     )
 }
-export default ReportLotto3
+export default ReportLotto2Up

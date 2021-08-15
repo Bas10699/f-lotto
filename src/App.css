@@ -261,7 +261,7 @@ h2 {
 /* sidebar */
 .sidenav {
   height: 100%;
-  width: 240px;
+  width: 15vw;
   position: fixed;
   z-index: 1;
   left: 0;
@@ -269,6 +269,7 @@ h2 {
   overflow-x: hidden;
   padding-top: 20px;
   color: #ffffff;
+  transition: 0.3s;
 }
 
 .sidenav a {
@@ -283,10 +284,21 @@ h2 {
 }
 
 .page-sh{
-  margin-left: 240px; /* Same as the width of the sidenav */
+  margin-left: 15vw; /* Same as the width of the sidenav */
   padding: 0px 10px;
+  transition: margin-left .3s;
 }
 hr {
   color: #ffffff;
   background-color: #ffffff;
+}
+@media only screen and (max-width: 1216px) {
+  .sidenav {
+    width: 0vw;
+    padding: 0rem!important;
+  }
+  .page-sh{
+    margin-left: 0vw; /* Same as the width of the sidenav */
+    padding: 0px 10px;
+  }
 }
