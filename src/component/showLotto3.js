@@ -282,19 +282,24 @@ const ShowLotto3 = (props) => {
                         </thead>
                         <tbody>
                             {showT3.map((element, index) => {
-                                return (
-                                    <tr key={index}>
-                                        {/* <td>{index + 1}</td> */}
-                                        <td>{element.numLotto}</td>
-                                        <td>{element.sumTrong}</td>
-                                        <td>{element.sumTodd}</td>
-                                        <td><button className="btn btn-warning btn-sm"
-                                            data-toggle="modal"
-                                            data-target="#exampleModal"
-                                            onClick={() => numberLottoTop(element.numLotto)}>แก้ไข</button></td>
-                                        {/* <td>{element.name}</td> */}
-                                    </tr>
-                                )
+                                if (element.numLotto != "") {
+                                    return (
+                                        <tr key={index}>
+                                            {/* <td>{index + 1}</td> */}
+                                            <td>{element.numLotto}</td>
+                                            <td>{element.sumTrong}</td>
+                                            <td>{element.sumTodd}</td>
+                                            <td><button className="btn btn-warning btn-sm"
+                                                data-toggle="modal"
+                                                data-target="#exampleModal"
+                                                onClick={() => numberLottoTop(element.numLotto)}>แก้ไข</button></td>
+                                            {/* <td>{element.name}</td> */}
+                                        </tr>
+                                    )
+                                }
+                                else {
+                                    console.log("err lotto3",index)
+                                }
                             })}
 
 

@@ -36,28 +36,32 @@ const Lotto3 = (props) => {
         let timeNow = moment().format("HH:mm")
         // console.log(typeLotto)
         if (checkedSwap === true) {
-            const batch = db.batch()
-            swapLotto3(numLotto).map((lotto) => {
-                let data = {
-                    name: props.name,
-                    numLotto: lotto,
-                    priceLotto1: priceLotto1,
-                    priceLotto2: 0,
-                    date: dateNow,
-                    time: timeNow,
-                    drawDate: props.drawDate
-                }
-                console.log("data", data)
-                const docRef = db.collection("lotto3").doc(); //automatically generate unique id
-                batch.set(docRef, data);
-            })
-            batch.commit().then(() => {
-                console.log("Document successfully written!");
-                setNumLoto('')
-                setPriceLoto1('')
-                setPriceLoto2('')
-            })
-
+            if (numLotto !== "" && priceLotto1 > 0) {
+                const batch = db.batch()
+                swapLotto3(numLotto).map((lotto) => {
+                    let data = {
+                        name: props.name,
+                        numLotto: lotto,
+                        priceLotto1: priceLotto1,
+                        priceLotto2: 0,
+                        date: dateNow,
+                        time: timeNow,
+                        drawDate: props.drawDate
+                    }
+                    console.log("data", data)
+                    const docRef = db.collection("lotto3").doc(); //automatically generate unique id
+                    batch.set(docRef, data);
+                })
+                batch.commit().then(() => {
+                    console.log("Document successfully written!");
+                    setNumLoto('')
+                    setPriceLoto1('')
+                    setPriceLoto2('')
+                })
+            }
+            else {
+                alert("กรุณากรอกข้อมูลให้ถูกต้อง")
+            }
         }
         else {
             if (numLotto !== "" && priceLotto1 > 0) {

@@ -517,8 +517,8 @@ const PriceShowAll = (props) => {
                                             <tr key={index} className="">
                                                 {/* <td>{index + 1}</td> */}
                                                 <td>{element.numLotto}</td>
-                                                <td>{element.sumTrong - limitPrice > 0 ? element.sumTrong : 0}</td>
-                                                <td>{element.sumTodd - limitPrice > 0 ? element.sumTodd : 0}</td>
+                                                <td>{element.sumTrong - limitPrice > 0 ? element.sumTrong - limitPrice : 0}</td>
+                                                <td>{element.sumTodd - limitPrice > 0 ? element.sumTodd - limitPrice : 0}</td>
                                             </tr>
                                         )
                                     }
