@@ -83,3 +83,19 @@ export function swapLotto3(textnum) {
     // console.log(mySet)
     return Array.from(mySet)
 }
+
+export const sortlotto3 = (item) => {
+    let item_trong = []
+    let item_todd = []
+    item.map((element) => {
+        if (element.sumTrong > 0) {
+            item_trong.push(element)
+        }
+        if (element.sumTodd > 0) {
+            item_todd.push(element)
+        }
+
+    })
+    console.log("trong", item_trong)
+    console.log("todd", item_todd)
+}

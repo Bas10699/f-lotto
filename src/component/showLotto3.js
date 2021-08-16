@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { sortData, swapLotto3 } from '../const/constance'
+import { sortData, sortlotto3, swapLotto3 } from '../const/constance'
 import firebase, { db } from '../firebase'
 import Swal from 'sweetalert2'
 import ExportExcel from './exportExcel'
@@ -83,10 +83,6 @@ const ShowLotto3 = (props) => {
                     } else {
                         console.log("update: ", doc)
                     }
-
-
-
-
                 });
 
                 setdataNumber(shData)
@@ -127,6 +123,7 @@ const ShowLotto3 = (props) => {
             }
             // console.log("index", swapLotto3(element.numLotto).sort())
         })
+        sortlotto3(lotto)
         // console.log("lotto", lotto)
         return lotto
     }
@@ -244,7 +241,11 @@ const ShowLotto3 = (props) => {
                                 }
 
                             })}
-
+                            {/* <tr>
+                                <td>รวม</td>
+                                <td>{showT3S100.reduce((accumulator, currentValue) => accumulator + currentValue.sumTrong, 0)}</td>
+                                <td>{showT3S100.reduce((accumulator, currentValue) => accumulator + currentValue.sumTodd, 0)}</td>
+                            </tr> */}
 
                         </tbody>
                     </table>
@@ -298,10 +299,14 @@ const ShowLotto3 = (props) => {
                                     )
                                 }
                                 else {
-                                    console.log("err lotto3",index)
+                                    console.log("err lotto3", index)
                                 }
                             })}
-
+                            <tr>
+                                <td>รวม</td>
+                                <td>{showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTrong, 0)}</td>
+                                <td>{showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTodd, 0)}</td>
+                            </tr>
 
                         </tbody>
                     </table>

@@ -12,6 +12,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import CheckResults from './component/checkResults';
 import Report from './component/report';
 
+
 function App() {
   const [timeshow, setTime] = useState('')
   const [numLotto, setNumLoto] = useState('')
@@ -36,16 +37,16 @@ function App() {
   const nextInput = nextIn => nextIn.current.focus()
 
   const drawDate = () => {
-    if ((moment().format("DD") * 1) <= 10) {
-      return "01/" + moment().format("MM/YYYY")
-    }
-    else if ((moment().format("DD") * 1 > 10) && (moment().format("DD") * 1 < 20)) {
-      return "16/" + moment().format("MM/YYYY")
-    }
-    else {
-      return "01/" + moment().add(1, 'months').format("MM/YYYY")
-    }
-    // return "16/06/2021"
+    // if ((moment().format("DD") * 1) <= 10) {
+    //   return "01/" + moment().format("MM/YYYY")
+    // }
+    // else if ((moment().format("DD") * 1 > 10) && (moment().format("DD") * 1 < 20)) {
+    //   return "16/" + moment().format("MM/YYYY")
+    // }
+    // else {
+    //   return "01/" + moment().add(1, 'months').format("MM/YYYY")
+    // }
+    return "01/09/2021"
   }
 
   useEffect(() => {
@@ -75,7 +76,7 @@ function App() {
       if (priceLotto2 > 0) {
         let numLottoRev = reversedNum(numLotto)
 
-        await db.collection("lotto").doc().set({
+        await db.collection("lotto").doc(moment().format("YYYYMMDDTHHmmssSSS")).set({
           name: name,
           numLotto: numLotto,
           priceLotto: priceLotto1,
@@ -87,7 +88,7 @@ function App() {
         })
           .then(() => {
             console.log("Document successfully written!");
-            db.collection("lotto").doc().set({
+            db.collection("lotto").doc(moment().format("YYYYMMDDTHHmmssSSS")).set({
               name: name,
               numLotto: numLottoRev,
               priceLotto: priceLotto2,
