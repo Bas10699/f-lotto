@@ -392,39 +392,39 @@ const PriceShowAll = (props) => {
                                     {/* <th scope="col">#</th> */}
                                     <th className="headerTable" scope="col">2ตัวล่าง</th>
                                     <th className="headerTable" scope="col">ราคา</th>
-                                    <th className="headerTable" scope="col">ชื่อ</th>
-                                    <th className="headerTable" scope="col">เวลา</th>
+                                    {/* <th className="headerTable" scope="col">ชื่อ</th> */}
+                                    {/* <th className="headerTable" scope="col">เวลา</th> */}
                                     <th className="headerTable" scope="col"></th>
                                     {/* <th scope="col">ชื่อ</th> */}
                                 </tr>
                             </thead>
                             <tbody>
-                                {showData.map((element, index) => {
+                                {showDown.map((element, index) => {
                                     // console.log(element)
-                                    if (element.typeLotto === 1) {
+                                    // if (element.typeLotto === 1) {
                                         return (
                                             <tr key={index}>
                                                 {/* <td>{index + 1}</td> */}
                                                 <td>{element.numLotto}</td>
-                                                {/* <td>{element.sumPrice}</td> */}
-                                                <td>{element.priceLotto}</td>
+                                                <td>{element.sumPrice}</td>
+                                                {/* <td>{element.priceLotto}</td>
                                                 <td>{element.name}</td>
-                                                <td>{element.time}</td>
-                                                {/* <td><button className="btn btn-warning btn-sm"
+                                                <td>{element.time}</td> */}
+                                                <td><button className="btn btn-warning btn-sm"
                                                 data-toggle="modal"
                                                 data-target="#exampleModal"
                                                 onClick={() => numberLottoDown(element.numLotto, props.show)}>แก้ไข</button>
-                                            </td> */}
-                                                <td>
+                                            </td>
+                                                {/* <td>
                                                     <button className="btn btn-danger btn-sm"
                                                         onClick={() => deletePriceLotto(element.id, element.numLotto, element.priceLotto, index)}>
                                                         ลบ
                                                     </button>
-                                                </td>
+                                                </td> */}
                                                 {/* <td>{element.name}</td> */}
                                             </tr>
                                         )
-                                    }
+                                    // }
                                 })}
                             </tbody>
                         </table>
@@ -514,7 +514,7 @@ const PriceShowAll = (props) => {
                             })}>print</button>
                         </div>
                     </div>
-                    <div style={{ overflow: "auto", maxHeight: "480px" }}>
+                    <div style={{ overflow: "auto", maxHeight: "450px" }}>
                         <table className="table table-sm table-striped ">
                             <thead className="thead-dark headerTable">
                                 <tr>
@@ -552,50 +552,50 @@ const PriceShowAll = (props) => {
                         <div className="float-right">
                             {addComma(showTop.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0))} บาท</div>
                     </h6>
-                    <div style={{ overflow: "auto", height: "480px" }}>
+                    <div style={{ overflow: "auto", height: "450px" }}>
                         <table className="table table-sm table-striped">
                             <thead className="thead-dark headerTable">
                                 <tr>
                                     {/* <th scope="col">#</th> */}
                                     <th className="headerTable" scope="col">2ตัวบน</th>
                                     <th className="headerTable" scope="col">ราคา</th>
-                                    <th className="headerTable" scope="col">ชื่อ</th>
-                                    <th className="headerTable" scope="col">เวลา</th>
+                                    {/* <th className="headerTable" scope="col">ชื่อ</th> */}
+                                    {/* <th className="headerTable" scope="col">เวลา</th> */}
                                     <th className="headerTable" scope="col"></th>
                                     {/* <th scope="col">ชื่อ</th> */}
                                 </tr>
                             </thead>
                             <tbody>
-                                {showData.map((element, index) => {
-                                    if (element.typeLotto === 0) {
+                                {showTop.map((element, index) => {
+                                    // if (element.typeLotto === 0) {
                                         return (
                                             <tr key={index}>
                                                 {/* <td>{index + 1}</td> */}
                                                 <td>{element.numLotto}</td>
-                                                {/* <td>{element.sumPrice}</td>
+                                                <td>{element.sumPrice}</td>
                                             <td><button className="btn btn-warning btn-sm"
                                                 data-toggle="modal"
                                                 data-target="#exampleModal"
                                                 onClick={() => numberLottoTop(element.numLotto, props.show)}>แก้ไข</button>
-                                            </td> */}
-                                                <td>{element.priceLotto}</td>
+                                            </td>
+                                                {/* <td>{element.priceLotto}</td>
                                                 <td>{element.name}</td>
-                                                <td>{element.time}</td>
+                                                <td>{element.time}</td> */}
                                                 {/* <td><button className="btn btn-warning btn-sm"
                                                 data-toggle="modal"
                                                 data-target="#exampleModal"
                                                 onClick={() => numberLottoDown(element.numLotto, props.show)}>แก้ไข</button>
                                             </td> */}
-                                                <td>
+                                                {/* <td>
                                                     <button className="btn btn-danger btn-sm"
                                                         onClick={() => deletePriceLotto(element.id, element.numLotto, element.priceLotto, index)}>
                                                         ลบ
                                                     </button>
-                                                </td>
+                                                </td> */}
                                                 {/* <td>{element.name}</td> */}
                                             </tr>
                                         )
-                                    }
+                                    // }
 
                                 })}
 
