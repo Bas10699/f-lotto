@@ -7,6 +7,7 @@ import PriceShowAll from './priceShowAll'
 import '../App.css'
 
 const InputLotto2 = () => {
+    const messageEl = useRef(null);
     const [timeshow, setTime] = useState('')
     const [numLotto, setNumLoto] = useState('')
     const [numLottoReverse, setNumLotoReverse] = useState('')
@@ -152,7 +153,7 @@ const InputLotto2 = () => {
         let item = inputItem
         let dateNow = moment().format("DD/MM/YYYY")
         let timeNow = moment().format("HH:mm")
-        item.unshift({
+        item.push({
             name: name,
             numLotto: numLotto,
             priceLotto1: priceLotto1,
@@ -167,7 +168,32 @@ const InputLotto2 = () => {
         setPriceLoto2('')
         console.log(item)
         setInputItem(item)
+
+        if (messageEl) {
+            console.log(messageEl)
+            messageEl.current.addEventListener('DOMNodeInserted', event => {
+                const { currentTarget: target } = event;
+                target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
+            });
+        }
     }
+
+    // const removeItem = (index) => {
+    //     let item = inputItem
+    //     item.splice(index, 1);
+    //     let itemOut = item
+    //     console.log(item)
+    //     setInputItem(itemOut)
+    // }
+
+    // useEffect(() => {
+    //     if (messageEl) {
+    //         messageEl.current.addEventListener('DOMNodeInserted', event => {
+    //             const { currentTarget: target } = event;
+    //             target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
+    //         });
+    //     }
+    // }, [])
 
     return (
         <div className="container">
@@ -324,27 +350,38 @@ const InputLotto2 = () => {
 
                     <div>
                         <div className="card mb-3" >
-                            <div className="card-header">ตรวจสอบรายการ</div>
-                            <div className="card-body " style={{ maxHeight: '35vh', overflow: 'auto' }} >
+                            <div className="card-header">ตรวจสอบรายการ
+                                <button className="float-right btn btn-outline-success btn-sm" onClick={() => alert("ใจเย็นนะยังไม่เสร็จ")}>
+                                    บันทึก
+                                </button>
+                            </div>
+                            <div className="card-body " style={{ maxHeight: '40vh', overflow: 'auto' }} ref={messageEl}>
                                 {/* <ul className="list-group list-group-flush "> */}
                                 {inputItem.length === 0 ? <div>ไม่มีรายการ...</div> :
                                     inputItem.map((item, index) => {
                                         return (
-                                            <div className="row" key={index}>
+                                            <div className="row py-1 border-bottom" key={index} >
+                                                <div className="col" >{index + 1}</div>
                                                 <div className="col" >{item.name}</div>
+                                                {/* <div className="col" >{item.time}</div> */}
                                                 <div className="col" >{item.numLotto}</div>
                                                 <div className="col" >{item.priceLotto1}*{item.priceLotto2}</div>
-                                                <div className="col" ></div>
+                                                <div className="col" >
+                                                    <button className="btn btn-outline-danger btn-sm float-right"
+                                                        onClick={() => setInputItem(inputItem => inputItem.filter((item, i) => i !== index))}>
+                                                        ลบ
+                                                    </button>
+                                                </div>
                                             </div>
                                         )
                                     })}
                                 {/* </ul> */}
                             </div>
-                            <div className="card-footer bg-transparent">
-                                <button className="float-right btn btn-outline-success btn-sm">
+                            {/* <div className="card-footer bg-transparent">
+                                <button className="float-right btn btn-outline-success btn-sm" onClick={() => alert("ใจเย็นนะยังไม่เสร็จ")}>
                                     บันทึก
                                 </button>
-                            </div>
+                            </div> */}
                         </div>
 
 
