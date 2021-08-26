@@ -16,6 +16,7 @@ const InputLotto2 = () => {
     const [name, setName] = useState('')
     const [show, setShow] = useState(0)
     const [inputItem, setInputItem] = useState([])
+    const [inputItemSend, setInputItemSend] = useState([])
     const [loading, setloading] = useState(false)
     const inputNumLottoUp = useRef(null)
     const inputPriceUp1 = useRef(null)
@@ -34,7 +35,7 @@ const InputLotto2 = () => {
         if ((moment().format("DD") * 1) <= 10) {
             return "01/" + moment().format("MM/YYYY")
         }
-        else if ((moment().format("DD") * 1 > 10) && (moment().format("DD") * 1 < 20)) {
+        else if ((moment().format("DD") * 1 > 6) && (moment().format("DD") * 1 < 22)) {
             return "16/" + moment().format("MM/YYYY")
         }
         else {
@@ -149,10 +150,37 @@ const InputLotto2 = () => {
         }
 
     }
+
+    const send_click_2 = async () => {
+        const batch = db.batch()
+        let item = inputItemSend
+        let item_send = []
+        item.map((element, index) => {
+            let data = {
+                name: element.name,
+                numLotto: element.numLotto,
+                priceLotto: element.priceLotto,
+                date: element.date,
+                time: element.time,
+                typeLotto: element.typeLotto,
+                drawDate: element.drawDate
+            }
+            console.log("data", data)
+            const docRef = db.collection("lotto").doc(moment().format("YYYYMMDDTHHmmssSSS")); //automatically generate unique id
+            batch.set(docRef, data)
+        })
+        batch.commit().then(() => {
+            console.log("Document successfully written!");
+            setInputItem([])
+        })
+
+        console.log("lotto", item_send)
+    }
     const setItem = async (typeLotto) => {
         let item = inputItem
         let dateNow = moment().format("DD/MM/YYYY")
         let timeNow = moment().format("HH:mm")
+        let numLottoRev = reversedNum(numLotto)
         item.push({
             name: name,
             numLotto: numLotto,
@@ -176,6 +204,29 @@ const InputLotto2 = () => {
                 target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
             });
         }
+
+        let item_send = []
+        item_send.push({
+            name: name,
+            numLotto: numLotto,
+            priceLotto: priceLotto1,
+            date: dateNow,
+            time: timeNow,
+            typeLotto: typeLotto,
+            drawDate: drawDate()
+        })
+        if (priceLotto2 > 0) {
+            item_send.push({
+                name: name,
+                numLotto: numLottoRev,
+                priceLotto: priceLotto2,
+                date: dateNow,
+                time: timeNow,
+                typeLotto: typeLotto,
+                drawDate: drawDate()
+            })
+        }
+        setInputItemSend(item_send)
     }
 
     // const removeItem = (index) => {
@@ -351,7 +402,7 @@ const InputLotto2 = () => {
                     <div>
                         <div className="card mb-3" >
                             <div className="card-header">ตรวจสอบรายการ
-                                <button className="float-right btn btn-outline-success btn-sm" onClick={() => alert("ใจเย็นนะยังไม่เสร็จ")}>
+                                <button className="float-right btn btn-outline-success btn-sm" onClick={() => send_click_2()}>
                                     บันทึก
                                 </button>
                             </div>
