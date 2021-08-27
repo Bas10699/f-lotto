@@ -6,6 +6,7 @@ import { db } from "../firebase"
 import { get } from "../const/servive"
 import ReportLotto2Up from "./reportlotto2up"
 import ReportLotto2down from "./reportlotto2down"
+import ReportLottoAll from "./reportlottoall"
 
 const Report = () => {
     const [drawdate, setDrawdate] = useState('')
@@ -165,7 +166,12 @@ const Report = () => {
                             aria-labelledby="v-pills-messages-tab">
                             <ReportLotto2down result={resultLotto.result2down} />
                         </div>
-                        <div className="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">...</div>
+                        <div className="tab-pane fade"
+                            id="v-pills-settings"
+                            role="tabpanel"
+                            aria-labelledby="v-pills-settings-tab">
+                            <ReportLottoAll dateDraw={drawDate()} />
+                        </div>
                     </div>
                 </div>
             </div>

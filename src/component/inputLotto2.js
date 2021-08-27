@@ -154,7 +154,7 @@ const InputLotto2 = () => {
     const send_click_2 = async () => {
         const batch = db.batch()
         let item = inputItemSend
-        let item_send = []
+        console.log("lotto", item)
         item.map((element, index) => {
             let data = {
                 name: element.name,
@@ -165,68 +165,75 @@ const InputLotto2 = () => {
                 typeLotto: element.typeLotto,
                 drawDate: element.drawDate
             }
-            console.log("data", data)
-            const docRef = db.collection("lotto").doc(moment().format("YYYYMMDDTHHmmssSSS")); //automatically generate unique id
+            console.log("data", moment().format("YYYYMMDDTHHmmssSSSSSS"))
+            const docRef = db.collection("lotto").doc(); //automatically generate unique id
             batch.set(docRef, data)
         })
         batch.commit().then(() => {
             console.log("Document successfully written!");
             setInputItem([])
+            setInputItemSend([])
         })
 
-        console.log("lotto", item_send)
+
     }
     const setItem = async (typeLotto) => {
-        let item = inputItem
-        let dateNow = moment().format("DD/MM/YYYY")
-        let timeNow = moment().format("HH:mm")
-        let numLottoRev = reversedNum(numLotto)
-        item.push({
-            name: name,
-            numLotto: numLotto,
-            priceLotto1: priceLotto1,
-            priceLotto2: priceLotto2,
-            date: dateNow,
-            time: timeNow,
-            typeLotto: typeLotto,
-            drawDate: drawDate()
-        })
-        setNumLoto('')
-        setPriceLoto1('')
-        setPriceLoto2('')
-        console.log(item)
-        setInputItem(item)
-
-        if (messageEl) {
-            console.log(messageEl)
-            messageEl.current.addEventListener('DOMNodeInserted', event => {
-                const { currentTarget: target } = event;
-                target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
-            });
+        if (numLotto.length < 2) {
+            alert("กรุณากรอกข้อมูลให้ครบ")
         }
-
-        let item_send = []
-        item_send.push({
-            name: name,
-            numLotto: numLotto,
-            priceLotto: priceLotto1,
-            date: dateNow,
-            time: timeNow,
-            typeLotto: typeLotto,
-            drawDate: drawDate()
-        })
-        if (priceLotto2 > 0) {
-            item_send.push({
+        else {
+            let item = inputItem
+            let dateNow = moment().format("DD/MM/YYYY")
+            let timeNow = moment().format("HH:mm")
+            let numLottoRev = reversedNum(numLotto)
+            item.push({
                 name: name,
-                numLotto: numLottoRev,
-                priceLotto: priceLotto2,
+                numLotto: numLotto,
+                priceLotto1: priceLotto1,
+                priceLotto2: priceLotto2,
                 date: dateNow,
                 time: timeNow,
                 typeLotto: typeLotto,
                 drawDate: drawDate()
             })
+            setNumLoto('')
+            setPriceLoto1('')
+            setPriceLoto2('')
+            console.log(item)
+            setInputItem(item)
+
+            if (messageEl) {
+                console.log(messageEl)
+                messageEl.current.addEventListener('DOMNodeInserted', event => {
+                    const { currentTarget: target } = event;
+                    target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
+                });
+            }
+
+            let item_send = inputItemSend
+            item_send.push({
+                name: name,
+                numLotto: numLotto,
+                priceLotto: priceLotto1,
+                date: dateNow,
+                time: timeNow,
+                typeLotto: typeLotto,
+                drawDate: drawDate()
+            })
+            if (priceLotto2 > 0 || priceLotto2 !== "") {
+                item_send.push({
+                    name: name,
+                    numLotto: numLottoRev,
+                    priceLotto: priceLotto2,
+                    date: dateNow,
+                    time: timeNow,
+                    typeLotto: typeLotto,
+                    drawDate: drawDate()
+                })
+            }
+            console.log("check", item_send)
+            setInputItemSend(item_send)
         }
-        setInputItemSend(item_send)
     }
 
     // const removeItem = (index) => {
