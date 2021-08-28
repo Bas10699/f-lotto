@@ -253,6 +253,45 @@ const InputLotto2 = () => {
     //     }
     // }, [])
 
+    const listLotto = () => {
+        return (
+            <div className="card mb-3" >
+                <div className="card-header">ตรวจสอบรายการ
+                    <button className="float-right btn btn-outline-success btn-sm" onClick={() => send_click_2()}>
+                        บันทึก
+                    </button>
+                </div>
+                <div className="card-body " style={{ maxHeight: '40vh', overflow: 'auto' }} ref={messageEl}>
+                    {/* <ul className="list-group list-group-flush "> */}
+                    {inputItem.length === 0 ? <div>ไม่มีรายการ...</div> :
+                        inputItem.map((item, index) => {
+                            return (
+                                <div className="row py-1 border-bottom" key={index} >
+                                    <div className="col" >{index + 1}</div>
+                                    <div className="col" >{item.name}</div>
+                                    {/* <div className="col" >{item.time}</div> */}
+                                    <div className="col" >{item.numLotto}</div>
+                                    <div className="col" >{item.priceLotto1}*{item.priceLotto2}</div>
+                                    <div className="col" >
+                                        <button className="btn btn-outline-danger btn-sm float-right"
+                                            onClick={() => setInputItem(inputItem => inputItem.filter((item, i) => i !== index))}>
+                                            ลบ
+                                        </button>
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    {/* </ul> */}
+                </div>
+                {/* <div className="card-footer bg-transparent">
+                                <button className="float-right btn btn-outline-success btn-sm" onClick={() => alert("ใจเย็นนะยังไม่เสร็จ")}>
+                                    บันทึก
+                                </button>
+                            </div> */}
+            </div>
+        )
+    }
+
     return (
         <div className="container">
             <h3 className="pt-3">ระบบการจัดการตัวเลขของเอฟโอเวอร์</h3>
@@ -358,6 +397,7 @@ const InputLotto2 = () => {
                                     </div>
 
                                 </div>
+                                {listLotto()}
                             </div>
                             <div className="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                                 <div className="form-row">
@@ -399,6 +439,7 @@ const InputLotto2 = () => {
                                         </div>
                                     </div>
                                 </div>
+                                {listLotto()}
                             </div>
                             <div className="tab-pane fade" id="nav-lotto" role="tabpanel" aria-labelledby="nav-profile-tab">
                                 <Lotto3 drawDate={drawDate()} name={name} />
@@ -406,7 +447,7 @@ const InputLotto2 = () => {
                         </div>
                     </div>
 
-                    <div>
+                    {/* <div>
                         <div className="card mb-3" >
                             <div className="card-header">ตรวจสอบรายการ
                                 <button className="float-right btn btn-outline-success btn-sm" onClick={() => send_click_2()}>
@@ -414,14 +455,12 @@ const InputLotto2 = () => {
                                 </button>
                             </div>
                             <div className="card-body " style={{ maxHeight: '40vh', overflow: 'auto' }} ref={messageEl}>
-                                {/* <ul className="list-group list-group-flush "> */}
                                 {inputItem.length === 0 ? <div>ไม่มีรายการ...</div> :
                                     inputItem.map((item, index) => {
                                         return (
                                             <div className="row py-1 border-bottom" key={index} >
                                                 <div className="col" >{index + 1}</div>
                                                 <div className="col" >{item.name}</div>
-                                                {/* <div className="col" >{item.time}</div> */}
                                                 <div className="col" >{item.numLotto}</div>
                                                 <div className="col" >{item.priceLotto1}*{item.priceLotto2}</div>
                                                 <div className="col" >
@@ -433,17 +472,9 @@ const InputLotto2 = () => {
                                             </div>
                                         )
                                     })}
-                                {/* </ul> */}
                             </div>
-                            {/* <div className="card-footer bg-transparent">
-                                <button className="float-right btn btn-outline-success btn-sm" onClick={() => alert("ใจเย็นนะยังไม่เสร็จ")}>
-                                    บันทึก
-                                </button>
-                            </div> */}
                         </div>
-
-
-                    </div>
+                    </div> */}
 
                 </div >
                 <div className="col-lg-6">
