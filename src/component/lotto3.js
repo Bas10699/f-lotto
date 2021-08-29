@@ -5,6 +5,7 @@ import moment from 'moment';
 import { swapLotto3 } from "../const/constance";
 
 const Lotto3 = (props) => {
+    const messageEl = useRef(null);
     const [timeshow, setTime] = useState('')
     const [numLotto, setNumLoto] = useState('')
     const [numLottoReverse, setNumLotoReverse] = useState([])
@@ -15,6 +16,8 @@ const Lotto3 = (props) => {
     const inputPriceUp1 = useRef(null)
     const inputPriceUp2 = useRef(null)
     const buttonSendUp = useRef(null)
+    const [inputItem, setInputItem] = useState([])
+    const [inputItemSend, setInputItemSend] = useState([])
 
     const nextInput = nextIn => nextIn.current.focus()
 
@@ -145,6 +148,104 @@ const Lotto3 = (props) => {
 
     }
 
+    const send_click_2 = () => {
+        const batch = db.batch()
+        let item = inputItemSend
+        console.log("lotto3", item)
+        item.map((element, index) => {
+            let data = {
+                name: element.name,
+                numLotto: element.numLotto,
+                priceLotto1: element.priceLotto1,
+                priceLotto2: element.priceLotto2,
+                date: element.date,
+                time: element.time,
+                drawDate: element.drawDate
+            }
+            // console.log("data", moment().format("YYYYMMDDTHHmmssSSSSSS"))
+            const docRef = db.collection("lotto3").doc(); //automatically generate unique id
+            batch.set(docRef, data)
+        })
+        batch.commit().then(() => {
+            console.log("Document successfully written!");
+            setInputItem([])
+            setInputItemSend([])
+        })
+    }
+
+    const setItem = async () => {
+        if (numLotto.length < 3) {
+            alert("กรุณากรอกข้อมูลให้ครบ")
+        }
+        else {
+            let item = inputItem
+            let dateNow = moment().format("DD/MM/YYYY")
+            let timeNow = moment().format("HH:mm")
+            item.push({
+                name: props.name,
+                numLotto: numLotto,
+                priceLotto1: priceLotto1,
+                priceLotto2: priceLotto2,
+                date: dateNow,
+                time: timeNow,
+                drawDate: props.drawDate
+            })
+            setNumLoto('')
+            setPriceLoto1('')
+            setPriceLoto2('')
+            console.log(item)
+            setInputItem(item)
+
+            if (messageEl) {
+                console.log(messageEl)
+                messageEl.current.addEventListener('DOMNodeInserted', event => {
+                    const { currentTarget: target } = event;
+                    target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
+                });
+            }
+            let itemSend = inputItemSend
+            if (checkedSwap === true) {
+                swapLotto3(numLotto).map((lotto) => {
+                    itemSend.push({
+                        name: props.name,
+                        numLotto: lotto,
+                        priceLotto1: priceLotto1,
+                        priceLotto2: 0,
+                        date: dateNow,
+                        time: timeNow,
+                        drawDate: props.drawDate
+                    })
+                    console.log("data", itemSend)
+                })
+            }
+            else {
+                if (priceLotto2 > 0 || priceLotto2 !== "") {
+                    itemSend.push({
+                        name: props.name,
+                        numLotto: numLotto,
+                        priceLotto1: priceLotto1,
+                        priceLotto2: priceLotto2,
+                        date: dateNow,
+                        time: timeNow,
+                        drawDate: props.drawDate
+                    })
+                } else {
+                    itemSend.push({
+                        name: props.name,
+                        numLotto: numLotto,
+                        priceLotto1: priceLotto1,
+                        priceLotto2: 0,
+                        date: dateNow,
+                        time: timeNow,
+                        drawDate: props.drawDate
+                    })
+                }
+                console.log("data", itemSend)
+            }
+            setInputItemSend(itemSend)
+        }
+    }
+
     return (
         <div>
             <div className="form-row">
@@ -186,8 +287,8 @@ const Lotto3 = (props) => {
                         <div className="col-1">
                             <button className="btn btn-outline-success btn-sm"
                                 ref={buttonSendUp}
-                                onClick={() => send_click() && nextInput(inputNumLottoUp)}
-                            >บันทึก</button>
+                                onClick={() => setItem() && nextInput(inputNumLottoUp)}
+                            >เพิ่ม</button>
                         </div>
                     </div>
 
@@ -202,6 +303,40 @@ const Lotto3 = (props) => {
                 </label>
             </div>
 
+            <div className="card mb-3" >
+                <div className="card-header">ตรวจสอบรายการ
+                    <button className="float-right btn btn-outline-success btn-sm" onClick={() => send_click_2()}>
+                        บันทึก
+                    </button>
+                </div>
+                <div className="card-body " style={{ maxHeight: '40vh', overflow: 'auto' }} ref={messageEl}>
+                    {/* <ul className="list-group list-group-flush "> */}
+                    {inputItem.length === 0 ? <div>ไม่มีรายการ...</div> :
+                        inputItem.map((item, index) => {
+                            return (
+                                <div className="row py-1 border-bottom" key={index} >
+                                    <div className="col" >{index + 1}</div>
+                                    <div className="col" >{item.name}</div>
+                                    {/* <div className="col" >{item.time}</div> */}
+                                    <div className="col" >{item.numLotto}</div>
+                                    <div className="col" >{item.priceLotto1}*{item.priceLotto2}</div>
+                                    <div className="col" >
+                                        <button className="btn btn-outline-danger btn-sm float-right"
+                                            onClick={() => setInputItem(inputItem => inputItem.filter((item, i) => i !== index))}>
+                                            ลบ
+                                        </button>
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    {/* </ul> */}
+                </div>
+                {/* <div className="card-footer bg-transparent">
+                                <button className="float-right btn btn-outline-success btn-sm" onClick={() => alert("ใจเย็นนะยังไม่เสร็จ")}>
+                                    บันทึก
+                                </button>
+                            </div> */}
+            </div>
 
         </div>
     )

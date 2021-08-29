@@ -41,6 +41,10 @@
     position: sticky;
     top: 0;
 }
+.fTable {
+    position: sticky;
+    bottom: 0;
+}
 
 
 /* width */

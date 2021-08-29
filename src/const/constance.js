@@ -96,6 +96,6 @@ export const sortlotto3 = (item) => {
         }
 
     })
-    console.log("trong", item_trong)
-    console.log("todd", item_todd)
+    // console.log("trong", item_trong)
+    // console.log("todd", item_todd)
 }

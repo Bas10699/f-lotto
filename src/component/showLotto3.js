@@ -172,9 +172,6 @@ const ShowLotto3 = (props) => {
                     sumTodd: sumTodd,
                 })
 
-
-
-
             })
 
             setShowData(shData)
@@ -228,14 +225,15 @@ const ShowLotto3 = (props) => {
                             </tr>
                         </thead>
                         <tbody className="bg-body-table">
-                            {showT3S100.map((element, index) => {
+                            {showT3.map((element, index) => {
+                                let limitTodd = limitPrice/2
 
-                                if (element.sumTrong - limitPrice > 0 || element.sumTodd - limitPrice > 0) {
+                                if (element.sumTrong - limitPrice > 0 || element.sumTodd - limitTodd > 0) {
                                     return (
                                         <tr key={index} className="">
                                             <td>{element.numLotto}</td>
                                             <td>{(element.sumTrong - limitPrice) > 0 ? element.sumTrong - limitPrice : 0}</td>
-                                            <td>{(element.sumTodd - limitPrice) > 0 ? element.sumTodd - limitPrice : 0} </td>
+                                            <td>{(element.sumTodd - limitTodd) > 0 ? element.sumTodd - limitTodd : 0} </td>
                                         </tr>
                                     )
                                 }
@@ -270,8 +268,8 @@ const ShowLotto3 = (props) => {
                     documentTitle: `ราคาเกิน ${limitPrice}บาท`
                 })}>print</button>
 
-                <h6>ตัวเลขทั้งหมด {count(showData, props.show)} รายการ</h6>
-                <div style={{ overflow: "auto", height: "480px" }}>
+                <h6>ทั้งหมด {count(showData, props.show)} รายการ</h6>
+                <div style={{ overflow: "auto", height: "450px" }}>
                     <table className="table table-sm table-striped">
                         <thead className="thead-dark headerTable">
                             <tr>
@@ -302,13 +300,17 @@ const ShowLotto3 = (props) => {
                                     console.log("err lotto3", index)
                                 }
                             })}
-                            <tr>
-                                <td>รวม</td>
-                                <td>{showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTrong, 0)}</td>
-                                <td>{showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTodd, 0)}</td>
-                            </tr>
+
 
                         </tbody>
+                        <tfoot className="bg-light fTable">
+                            <tr>
+                                <td className="fTable">รวม</td>
+                                <td className="fTable">{showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTrong, 0)}</td>
+                                <td className="fTable">{showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTodd, 0)}</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
