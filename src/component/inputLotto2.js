@@ -152,6 +152,12 @@ const InputLotto2 = () => {
     }
 
     const send_click_2 = async () => {
+        Swal.fire({
+            title: 'กำลังบันทึก',
+            text: 'รอแป๊ปนึงนะ...',
+            didOpen: () =>  Swal.showLoading(),
+            
+        })
         const batch = db.batch()
         let item = inputItemSend
         console.log("lotto", item)
@@ -173,6 +179,7 @@ const InputLotto2 = () => {
             console.log("Document successfully written!");
             setInputItem([])
             setInputItemSend([])
+            Swal.close()
         })
 
 
@@ -267,11 +274,11 @@ const InputLotto2 = () => {
                         inputItem.map((item, index) => {
                             return (
                                 <div className="row py-1 border-bottom" key={index} >
-                                    <div className="col" >{index + 1}</div>
-                                    <div className="col" >{item.name}</div>
+                                    {/* <div className="col" >{index + 1}</div> */}
                                     {/* <div className="col" >{item.time}</div> */}
                                     <div className="col" >{item.numLotto}</div>
                                     <div className="col" >{item.priceLotto1}*{item.priceLotto2}</div>
+                                    <div className="col" >{item.name}</div>
                                     <div className="col" >
                                         <button className="btn btn-outline-danger btn-sm float-right"
                                             onClick={() => setInputItem(inputItem => inputItem.filter((item, i) => i !== index))}>

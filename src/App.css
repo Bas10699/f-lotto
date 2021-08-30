@@ -397,7 +397,7 @@ hr {
     background-color: #ffffff;
 }
 
-@media only screen and (max-width: 1216px) {
+@media only screen and (max-width: 720px) {
     .sidenav {
         width: 0vw;
         padding: 0rem!important;

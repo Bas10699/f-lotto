@@ -2,6 +2,7 @@ import moment from 'moment'
 import React, { useState, useEffect } from 'react'
 import { db } from '../firebase'
 import "../App.css"
+import Swal from 'sweetalert2'
 
 
 const ReportLottoAll = () => {
@@ -28,7 +29,7 @@ const ReportLottoAll = () => {
                 let doc_id = []
                 querySnapshot.forEach((doc) => {
                     // doc.data() is never undefined for query doc snapshots
-                    console.log(doc.id, " => ", doc.data());
+                    // console.log(doc.id, " => ", doc.data());
                     doc_id.push(doc.id)
                 });
                 setdocId(doc_id)
@@ -42,7 +43,7 @@ const ReportLottoAll = () => {
                 let doc_id = []
                 querySnapshot.forEach((doc) => {
                     // doc.data() is never undefined for query doc snapshots
-                    console.log(doc.id, " => ", doc.data());
+                    // console.log(doc.id, " => ", doc.data());
                     doc_id.push(doc.id)
                 });
                 setdocId3(doc_id)
@@ -54,6 +55,12 @@ const ReportLottoAll = () => {
     }, [i])
 
     const deleteAllItem = () => {
+        // Swal.fire({
+        //     title: 'กำลังลบ',
+        //     text: 'รอแป๊ปนึงนะ...',
+        //     didOpen: () => Swal.showLoading(),
+
+        // })
         let item = docId
         item.map((elem) => {
             db.collection("lotto").doc(elem).delete().then(() => {
@@ -62,9 +69,20 @@ const ReportLottoAll = () => {
                 console.error("Error removing document: ", error);
             });
         })
-        seti(i + 1)
+            console.log("ss")
+            seti(i + 1)
+
+        
+
+        // Swal.close()
     }
     const deleteAllItem3 = () => {
+        Swal.fire({
+            title: 'กำลังลบ',
+            text: 'รอแป๊ปนึงนะ...',
+            didOpen: () => Swal.showLoading(),
+
+        })
         let item = docId3
         item.map((elem) => {
             db.collection("lotto3").doc(elem).delete().then(() => {
@@ -74,6 +92,10 @@ const ReportLottoAll = () => {
             });
         })
         seti(i + 1)
+        if (item.length == 0) {
+            Swal.close()
+        }
+
     }
 
     return (
