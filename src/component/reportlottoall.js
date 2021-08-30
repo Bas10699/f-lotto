@@ -54,27 +54,26 @@ const ReportLottoAll = () => {
 
     }, [i])
 
-    const deleteAllItem = () => {
-        // Swal.fire({
-        //     title: 'กำลังลบ',
-        //     text: 'รอแป๊ปนึงนะ...',
-        //     didOpen: () => Swal.showLoading(),
+    const deleteAllItem = async () => {
+        Swal.fire({
+            title: 'กำลังลบ',
+            text: 'รอแป๊ปนึงนะ...',
+            didOpen: () => Swal.showLoading(),
 
-        // })
+        })
+        let writeBatch = db.batch();
         let item = docId
         item.map((elem) => {
-            db.collection("lotto").doc(elem).delete().then(() => {
-                console.log("Document successfully deleted!");
-            }).catch((error) => {
-                console.error("Error removing document: ", error);
-            });
+            let documentRef = db.collection('lotto').doc(elem);
+            writeBatch.delete(documentRef);
         })
-            console.log("ss")
+
+        writeBatch.commit().then(() => {
+            console.log('Successfully executed batch.');
             seti(i + 1)
+            Swal.close()
+        });
 
-        
-
-        // Swal.close()
     }
     const deleteAllItem3 = () => {
         Swal.fire({
@@ -83,19 +82,18 @@ const ReportLottoAll = () => {
             didOpen: () => Swal.showLoading(),
 
         })
+        let writeBatch = db.batch();
         let item = docId3
         item.map((elem) => {
-            db.collection("lotto3").doc(elem).delete().then(() => {
-                console.log("Document successfully deleted!");
-            }).catch((error) => {
-                console.error("Error removing document: ", error);
-            });
+            let documentRef = db.collection('lotto3').doc(elem);
+            writeBatch.delete(documentRef);
         })
-        seti(i + 1)
-        if (item.length == 0) {
-            Swal.close()
-        }
 
+        writeBatch.commit().then(() => {
+            console.log('Successfully executed batch.');
+            seti(i + 1)
+            Swal.close()
+        });
     }
 
     return (

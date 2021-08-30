@@ -46,7 +46,7 @@ const InputLotto2 = () => {
     const send_click = async (typeLotto) => {
 
         setTime(moment().format("YYYY-MM-DDTHH:mm:ss.SSS"))
-        console.log(moment().format("YYYY-MM-DDTHH:mm:ss.SSS"))
+        // console.log(moment().format("YYYY-MM-DDTHH:mm:ss.SSS"))
         let dateNow = moment().format("DD/MM/YYYY")
         let timeNow = moment().format("HH:mm")
         // console.log(typeLotto)
@@ -160,7 +160,7 @@ const InputLotto2 = () => {
         })
         const batch = db.batch()
         let item = inputItemSend
-        console.log("lotto", item)
+        // console.log("lotto", item)
         item.map((element, index) => {
             let data = {
                 name: element.name,
@@ -171,7 +171,7 @@ const InputLotto2 = () => {
                 typeLotto: element.typeLotto,
                 drawDate: element.drawDate
             }
-            console.log("data", moment().format("YYYYMMDDTHHmmssSSSSSS"))
+            // console.log("data", moment().format("YYYYMMDDTHHmmssSSSSSS"))
             const docRef = db.collection("lotto").doc(); //automatically generate unique id
             batch.set(docRef, data)
         })
@@ -206,11 +206,11 @@ const InputLotto2 = () => {
             setNumLoto('')
             setPriceLoto1('')
             setPriceLoto2('')
-            console.log(item)
+            // console.log(item)
             setInputItem(item)
 
             if (messageEl) {
-                console.log(messageEl)
+                // console.log(messageEl)
                 messageEl.current.addEventListener('DOMNodeInserted', event => {
                     const { currentTarget: target } = event;
                     target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
@@ -238,7 +238,7 @@ const InputLotto2 = () => {
                     drawDate: drawDate()
                 })
             }
-            console.log("check", item_send)
+            // console.log("check", item_send)
             setInputItemSend(item_send)
         }
     }

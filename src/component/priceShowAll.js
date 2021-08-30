@@ -391,39 +391,41 @@ const PriceShowAll = (props) => {
                                 <tr>
                                     {/* <th scope="col">#</th> */}
                                     <th className="headerTable" scope="col">2ตัวล่าง</th>
-                                    <th className="headerTable" scope="col">ราคา</th>
+                                    <th className="headerTable" scope="col">ตรง</th>
                                     {/* <th className="headerTable" scope="col">ชื่อ</th> */}
                                     {/* <th className="headerTable" scope="col">เวลา</th> */}
-                                    <th className="headerTable" scope="col"></th>
+                                    <th className="headerTable" scope="col">โต๊ด</th>
                                     {/* <th scope="col">ชื่อ</th> */}
                                 </tr>
                             </thead>
                             <tbody>
-                                {showDown.map((element, index) => {
+                                {showDown200.map((element, index) => {
+                                    if(element.numLotto == reversedNum(element.numLotto)) element.sumTodd=0
                                     // console.log(element)
                                     // if (element.typeLotto === 1) {
-                                        return (
-                                            <tr key={index}>
-                                                {/* <td>{index + 1}</td> */}
-                                                <td>{element.numLotto}</td>
-                                                <td>{element.sumPrice}</td>
-                                                {/* <td>{element.priceLotto}</td>
+                                    return (
+                                        <tr key={index}>
+                                            {/* <td>{index + 1}</td> */}
+                                            <td>{element.numLotto}</td>
+                                            <td>{element.sumTrong}</td>
+                                            <td>{element.sumTodd}</td>
+                                            {/* <td>{element.priceLotto}</td>
                                                 <td>{element.name}</td>
                                                 <td>{element.time}</td> */}
-                                                <td><button className="btn btn-warning btn-sm"
+                                            {/* <td><button className="btn btn-warning btn-sm"
                                                 data-toggle="modal"
                                                 data-target="#exampleModal"
                                                 onClick={() => numberLottoDown(element.numLotto, props.show)}>แก้ไข</button>
-                                            </td>
-                                                {/* <td>
+                                            </td> */}
+                                            {/* <td>
                                                     <button className="btn btn-danger btn-sm"
                                                         onClick={() => deletePriceLotto(element.id, element.numLotto, element.priceLotto, index)}>
                                                         ลบ
                                                     </button>
                                                 </td> */}
-                                                {/* <td>{element.name}</td> */}
-                                            </tr>
-                                        )
+                                            {/* <td>{element.name}</td> */}
+                                        </tr>
+                                    )
                                     // }
                                 })}
                             </tbody>
@@ -518,7 +520,6 @@ const PriceShowAll = (props) => {
                         <table className="table table-sm table-striped ">
                             <thead className="thead-dark headerTable">
                                 <tr>
-                                    {/* <th scope="col">#</th> */}
                                     <th className="headerTable" scope="col">2ตัวบน</th>
                                     <th className="headerTable" scope="col">ตรง</th>
                                     <th className="headerTable" scope="col">โต๊ด</th>
@@ -530,7 +531,6 @@ const PriceShowAll = (props) => {
                                     if (element.sumTrong - limitPrice > 0 || element.sumTodd - limitPrice > 0) {
                                         return (
                                             <tr key={index} className="">
-                                                {/* <td>{index + 1}</td> */}
                                                 <td>{element.numLotto}</td>
                                                 <td>{element.sumTrong - limitPrice > 0 ? element.sumTrong - limitPrice : 0}</td>
                                                 <td>{element.sumTodd - limitPrice > 0 ? element.sumTodd - limitPrice : 0}</td>
@@ -556,50 +556,28 @@ const PriceShowAll = (props) => {
                         <table className="table table-sm table-striped">
                             <thead className="thead-dark headerTable">
                                 <tr>
-                                    {/* <th scope="col">#</th> */}
                                     <th className="headerTable" scope="col">2ตัวบน</th>
-                                    <th className="headerTable" scope="col">ราคา</th>
-                                    {/* <th className="headerTable" scope="col">ชื่อ</th> */}
-                                    {/* <th className="headerTable" scope="col">เวลา</th> */}
-                                    <th className="headerTable" scope="col"></th>
-                                    {/* <th scope="col">ชื่อ</th> */}
+                                    <th className="headerTable" scope="col">ตรง</th>
+                                    <th className="headerTable" scope="col">โต๊ด</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {showTop.map((element, index) => {
-                                    // if (element.typeLotto === 0) {
-                                        return (
-                                            <tr key={index}>
-                                                {/* <td>{index + 1}</td> */}
-                                                <td>{element.numLotto}</td>
-                                                <td>{element.sumPrice}</td>
-                                            <td><button className="btn btn-warning btn-sm"
+                                {showTop200.map((element, index) => {
+                                    if(element.numLotto == reversedNum(element.numLotto)) element.sumTodd=0
+                                    return (
+                                        <tr key={index}>
+                                            <td>{element.numLotto}</td>
+                                            <td>{element.sumTrong}</td>
+                                            <td>{element.sumTodd}</td>
+
+                                            {/* <td><button className="btn btn-warning btn-sm"
                                                 data-toggle="modal"
                                                 data-target="#exampleModal"
                                                 onClick={() => numberLottoTop(element.numLotto, props.show)}>แก้ไข</button>
-                                            </td>
-                                                {/* <td>{element.priceLotto}</td>
-                                                <td>{element.name}</td>
-                                                <td>{element.time}</td> */}
-                                                {/* <td><button className="btn btn-warning btn-sm"
-                                                data-toggle="modal"
-                                                data-target="#exampleModal"
-                                                onClick={() => numberLottoDown(element.numLotto, props.show)}>แก้ไข</button>
                                             </td> */}
-                                                {/* <td>
-                                                    <button className="btn btn-danger btn-sm"
-                                                        onClick={() => deletePriceLotto(element.id, element.numLotto, element.priceLotto, index)}>
-                                                        ลบ
-                                                    </button>
-                                                </td> */}
-                                                {/* <td>{element.name}</td> */}
-                                            </tr>
-                                        )
-                                    // }
-
+                                        </tr>
+                                    )
                                 })}
-
-
                             </tbody>
                         </table>
                     </div>
