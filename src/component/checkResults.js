@@ -24,14 +24,14 @@ const CheckResults = () => {
         // return "16/06/2021"
     }
 
-    const checkLotto = async (date) => {
-        console.log("date", date)
-        await get(date).then((result) => {
+    const checkLotto = async () => {
+        console.log("date", drawDate())
+        await get("?date="+drawDate()).then((result) => {
             setLoading(true)
-            if (result.code == 200) {
-                console.log(result)
-                setDrawdate(result.drawdate)
-                setresultLotto(result.result)
+            if (result[0]) {
+                console.log(result[0])
+                // setDrawdate(result.drawdate)
+                setresultLotto(result)
                 setLoading(false)
             }
             else {
@@ -111,7 +111,8 @@ const CheckResults = () => {
         })
     }
     useEffect(async () => {
-        checkLotto(moment().add(543, 'years').format("DDMMyyyy"))
+        // checkLotto(moment().add(543, 'years').format("DDMMyyyy"))
+        checkLotto()
     }, [])
     return (
         loading ?
@@ -211,10 +212,11 @@ const CheckResults = () => {
                     <div className="col">
                         <div className="card border-secondary " >
                             <div className="card-header border-secondary ">
-                                {resultLotto[0].name}
+                                {/* {resultLotto[0].name} */}
+                                {resultLotto[0][0]}
                             </div>
                             <div className="card-body">
-                                <h1 className="font-weight-bolder display-3 text-center">{resultLotto[0].number}</h1>
+                                <h1 className="font-weight-bolder display-3 text-center">{resultLotto[0][1]}</h1>
                             </div>
                         </div>
                     </div>
@@ -224,30 +226,30 @@ const CheckResults = () => {
                     <div className="col-md-4 pt-3">
                         <div className="card border-secondary" >
                             <div className="card-header border-secondary ">
-                                {resultLotto[1].name}
+                                {resultLotto[1][0]}
                             </div>
                             <div className="card-body">
-                                <h1 className="font-weight-bolder display-4 text-center">{resultLotto[1].number.join(' ')}</h1>
+                                <h1 className="font-weight-bolder display-4 text-center">{resultLotto[1].slice(1).join(' ')}</h1>
                             </div>
                         </div>
                     </div>
                     <div className="col-md-4 pt-3">
                         <div className="card border-secondary" >
                             <div className="card-header border-secondary ">
-                                {resultLotto[2].name}
+                                {resultLotto[2][0]}
                             </div>
                             <div className="card-body">
-                                <h1 className="font-weight-bolder display-4 text-center">{resultLotto[2].number.join(' ')}</h1>
+                                <h1 className="font-weight-bolder display-4 text-center">{resultLotto[2].slice(1).join(' ')}</h1>
                             </div>
                         </div>
                     </div>
                     <div className="col-md-4 pt-3">
                         <div className="card border-secondary" >
                             <div className="card-header border-secondary ">
-                                {resultLotto[3].name}
+                                {resultLotto[3][0]}
                             </div>
                             <div className="card-body">
-                                <h1 className="font-weight-bolder display-4 text-center">{resultLotto[3].number}</h1>
+                                <h1 className="font-weight-bolder display-4 text-center">{resultLotto[3][1]}</h1>
                             </div>
                         </div>
 
@@ -257,10 +259,10 @@ const CheckResults = () => {
                     <div className="col pt-3">
                         <div className="card border-secondary " >
                             <div className="card-header border-secondary ">
-                                {resultLotto[4].name}
+                                {resultLotto[4][0]}
                             </div>
                             <div className="card-body">
-                                <h1 className="font-weight-bolder display-4 text-center">{resultLotto[4].number.join(' ')}</h1>
+                                <h1 className="font-weight-bolder display-4 text-center">{resultLotto[4].slice(1).join(' ')}</h1>
                             </div>
                         </div>
                     </div>
@@ -269,10 +271,10 @@ const CheckResults = () => {
                     <div className="col pt-3">
                         <div className="card border-secondary " >
                             <div className="card-header border-secondary ">
-                                {resultLotto[5].name}
+                                {resultLotto[5][0]}
                             </div>
                             <div className="card-body">
-                                <h1 className="font-weight-bolder display-5 text-center">{resultLotto[5].number.join(' ')}</h1>
+                                <h1 className="font-weight-bolder display-5 text-center">{resultLotto[5].slice(1).join(' ')}</h1>
                             </div>
                         </div>
                     </div>
@@ -281,10 +283,10 @@ const CheckResults = () => {
                     <div className="col pt-3">
                         <div className="card border-secondary " >
                             <div className="card-header border-secondary ">
-                                {resultLotto[6].name}
+                                {resultLotto[6][0]}
                             </div>
                             <div className="card-body">
-                                <h1 className="font-weight-bolder display-5 ">{resultLotto[6].number.join(' ')}</h1>
+                                <h1 className="font-weight-bolder display-5 ">{resultLotto[6].slice(1).join(' ')}</h1>
                             </div>
                         </div>
                     </div>
@@ -293,10 +295,10 @@ const CheckResults = () => {
                  <div className="col pt-3">
                      <div className="card border-secondary " >
                          <div className="card-header border-secondary ">
-                             {resultLotto[7].name}
+                             {resultLotto[7][0]}
                          </div>
                          <div className="card-body">
-                             <h1 className="font-weight-bolder  ">{resultLotto[7].number.join(' ')}</h1>
+                             <h1 className="font-weight-bolder  ">{resultLotto[7].slice(1).join(' ')}</h1>
                          </div>
                      </div>
                  </div>

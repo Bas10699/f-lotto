@@ -91,7 +91,7 @@ const PriceShowAll = (props) => {
 
     const numberLottoTop = (number, typeLotto) => {
         db.collection("lotto")
-            .where("numLotto", "==", number)
+            .where("numLotto", "in", [number, reversedNum(number)])
             .where("typeLotto", "==", typeLotto)
             .where("drawDate", "==", props.dDate).onSnapshot((querySnapshot) => {
                 let shData = []
@@ -101,7 +101,7 @@ const PriceShowAll = (props) => {
                     // console.log(doc.id, " => ", doc.data());
                     // console.log("num: ", number)
                     // if (change.type === "added") {
-                    if ((doc.data().numLotto === number) && (doc.data().typeLotto === typeLotto)) {
+                    if ((doc.data().numLotto === number || doc.data().numLotto === reversedNum(number)) && (doc.data().typeLotto === typeLotto)) {
                         // console.log("num1: ", doc.data().numLotto)
                         // console.log("New city: ", doc.data());
                         shData.unshift({ id: doc.id, ...doc.data() })
@@ -144,7 +144,7 @@ const PriceShowAll = (props) => {
 
     const numberLottoDown = (number, typeLotto) => {
         db.collection("lotto")
-            .where("numLotto", "==", number)
+            .where("numLotto", "in", [number, reversedNum(number)])
             .where("typeLotto", "==", typeLotto)
             .where("drawDate", "==", props.dDate)
             .onSnapshot((querySnapshot) => {
@@ -154,7 +154,7 @@ const PriceShowAll = (props) => {
                     // doc.data() is never undefined for query doc snapshots
                     // console.log(doc.id, " => ", doc.data());
                     // shData.unshift({ id: doc.id, ...doc.data() })
-                    if ((doc.data().numLotto === number) && (doc.data().typeLotto === typeLotto)) {
+                    if ((doc.data().numLotto === number || doc.data().numLotto === reversedNum(number)) && (doc.data().typeLotto === typeLotto)) {
                         shData.unshift({ id: doc.id, ...doc.data() })
                     } else {
                         console.log("update: ", doc)
@@ -395,12 +395,12 @@ const PriceShowAll = (props) => {
                                     {/* <th className="headerTable" scope="col">ชื่อ</th> */}
                                     {/* <th className="headerTable" scope="col">เวลา</th> */}
                                     <th className="headerTable" scope="col">โต๊ด</th>
-                                    {/* <th scope="col">ชื่อ</th> */}
+                                    <th scope="col"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {showDown200.map((element, index) => {
-                                    if(element.numLotto == reversedNum(element.numLotto)) element.sumTodd=0
+                                    if (element.numLotto == reversedNum(element.numLotto)) element.sumTodd = 0
                                     // console.log(element)
                                     // if (element.typeLotto === 1) {
                                     return (
@@ -412,11 +412,11 @@ const PriceShowAll = (props) => {
                                             {/* <td>{element.priceLotto}</td>
                                                 <td>{element.name}</td>
                                                 <td>{element.time}</td> */}
-                                            {/* <td><button className="btn btn-warning btn-sm"
+                                            <td><button className="btn btn-warning btn-sm"
                                                 data-toggle="modal"
                                                 data-target="#exampleModal"
                                                 onClick={() => numberLottoDown(element.numLotto, props.show)}>แก้ไข</button>
-                                            </td> */}
+                                            </td>
                                             {/* <td>
                                                     <button className="btn btn-danger btn-sm"
                                                         onClick={() => deletePriceLotto(element.id, element.numLotto, element.priceLotto, index)}>
@@ -559,22 +559,23 @@ const PriceShowAll = (props) => {
                                     <th className="headerTable" scope="col">2ตัวบน</th>
                                     <th className="headerTable" scope="col">ตรง</th>
                                     <th className="headerTable" scope="col">โต๊ด</th>
+                                    <th className="headerTable" scope="col"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {showTop200.map((element, index) => {
-                                    if(element.numLotto == reversedNum(element.numLotto)) element.sumTodd=0
+                                    if (element.numLotto == reversedNum(element.numLotto)) element.sumTodd = 0
                                     return (
                                         <tr key={index}>
                                             <td>{element.numLotto}</td>
                                             <td>{element.sumTrong}</td>
                                             <td>{element.sumTodd}</td>
 
-                                            {/* <td><button className="btn btn-warning btn-sm"
+                                            <td><button className="btn btn-warning btn-sm"
                                                 data-toggle="modal"
                                                 data-target="#exampleModal"
                                                 onClick={() => numberLottoTop(element.numLotto, props.show)}>แก้ไข</button>
-                                            </td> */}
+                                            </td>
                                         </tr>
                                     )
                                 })}

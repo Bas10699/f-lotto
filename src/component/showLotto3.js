@@ -11,7 +11,7 @@ const ShowLotto3 = (props) => {
     const [showData, setShowData] = useState([])
     const [showT3, setShowT3] = useState([])
     const [showT3S100, setShowT3S100] = useState([])
-    const [limitPrice, setLimitPrice] = useState(100)
+    const [limitPrice, setLimitPrice] = useState(50)
     const [dataNumber, setdataNumber] = useState([])
 
     // const reversedNum = num => num.toString().split('').reverse().join('')
@@ -192,6 +192,7 @@ const ShowLotto3 = (props) => {
                     <div className="input-group-prepend">
                         <span className="input-group-text" id="inputGroup-sizing-default">ราคารวมเกิน</span></div>
                     <select className="custom-select" onChange={(e) => setLimitPrice(e.target.value)}>
+                        <option value={50}>50</option>
                         <option value={100}>100</option>
                         <option value={200}>200</option>
                         <option value={300}>300</option>
@@ -215,7 +216,7 @@ const ShowLotto3 = (props) => {
                     </div>
                 </div>
 
-                <div style={{ overflow: "auto", maxHeight: "480px" }}>
+                <div style={{ overflow: "auto", maxHeight: "450px" }}>
                     <table className="table table-sm table-striped ">
                         <thead className="thead-dark headerTable">
                             <tr>
@@ -226,7 +227,7 @@ const ShowLotto3 = (props) => {
                         </thead>
                         <tbody className="bg-body-table">
                             {showT3.map((element, index) => {
-                                let limitTodd = limitPrice/2
+                                let limitTodd = limitPrice / 2
 
                                 if (element.sumTrong - limitPrice > 0 || element.sumTodd - limitTodd > 0) {
                                     return (

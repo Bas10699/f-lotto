@@ -12,6 +12,7 @@ const Report = () => {
     const [drawdate, setDrawdate] = useState('')
     const [loading, setLoading] = useState(true)
     const [resultLotto, setresultLotto] = useState([])
+    const [i, seti] = useState(0)
 
     const drawDate = () => {
         if ((moment().format("DD") * 1) > 16) {
@@ -24,9 +25,9 @@ const Report = () => {
 
     const checkLotto = async (date) => {
         console.log("date", date)
-        await get(date).then((result) => {
+        await get("?date=" + drawDate()).then((result) => {
             setLoading(true)
-            if (result.code == 200) {
+            if (result[0]) {
                 console.log(result)
                 // setDrawdate(result.drawdate)
                 // setresultLotto(result.result)
@@ -36,19 +37,20 @@ const Report = () => {
                     // result: result.result,
                     result2down: {
                         name: "2ตัวล่าง",
-                        number: result.result[3].number
+                        number: result[3][1]
                     },
                     result3: {
                         name: "3ตัวบน",
-                        number: result.result[0].number.slice(3)
+                        number: result[0][1].slice(3)
                     },
                     result2up: {
                         name: "2ตัวบน",
-                        number: result.result[0].number.slice(4)
+                        number: result[0][1].slice(4)
                     }
                 })
                     .then(() => {
                         console.log("Document successfully written!");
+                        seti(i + 1)
                     })
                     .catch((error) => {
                         console.error("Error writing document: ", error);
@@ -93,7 +95,7 @@ const Report = () => {
             }).catch((error) => {
                 console.log("Error getting document:", error);
             });
-    }, [])
+    }, [i])
     return (
         loading ? <div className="loading">
             <h2>F Lotto Loading...</h2>
