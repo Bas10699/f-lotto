@@ -5,6 +5,7 @@ import Swal from 'sweetalert2'
 import Lotto3 from './lotto3'
 import PriceShowAll from './priceShowAll'
 import '../App.css'
+import { swapLotto3 } from '../const/constance'
 
 const InputLotto2 = () => {
     const messageEl = useRef(null);
@@ -26,6 +27,12 @@ const InputLotto2 = () => {
     const inputPrice1 = useRef(null)
     const inputPrice2 = useRef(null)
     const buttonSend = useRef(null)
+
+    const [checkedSwap, setCheckedSwap] = useState(false)
+    const inputNumLottoUp3 = useRef(null)
+    const inputPriceUp13 = useRef(null)
+    const inputPriceUp23 = useRef(null)
+    const buttonSendUp3 = useRef(null)
 
     const reversedNum = num => num.toString().split('').reverse().join('')
 
@@ -155,25 +162,41 @@ const InputLotto2 = () => {
         Swal.fire({
             title: 'กำลังบันทึก',
             text: 'รอแป๊ปนึงนะ...',
-            didOpen: () =>  Swal.showLoading(),
-            
+            didOpen: () => Swal.showLoading(),
+
         })
         const batch = db.batch()
         let item = inputItemSend
         // console.log("lotto", item)
         item.map((element, index) => {
-            let data = {
-                name: element.name,
-                numLotto: element.numLotto,
-                priceLotto: element.priceLotto,
-                date: element.date,
-                time: element.time,
-                typeLotto: element.typeLotto,
-                drawDate: element.drawDate
+            if (element.numLotto.length > 2) {
+                let data = {
+                    name: element.name,
+                    numLotto: element.numLotto,
+                    priceLotto1: element.priceLotto1,
+                    priceLotto2: element.priceLotto2,
+                    date: element.date,
+                    time: element.time,
+                    drawDate: element.drawDate
+                }
+                // console.log("data", moment().format("YYYYMMDDTHHmmssSSSSSS"))
+                const docRef = db.collection("lotto3").doc(); //automatically generate unique id
+                batch.set(docRef, data)
             }
-            // console.log("data", moment().format("YYYYMMDDTHHmmssSSSSSS"))
-            const docRef = db.collection("lotto").doc(); //automatically generate unique id
-            batch.set(docRef, data)
+            else {
+                let data = {
+                    name: element.name,
+                    numLotto: element.numLotto,
+                    priceLotto: element.priceLotto,
+                    date: element.date,
+                    time: element.time,
+                    typeLotto: element.typeLotto,
+                    drawDate: element.drawDate
+                }
+                const docRef = db.collection("lotto").doc(); //automatically generate unique id
+                batch.set(docRef, data)
+            }
+
         })
         batch.commit().then(() => {
             console.log("Document successfully written!");
@@ -243,22 +266,78 @@ const InputLotto2 = () => {
         }
     }
 
-    // const removeItem = (index) => {
-    //     let item = inputItem
-    //     item.splice(index, 1);
-    //     let itemOut = item
-    //     console.log(item)
-    //     setInputItem(itemOut)
-    // }
+    const setItem3 = async () => {
+        if (numLotto.length < 3) {
+            alert("กรุณากรอกข้อมูลให้ครบ")
+        }
+        else {
+            let item = inputItem
+            let dateNow = moment().format("DD/MM/YYYY")
+            let timeNow = moment().format("HH:mm")
+            item.push({
+                name: name,
+                numLotto: numLotto,
+                priceLotto1: priceLotto1,
+                priceLotto2: priceLotto2,
+                date: dateNow,
+                time: timeNow,
+                drawDate: drawDate()
+            })
+            setNumLoto('')
+            setPriceLoto1('')
+            setPriceLoto2('')
+            console.log(item)
+            setInputItem(item)
 
-    // useEffect(() => {
-    //     if (messageEl) {
-    //         messageEl.current.addEventListener('DOMNodeInserted', event => {
-    //             const { currentTarget: target } = event;
-    //             target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
-    //         });
-    //     }
-    // }, [])
+            if (messageEl) {
+                console.log(messageEl)
+                messageEl.current.addEventListener('DOMNodeInserted', event => {
+                    const { currentTarget: target } = event;
+                    target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
+                });
+            }
+            let itemSend = inputItemSend
+            if (checkedSwap === true) {
+                swapLotto3(numLotto).map((lotto) => {
+                    itemSend.push({
+                        name: name,
+                        numLotto: lotto,
+                        priceLotto1: priceLotto1,
+                        priceLotto2: 0,
+                        date: dateNow,
+                        time: timeNow,
+                        drawDate: drawDate()
+                    })
+                    console.log("data", itemSend)
+                })
+            }
+            else {
+                if (priceLotto2 > 0 || priceLotto2 !== "") {
+                    itemSend.push({
+                        name: name,
+                        numLotto: numLotto,
+                        priceLotto1: priceLotto1,
+                        priceLotto2: priceLotto2,
+                        date: dateNow,
+                        time: timeNow,
+                        drawDate: drawDate()
+                    })
+                } else {
+                    itemSend.push({
+                        name: name,
+                        numLotto: numLotto,
+                        priceLotto1: priceLotto1,
+                        priceLotto2: 0,
+                        date: dateNow,
+                        time: timeNow,
+                        drawDate: drawDate()
+                    })
+                }
+                console.log("data", itemSend)
+            }
+            setInputItemSend(itemSend)
+        }
+    }
 
     const listLotto = () => {
         return (
@@ -269,18 +348,28 @@ const InputLotto2 = () => {
                     </button>
                 </div>
                 <div className="card-body " style={{ maxHeight: '40vh', overflow: 'auto' }} ref={messageEl}>
-                    {/* <ul className="list-group list-group-flush "> */}
                     {inputItem.length === 0 ? <div>ไม่มีรายการ...</div> :
                         inputItem.map((item, index) => {
+                            let bg = index % 2 == 0 ? "" : "bg-secondary text-white"
+                            let bt = index % 2 == 0 ? "btn-outline-danger" : "btn-danger"
+                            let typelot = ""
+                            if (item.typeLotto == 0) {
+                                typelot = "2ตัวบน"
+                            }
+                            else if (item.typeLotto == 1) {
+                                typelot = "2ตัวล่าง"
+                            }
+                            else {
+                                typelot = ""
+                            }
                             return (
-                                <div className="row py-1 border-bottom" key={index} >
-                                    {/* <div className="col" >{index + 1}</div> */}
-                                    {/* <div className="col" >{item.time}</div> */}
+                                <div className={"row py-1 border-bottom " + bg} key={index} >
                                     <div className="col" >{item.numLotto}</div>
                                     <div className="col" >{item.priceLotto1}*{item.priceLotto2}</div>
                                     <div className="col" >{item.name}</div>
+                                    <div className="col" >{typelot}</div>
                                     <div className="col" >
-                                        <button className="btn btn-outline-danger btn-sm float-right"
+                                        <button className={"btn btn-sm float-right " + bt}
                                             onClick={() => setInputItem(inputItem => inputItem.filter((item, i) => i !== index))}>
                                             ลบ
                                         </button>
@@ -288,13 +377,7 @@ const InputLotto2 = () => {
                                 </div>
                             )
                         })}
-                    {/* </ul> */}
                 </div>
-                {/* <div className="card-footer bg-transparent">
-                                <button className="float-right btn btn-outline-success btn-sm" onClick={() => alert("ใจเย็นนะยังไม่เสร็จ")}>
-                                    บันทึก
-                                </button>
-                            </div> */}
             </div>
         )
     }
@@ -367,7 +450,6 @@ const InputLotto2 = () => {
                                             type="text"
                                             ref={inputNumLottoUp}
                                             maxLength="2"
-                                            // id="numlotto1"
                                             className="form-control form-control-sm"
                                             onKeyDown={e => e.key === 'Enter' && nextInput(inputPriceUp1)}
                                             onChange={(e) => setNumLoto((e.target.value))}
@@ -449,39 +531,92 @@ const InputLotto2 = () => {
                                 {listLotto()}
                             </div>
                             <div className="tab-pane fade" id="nav-lotto" role="tabpanel" aria-labelledby="nav-profile-tab">
-                                <Lotto3 drawDate={drawDate()} name={name} />
+                                {/* <Lotto3 drawDate={drawDate()} name={name} /> */}
+                                <div>
+                                    <div className="form-row">
+                                        <div className="form-group col-4">
+                                            <label htmlFor="numlotto1">ตัวเลข</label>
+                                            <input
+                                                type="text"
+                                                ref={inputNumLottoUp3}
+                                                maxLength="3"
+                                                className="form-control form-control-sm"
+                                                onKeyDown={e => e.key === 'Enter' && nextInput(inputPriceUp13)}
+                                                onChange={(e) => setNumLoto((e.target.value))}
+                                                value={numLotto}
+                                            ></input>
+                                        </div>
+                                        <div className="form-group col-7">
+                                            <label htmlFor="pricelotto1">ราคา</label>
+                                            <div className="row">
+                                                <div className="col-5">
+                                                    <input type="number"
+                                                        ref={inputPriceUp13}
+                                                        className="form-control form-control-sm"
+                                                        onChange={(e) => setPriceLoto1((e.target.value) * 1)}
+                                                        onKeyDown={e => e.key === 'Enter' && nextInput(inputPriceUp23)}
+                                                        value={priceLotto1}
+                                                    ></input>
+                                                </div>
+                                                x
+                                                <div className="col-5">
+                                                    <input type="number"
+                                                        ref={inputPriceUp23}
+                                                        className="form-control form-control-sm"
+                                                        onChange={(e) => setPriceLoto2((e.target.value) * 1)}
+                                                        onKeyDown={e => e.key === 'Enter' && nextInput(buttonSendUp3)}
+                                                        value={priceLotto2}
+                                                    ></input>
+                                                </div>
+                                                <div className="col-1">
+                                                    <button className="btn btn-outline-success btn-sm"
+                                                        ref={buttonSendUp3}
+                                                        onClick={() => setItem3() && nextInput(inputNumLottoUp3)}
+                                                    >เพิ่ม</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    {checkedSwap ? <div>{swapLotto3(numLotto).join(' __ ')}</div> : <div></div>}
+                                    <div className="form-check">
+                                        <input className="form-check-input" type="checkbox" defaultValue id="defaultCheck1" onChange={e => setCheckedSwap(e.target.checked)} />
+                                        <label className="form-check-label" htmlFor="defaultCheck1">
+                                            3 หรือ 6 กลับ
+                                        </label>
+                                    </div>
+                                    {listLotto()}
+                                    {/* <div className="card mb-3" >
+                                        <div className="card-header">ตรวจสอบรายการ
+                                            <button className="float-right btn btn-outline-success btn-sm" onClick={() => send_click_2()}>
+                                                บันทึก
+                                            </button>
+                                        </div>
+                                        <div className="card-body " style={{ maxHeight: '40vh', overflow: 'auto' }} ref={messageEl}>
+                                            {inputItem.length === 0 ? <div>ไม่มีรายการ...</div> :
+                                                inputItem.map((item, index) => {
+                                                    return (
+                                                        <div className="row py-1 border-bottom" key={index} >
+                                                            <div className="col" >{item.numLotto}</div>
+                                                            <div className="col" >{item.priceLotto1}*{item.priceLotto2}</div>
+                                                            <div className="col" >{item.name}</div>
+                                                            <div className="col" >
+                                                                <button className="btn btn-outline-danger btn-sm float-right"
+                                                                    onClick={() => setInputItem(inputItem => inputItem.filter((item, i) => i !== index))}>
+                                                                    ลบ
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                })}
+                                        </div>
+                                    </div> */}
+
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    {/* <div>
-                        <div className="card mb-3" >
-                            <div className="card-header">ตรวจสอบรายการ
-                                <button className="float-right btn btn-outline-success btn-sm" onClick={() => send_click_2()}>
-                                    บันทึก
-                                </button>
-                            </div>
-                            <div className="card-body " style={{ maxHeight: '40vh', overflow: 'auto' }} ref={messageEl}>
-                                {inputItem.length === 0 ? <div>ไม่มีรายการ...</div> :
-                                    inputItem.map((item, index) => {
-                                        return (
-                                            <div className="row py-1 border-bottom" key={index} >
-                                                <div className="col" >{index + 1}</div>
-                                                <div className="col" >{item.name}</div>
-                                                <div className="col" >{item.numLotto}</div>
-                                                <div className="col" >{item.priceLotto1}*{item.priceLotto2}</div>
-                                                <div className="col" >
-                                                    <button className="btn btn-outline-danger btn-sm float-right"
-                                                        onClick={() => setInputItem(inputItem => inputItem.filter((item, i) => i !== index))}>
-                                                        ลบ
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        )
-                                    })}
-                            </div>
-                        </div>
-                    </div> */}
 
                 </div >
                 <div className="col-lg-6">

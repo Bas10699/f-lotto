@@ -21,132 +21,6 @@ const Lotto3 = (props) => {
 
     const nextInput = nextIn => nextIn.current.focus()
 
-    const checkSwap = (e) => {
-        // console.log(e.target.checked)
-        // let data = swapLotto3(numLotto)
-        setCheckedSwap(e.target.checked)
-        // setNumLotoReverse(data)
-        if (e.target.checked === true) {
-            console.log(e.target.checked)
-        }
-    }
-
-    const send_click = async () => {
-
-        setTime(moment().format("YYYY-MM-DDTHH:mm:ss.SSS"))
-        console.log(moment().format("YYYY-MM-DDTHH:mm:ss.SSS"))
-        let dateNow = moment().format("DD/MM/YYYY")
-        let timeNow = moment().format("HH:mm")
-        // console.log(typeLotto)
-        if (checkedSwap === true) {
-            if (numLotto !== "" && priceLotto1 > 0) {
-                const batch = db.batch()
-                swapLotto3(numLotto).map((lotto) => {
-                    let data = {
-                        name: props.name,
-                        numLotto: lotto,
-                        priceLotto1: priceLotto1,
-                        priceLotto2: 0,
-                        date: dateNow,
-                        time: timeNow,
-                        drawDate: props.drawDate
-                    }
-                    console.log("data", data)
-                    const docRef = db.collection("lotto3").doc(); //automatically generate unique id
-                    batch.set(docRef, data);
-                })
-                batch.commit().then(() => {
-                    console.log("Document successfully written!");
-                    setNumLoto('')
-                    setPriceLoto1('')
-                    setPriceLoto2('')
-                })
-            }
-            else {
-                alert("กรุณากรอกข้อมูลให้ถูกต้อง")
-            }
-        }
-        else {
-            if (numLotto !== "" && priceLotto1 > 0) {
-                if (priceLotto2 > 0) {
-                    await db.collection("lotto3").doc().set({
-                        name: props.name,
-                        numLotto: numLotto,
-                        priceLotto1: priceLotto1,
-                        priceLotto2: priceLotto2,
-                        date: dateNow,
-                        time: timeNow,
-                        drawDate: props.drawDate
-
-                    })
-                        .then(() => {
-                            console.log("Document successfully written!");
-                            setNumLoto('')
-                            setPriceLoto1('')
-                            setPriceLoto2('')
-                        })
-                        .catch((error) => {
-                            console.error("Error writing document: ", error);
-                            console.log("Error code: ", error.code);
-                            if (error.code == "permission-denied") {
-                                Swal.fire(
-                                    'แหนะ!',
-                                    'บอกแล้วใช่ไหม ดูได้อย่างเดียว',
-                                    'error'
-                                )
-                            }
-                            else {
-                                Swal.fire(
-                                    'เกิดข้อผิดพลาด!',
-                                    'บันทึกข้อมูลไม่สำเร็จ',
-                                    'error'
-                                )
-                            }
-                        });
-
-                }
-                else {
-                    db.collection("lotto3").doc().set({
-                        name: props.name,
-                        numLotto: numLotto,
-                        priceLotto1: priceLotto1,
-                        priceLotto2: 0,
-                        date: dateNow,
-                        time: timeNow,
-                        drawDate: props.drawDate
-                    })
-                        .then(() => {
-                            console.log("Document successfully written!");
-                            setNumLoto('')
-                            setPriceLoto1('')
-                            setPriceLoto2('')
-                        })
-                        .catch((error) => {
-                            console.error("Error writing document: ", error);
-                            console.log("Error code: ", error.code);
-                            if (error.code == "permission-denied") {
-                                Swal.fire(
-                                    'แหนะ!',
-                                    'บอกแล้วใช่ไหม ดูได้อย่างเดียว',
-                                    'error'
-                                )
-                            }
-                            else {
-                                Swal.fire(
-                                    'เกิดข้อผิดพลาด!',
-                                    'บันทึกข้อมูลไม่สำเร็จ',
-                                    'error'
-                                )
-                            }
-                        });
-                }
-            }
-            else {
-                alert("กรุณากรอกข้อมูลให้ถูกต้อง")
-            }
-        }
-
-    }
 
     const send_click_2 = () => {
         const batch = db.batch()
@@ -255,7 +129,6 @@ const Lotto3 = (props) => {
                         type="text"
                         ref={inputNumLottoUp}
                         maxLength="3"
-                        // id="numlotto1"
                         className="form-control form-control-sm"
                         onKeyDown={e => e.key === 'Enter' && nextInput(inputPriceUp1)}
                         onChange={(e) => setNumLoto((e.target.value))}
@@ -310,13 +183,10 @@ const Lotto3 = (props) => {
                     </button>
                 </div>
                 <div className="card-body " style={{ maxHeight: '40vh', overflow: 'auto' }} ref={messageEl}>
-                    {/* <ul className="list-group list-group-flush "> */}
                     {inputItem.length === 0 ? <div>ไม่มีรายการ...</div> :
                         inputItem.map((item, index) => {
                             return (
                                 <div className="row py-1 border-bottom" key={index} >
-                                    {/* <div className="col" >{index + 1}</div> */}
-                                    {/* <div className="col" >{item.time}</div> */}
                                     <div className="col" >{item.numLotto}</div>
                                     <div className="col" >{item.priceLotto1}*{item.priceLotto2}</div>
                                     <div className="col" >{item.name}</div>
@@ -329,13 +199,7 @@ const Lotto3 = (props) => {
                                 </div>
                             )
                         })}
-                    {/* </ul> */}
                 </div>
-                {/* <div className="card-footer bg-transparent">
-                                <button className="float-right btn btn-outline-success btn-sm" onClick={() => alert("ใจเย็นนะยังไม่เสร็จ")}>
-                                    บันทึก
-                                </button>
-                            </div> */}
             </div>
 
         </div>

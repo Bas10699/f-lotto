@@ -16,17 +16,7 @@ const Navbar = () => {
         });
     }
     return (
-        // <div>
-        //     <nav className="navbar bg-dark navbar-dark">
-        //         <a className="navbar-brand">F-Lotto</a>
-
-        //         <div className="form-inline">
-        //             <button className="form-control mr-sm-2 btn btn-outline-secondary" onClick={logout}>ออกจากระบบ</button>
-        //         </div>
-
-        //     </nav>
-        // </div>
-        <nav className="navbar navbar-expand-md navbar-dark bg-dark">
+        <nav className="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
             <NavLink to="/" className="navbar-brand" >F-Lotto</NavLink>
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon" />
