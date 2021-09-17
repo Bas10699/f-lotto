@@ -8,6 +8,8 @@ import Swal from 'sweetalert2'
 const ReportLottoAll = () => {
     const [docId, setdocId] = useState([])
     const [docId3, setdocId3] = useState([])
+    const [docData, setdocData] = useState([])
+    const [docData3, setdocData3] = useState([])
     const [loading, setloading] = useState(true)
     const [i, seti] = useState(0)
 
@@ -27,12 +29,15 @@ const ReportLottoAll = () => {
             .get()
             .then((querySnapshot) => {
                 let doc_id = []
+                let doc_data = []
                 querySnapshot.forEach((doc) => {
                     // doc.data() is never undefined for query doc snapshots
                     // console.log(doc.id, " => ", doc.data());
                     doc_id.push(doc.id)
+                    doc_data.push(doc.data())
                 });
                 setdocId(doc_id)
+                setdocData(doc_data)
             })
             .catch((error) => {
                 console.log("Error getting documents: ", error);
@@ -41,12 +46,15 @@ const ReportLottoAll = () => {
             .get()
             .then((querySnapshot) => {
                 let doc_id = []
+                let doc_data = []
                 querySnapshot.forEach((doc) => {
                     // doc.data() is never undefined for query doc snapshots
                     // console.log(doc.id, " => ", doc.data());
                     doc_id.push(doc.id)
+                    doc_data.push(doc.data())
                 });
                 setdocId3(doc_id)
+                setdocData3(doc_data)
             })
             .catch((error) => {
                 console.log("Error getting documents: ", error);
@@ -103,7 +111,7 @@ const ReportLottoAll = () => {
             <button onClick={() => deleteAllItem3()} > ลบ 3ตัวทั้งหมด </button>
             {docId.map((elem, index) => {
                 return (
-                    <div key={index} > {elem} </div>
+                    <div key={index} > {elem} {docData[index].name} {docData[index].numLotto} {docData[index].priceLotto}</div>
                 )
             })
             }

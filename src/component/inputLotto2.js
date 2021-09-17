@@ -166,7 +166,7 @@ const InputLotto2 = () => {
 
         })
         const batch = db.batch()
-        let item = inputItemSend
+        let item = inputItem
         // console.log("lotto", item)
         item.map((element, index) => {
             if (element.numLotto.length > 2) {
@@ -184,10 +184,11 @@ const InputLotto2 = () => {
                 batch.set(docRef, data)
             }
             else {
+                let numLottoRev = reversedNum(element.numLotto)
                 let data = {
                     name: element.name,
                     numLotto: element.numLotto,
-                    priceLotto: element.priceLotto,
+                    priceLotto: element.priceLotto1,
                     date: element.date,
                     time: element.time,
                     typeLotto: element.typeLotto,
@@ -195,6 +196,19 @@ const InputLotto2 = () => {
                 }
                 const docRef = db.collection("lotto").doc(); //automatically generate unique id
                 batch.set(docRef, data)
+                if (element.priceLotto2 > 0 || element.priceLotto2 !== "") {
+                    let data = {
+                        name: element.name,
+                        numLotto: numLottoRev,
+                        priceLotto: element.priceLotto2,
+                        date: element.date,
+                        time: element.time,
+                        typeLotto: element.typeLotto,
+                        drawDate: element.drawDate
+                    }
+                    const docRef = db.collection("lotto").doc(); //automatically generate unique id
+                    batch.set(docRef, data)
+                }
             }
 
         })
@@ -215,7 +229,6 @@ const InputLotto2 = () => {
             let item = inputItem
             let dateNow = moment().format("DD/MM/YYYY")
             let timeNow = moment().format("HH:mm")
-            let numLottoRev = reversedNum(numLotto)
             item.push({
                 name: name,
                 numLotto: numLotto,
@@ -233,56 +246,47 @@ const InputLotto2 = () => {
             setInputItem(item)
 
             if (messageEl) {
-                // console.log(messageEl)
                 messageEl.current.addEventListener('DOMNodeInserted', event => {
                     const { currentTarget: target } = event;
                     target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
                 });
             }
-
-            let item_send = inputItemSend
-            item_send.push({
-                name: name,
-                numLotto: numLotto,
-                priceLotto: priceLotto1,
-                date: dateNow,
-                time: timeNow,
-                typeLotto: typeLotto,
-                drawDate: drawDate()
-            })
-            if (priceLotto2 > 0 || priceLotto2 !== "") {
-                item_send.push({
-                    name: name,
-                    numLotto: numLottoRev,
-                    priceLotto: priceLotto2,
-                    date: dateNow,
-                    time: timeNow,
-                    typeLotto: typeLotto,
-                    drawDate: drawDate()
-                })
-            }
-            // console.log("check", item_send)
-            setInputItemSend(item_send)
         }
     }
 
     const setItem3 = async () => {
-        if (numLotto.length < 3) {
+        if (numLotto.length < 3 || priceLotto1 < 1) {
             alert("กรุณากรอกข้อมูลให้ครบ")
         }
         else {
             let item = inputItem
             let dateNow = moment().format("DD/MM/YYYY")
             let timeNow = moment().format("HH:mm")
-            item.push({
-                name: name,
-                numLotto: numLotto,
-                priceLotto1: priceLotto1,
-                priceLotto2: priceLotto2,
-                date: dateNow,
-                time: timeNow,
-                drawDate: drawDate()
-            })
+            if (checkedSwap === true) {
+                swapLotto3(numLotto).map((lotto) => {
+                    item.push({
+                        name: name,
+                        numLotto: lotto,
+                        priceLotto1: priceLotto1,
+                        priceLotto2: 0,
+                        date: dateNow,
+                        time: timeNow,
+                        drawDate: drawDate()
+                    })
+                })
+            }
+            else {
+                item.push({
+                    name: name,
+                    numLotto: numLotto,
+                    priceLotto1: priceLotto1 * 1,
+                    priceLotto2: priceLotto2 * 1,
+                    date: dateNow,
+                    time: timeNow,
+                    drawDate: drawDate()
+                })
+            }
+
             setNumLoto('')
             setPriceLoto1('')
             setPriceLoto2('')
@@ -296,46 +300,46 @@ const InputLotto2 = () => {
                     target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
                 });
             }
-            let itemSend = inputItemSend
-            if (checkedSwap === true) {
-                swapLotto3(numLotto).map((lotto) => {
-                    itemSend.push({
-                        name: name,
-                        numLotto: lotto,
-                        priceLotto1: priceLotto1,
-                        priceLotto2: 0,
-                        date: dateNow,
-                        time: timeNow,
-                        drawDate: drawDate()
-                    })
-                    console.log("data", itemSend)
-                })
-            }
-            else {
-                if (priceLotto2 > 0 || priceLotto2 !== "") {
-                    itemSend.push({
-                        name: name,
-                        numLotto: numLotto,
-                        priceLotto1: priceLotto1,
-                        priceLotto2: priceLotto2,
-                        date: dateNow,
-                        time: timeNow,
-                        drawDate: drawDate()
-                    })
-                } else {
-                    itemSend.push({
-                        name: name,
-                        numLotto: numLotto,
-                        priceLotto1: priceLotto1,
-                        priceLotto2: 0,
-                        date: dateNow,
-                        time: timeNow,
-                        drawDate: drawDate()
-                    })
-                }
-                console.log("data", itemSend)
-            }
-            setInputItemSend(itemSend)
+            // let itemSend = inputItemSend
+            // if (checkedSwap === true) {
+            //     swapLotto3(numLotto).map((lotto) => {
+            //         itemSend.push({
+            //             name: name,
+            //             numLotto: lotto,
+            //             priceLotto1: priceLotto1,
+            //             priceLotto2: 0,
+            //             date: dateNow,
+            //             time: timeNow,
+            //             drawDate: drawDate()
+            //         })
+            //         console.log("data", itemSend)
+            //     })
+            // }
+            // else {
+            //     if (priceLotto2 > 0 || priceLotto2 !== "") {
+            //         itemSend.push({
+            //             name: name,
+            //             numLotto: numLotto,
+            //             priceLotto1: priceLotto1,
+            //             priceLotto2: priceLotto2,
+            //             date: dateNow,
+            //             time: timeNow,
+            //             drawDate: drawDate()
+            //         })
+            //     } else {
+            //         itemSend.push({
+            //             name: name,
+            //             numLotto: numLotto,
+            //             priceLotto1: priceLotto1,
+            //             priceLotto2: 0,
+            //             date: dateNow,
+            //             time: timeNow,
+            //             drawDate: drawDate()
+            //         })
+            //     }
+            //     console.log("data", itemSend)
+            // }
+            // setInputItemSend(itemSend)
         }
     }
 

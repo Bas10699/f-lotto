@@ -22,6 +22,14 @@ const Report = () => {
             return "01" + moment().add(543, "years").format("MMYYYY")
         }
     }
+    const drawDateShow = () => {
+        if ((moment().format("DD") * 1) > 16) {
+            return "16/" + moment().add(543, "years").format("MM/YYYY")
+        }
+        else {
+            return "01/" + moment().add(543, "years").format("MM/YYYY")
+        }
+    }
 
     const checkLotto = async (date) => {
         console.log("date", date)
@@ -109,7 +117,7 @@ const Report = () => {
         </div> :
             <div className="container-fluid">
                 <div className="p-3 sidenav">
-                    <h5>สรุปข้อมูลงวดวันที่ {drawDate()}</h5>
+                    <h5>สรุปข้อมูลงวดวันที่ {drawDateShow()}</h5>
                     <hr />
                     <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                         <a className="nav-link active"
