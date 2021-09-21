@@ -4,7 +4,6 @@ import firebase, { db } from '../firebase'
 import icon from '../const/icon/list.svg'
 import Swal from 'sweetalert2'
 import ExportExcel from './exportExcel'
-import ShowLotto3 from './showLotto3'
 import printJS from "print-js";
 import '../App.css'
 import ExportExcel3 from './exportExcel3'
@@ -738,7 +737,6 @@ const PriceShowAll = (props) => {
     }
     else {
         return (
-            // <ShowLotto3 dDate={props.dDate} />
             <div className="row">
                 <div className="col-sm-6">
                     <div className="input-group mb-3">
