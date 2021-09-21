@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { addComma, sortData, sortReversedData } from '../const/constance'
+import { addComma, sortData, sortlotto3, sortReversedData, swapLotto3 } from '../const/constance'
 import firebase, { db } from '../firebase'
 import icon from '../const/icon/list.svg'
 import Swal from 'sweetalert2'
@@ -7,6 +7,7 @@ import ExportExcel from './exportExcel'
 import ShowLotto3 from './showLotto3'
 import printJS from "print-js";
 import '../App.css'
+import ExportExcel3 from './exportExcel3'
 
 
 const PriceShowAll = (props) => {
@@ -18,6 +19,12 @@ const PriceShowAll = (props) => {
     const [limitPrice, setLimitPrice] = useState(200)
     const [dataNumber, setdataNumber] = useState([])
 
+    const [showData3, setShowData3] = useState([])
+    const [showT3, setShowT3] = useState([])
+    const [showT3S100, setShowT3S100] = useState([])
+    const [limitPrice3, setLimitPrice3] = useState(50)
+    const [dataNumber3, setdataNumber3] = useState([])
+
     const reversedNum = num => num.toString().split('').reverse().join('')
 
     const sumAllPrice = (item) => {
@@ -26,14 +33,39 @@ const PriceShowAll = (props) => {
 
     const LottoPintter = (item) => {
         let dataPinter = []
-
+        let sum = 0
         item.map((element, index) => {
 
             if (element.sumTrong - limitPrice > 0 || element.sumTodd - limitPrice > 0) {
+                sum = sum + (element.sumTrong - limitPrice) * 1 + (element.sumTodd - limitPrice) * 1
                 dataPinter.push({
                     numLotto: element.numLotto,
                     sumTrong: (element.sumTrong - limitPrice) > 0 ? element.sumTrong - limitPrice : 0,
                     sumTodd: (element.sumTodd - limitPrice) > 0 ? element.sumTodd - limitPrice : 0
+                })
+
+            }
+
+        })
+        dataPinter.push({
+            numLotto: "รวม",
+            sumTrong: sum,
+            sumTodd: "บาท"
+        })
+
+
+        return dataPinter
+    }
+    const LottoPintter3 = (item, limit) => {
+        let dataPinter = []
+
+        item.map((element, index) => {
+
+            if (element.sumTrong - limit > 0 || element.sumTodd - limit > 0) {
+                dataPinter.push({
+                    numLotto: element.numLotto,
+                    sumTrong: (element.sumTrong - limit) > 0 ? element.sumTrong - limit : 0,
+                    sumTodd: (element.sumTodd - limit) > 0 ? element.sumTodd - limit : 0
                 })
 
             }
@@ -57,21 +89,8 @@ const PriceShowAll = (props) => {
             confirmButtonText: 'ลบเลย'
         }).then((result) => {
             if (result.isConfirmed) {
-                // let data = dataNum.splice(index, 1)
                 db.collection("lotto").doc(id).delete().then(() => {
                     console.log("Document successfully deleted!");
-                    // numberLottoTop(lotto, props.show)
-                    // setdataNumber(data)
-                    // dataNum.splice(index, 1)
-                    // console.log("1", dataNum)
-                    // setdataNumber(dataNum)
-                    // console.log("2", dataNum)
-                    // setdataNumber(data)
-                    // Swal.fire(
-                    //     'Deleted!',
-                    //     'Your file has been deleted.',
-                    //     'success'
-                    // )
                 }).catch((error) => {
                     console.error("Error removing document: ", error);
                     if (error.code == "permission-denied") {
@@ -88,6 +107,63 @@ const PriceShowAll = (props) => {
 
 
     }
+    const deletePriceLotto3 = (id, lotto, price1, price2, index) => {
+        let dataNum = dataNumber3
+        console.log("0", dataNum)
+
+        Swal.fire({
+            title: "แน่ใจนะ!",
+            text: 'เลข ' + lotto + " ราคา " + price1 + "*" + price2 + ".-",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'ยกเลิก',
+            confirmButtonText: 'ลบเลย'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                db.collection("lotto3").doc(id).delete().then(() => {
+                    console.log("Document successfully deleted!");
+
+                }).catch((error) => {
+                    console.error("Error removing document: ", error);
+                    if (error.code == "permission-denied") {
+                        Swal.fire(
+                            'แหนะ!',
+                            'บอกแล้วใช่ไหม ดูได้อย่างเดียว',
+                            'error'
+                        )
+                    }
+                });
+
+            }
+        })
+
+
+    }
+    const numberLottoTop3 = (number) => {
+        db.collection("lotto3")
+            .where("numLotto", "==", number)
+            .where("drawDate", "==", props.dDate).onSnapshot((querySnapshot) => {
+                let shData = []
+                let lotto = []
+                querySnapshot.forEach((doc) => {
+
+                    if ((doc.data().numLotto === number)) {
+
+                        shData.unshift({ id: doc.id, ...doc.data() })
+                    } else {
+                        console.log("update: ", doc)
+                    }
+                });
+
+                setdataNumber3(shData)
+
+            })
+        // .catch((error) => {
+        //     console.log("Error getting documents: ", error);
+        // });
+    }
 
     const numberLottoTop = (number, typeLotto) => {
         db.collection("lotto")
@@ -97,32 +173,13 @@ const PriceShowAll = (props) => {
                 let shData = []
                 let lotto = []
                 querySnapshot.forEach((doc) => {
-                    // doc.data() is never undefined for query doc snapshots
-                    // console.log(doc.id, " => ", doc.data());
-                    // console.log("num: ", number)
-                    // if (change.type === "added") {
+
                     if ((doc.data().numLotto === number || doc.data().numLotto === reversedNum(number)) && (doc.data().typeLotto === typeLotto)) {
-                        // console.log("num1: ", doc.data().numLotto)
-                        // console.log("New city: ", doc.data());
+
                         shData.unshift({ id: doc.id, ...doc.data() })
                     } else {
                         console.log("update: ", doc)
                     }
-
-
-                    // }
-                    // if (change.type === "modified") {
-                    //     console.log("Modified city: ", change.doc.data());
-                    //     shData.unshift({ id: change.doc.id, ...change.doc.data() })
-                    // }
-                    // if (change.type === "removed") {
-                    //     console.log("Removed city: ", change.doc.data());
-                    //     shData.unshift({ id: change.doc.id, ...change.doc.data() })
-                    // }
-                    // shData.unshift({ id: doc.id, ...doc.data() })
-                    // else{
-                    //     console.log("else : ",change)
-                    // }
 
 
                 });
@@ -176,21 +233,6 @@ const PriceShowAll = (props) => {
     }
     const count = (storage, typeLot) => { return storage.filter(item => item.typeLotto === typeLot).length }
 
-    // const updatedd = () => {
-    //     db.collection("lotto").where("drawDate", "==", props.dDate).get().then((querySnapshot) => {
-
-    //         querySnapshot.forEach((doc) => {
-    //             db.collection("lotto").doc(doc.id).update({ drawDate: "01/06/2021" })
-    //             console.log("success")
-    //         })
-
-    //     })
-    //         .catch((error) => {
-    //             console.log("Error getting documents: ", error);
-    //         });
-
-    // }
-
     const sortLotto = (data) => {
         let dataOut = []
         let lotto = []
@@ -214,24 +256,19 @@ const PriceShowAll = (props) => {
 
                 }
             }
-            // data.map((elementTodd) => {
-            //     if (element.numLotto === reversedNum(elementTodd.numLotto)) {
-            //         console.log(element.numLotto + ":" + elementTodd.numLotto + " = " + element.sumPrice + "*" + elementTodd.sumPrice)
-            //         dataOut.push({
-            //             numLotto: element.numLotto,
-            //             trong: element.sumPrice,
-            //             todd: elementTodd.sumPrice
-            //         })
-            //     }
-            // })
 
         })
         // console.log("lotto", dataOut)
         return dataOut
     }
 
-    useEffect(() => {
+    const sumPrice = (data, item, limit) => {
+        data.map((ele) => {
 
+        })
+    }
+
+    const lotto2 = () => {
         db.collection("lotto").where("drawDate", "==", props.dDate).onSnapshot((querySnapshot) => {
             let shData = []
             let lotto = []
@@ -284,19 +321,6 @@ const PriceShowAll = (props) => {
                         sumPrice: sumDown
                     })
                 }
-                // if (sumTop >= 200) {
-                //     lottoTop200.push({
-                //         numLotto: eleLotto,
-                //         sumPrice: sumTop
-                //     })
-                // }
-                // if (sumDown >= 200) {
-                //     lottoDown200.push({
-                //         numLotto: eleLotto,
-                //         sumPrice: sumDown
-                //     })
-                // }
-
 
             })
             // console.log("lotto", lotto200)
@@ -315,6 +339,97 @@ const PriceShowAll = (props) => {
 
 
         });
+    }
+
+    const LottosumTodd = (item) => {
+        let lotto = []
+        item.map((element) => {
+            let sumToddAll = swapLotto3(element.numLotto).sort()[0]
+            let index = lotto.findIndex((elem) => (elem.numLotto === sumToddAll))
+            if (index < 0) {
+                lotto.push({
+                    numLotto: element.numLotto,
+                    sumTrong: element.sumTrong,
+                    sumTodd: 0
+                })
+                lotto.push({
+                    numLotto: sumToddAll,
+                    sumTrong: 0,
+                    sumTodd: element.sumTodd
+                })
+            }
+            else {
+                lotto[index].sumTodd += element.sumTodd
+                lotto.push({
+                    numLotto: element.numLotto,
+                    sumTrong: element.sumTrong,
+                    sumTodd: 0
+                })
+            }
+            // console.log("index", swapLotto3(element.numLotto).sort())
+        })
+        sortlotto3(lotto)
+        // console.log("lotto", lotto)
+        return lotto
+    }
+
+    const lotto3 = () => {
+        db.collection("lotto3").where("drawDate", "==", props.dDate).onSnapshot((querySnapshot) => {
+            let shData = []
+            let lotto = []
+            querySnapshot.forEach((doc) => {
+                // doc.data() is never undefined for query doc snapshots
+                // console.log(doc.id, " => ", doc.data());
+
+                shData.unshift(doc.data())
+
+
+                let index = lotto.findIndex((elem) => elem === doc.data().numLotto)
+                if (index < 0) {
+                    if (doc.data().numLotto !== null && doc.data().numLotto !== undefined) {
+                        // console.log(ele_data.plant)
+                        lotto.push(
+                            doc.data().numLotto
+                        )
+                    }
+                }
+
+            });
+            let lottoT3 = []
+
+            lotto.map((eleLotto) => {
+                let sumTrong = 0
+                let sumTodd = 0
+                shData.map((eleData) => {
+                    if (eleLotto === eleData.numLotto) {
+                        sumTrong += eleData.priceLotto1 * 1
+                        sumTodd += eleData.priceLotto2 * 1
+                    }
+
+                })
+
+
+
+                lottoT3.push({
+                    numLotto: eleLotto,
+                    sumTrong: sumTrong,
+                    sumTodd: sumTodd,
+                })
+
+            })
+
+            setShowData3(shData)
+
+            sortData(lottoT3, "numLotto", false)
+            setShowT3(lottoT3)
+            setShowT3S100(LottosumTodd(lottoT3))
+
+        });
+    }
+
+    useEffect(() => {
+        lotto2()
+        lotto3()
 
 
     }, [])
@@ -389,11 +504,8 @@ const PriceShowAll = (props) => {
                         <table className="table table-sm table-striped">
                             <thead className="thead-dark headerTable">
                                 <tr>
-                                    {/* <th scope="col">#</th> */}
                                     <th className="headerTable" scope="col">2ตัวล่าง</th>
                                     <th className="headerTable" scope="col">ตรง</th>
-                                    {/* <th className="headerTable" scope="col">ชื่อ</th> */}
-                                    {/* <th className="headerTable" scope="col">เวลา</th> */}
                                     <th className="headerTable" scope="col">โต๊ด</th>
                                     <th scope="col"></th>
                                 </tr>
@@ -401,32 +513,18 @@ const PriceShowAll = (props) => {
                             <tbody>
                                 {showDown200.map((element, index) => {
                                     if (element.numLotto == reversedNum(element.numLotto)) element.sumTodd = 0
-                                    // console.log(element)
-                                    // if (element.typeLotto === 1) {
                                     return (
                                         <tr key={index}>
-                                            {/* <td>{index + 1}</td> */}
                                             <td>{element.numLotto}</td>
                                             <td>{element.sumTrong}</td>
                                             <td>{element.sumTodd}</td>
-                                            {/* <td>{element.priceLotto}</td>
-                                                <td>{element.name}</td>
-                                                <td>{element.time}</td> */}
                                             <td><button className="btn btn-warning btn-sm"
                                                 data-toggle="modal"
                                                 data-target="#exampleModal"
                                                 onClick={() => numberLottoDown(element.numLotto, props.show)}>แก้ไข</button>
                                             </td>
-                                            {/* <td>
-                                                    <button className="btn btn-danger btn-sm"
-                                                        onClick={() => deletePriceLotto(element.id, element.numLotto, element.priceLotto, index)}>
-                                                        ลบ
-                                                    </button>
-                                                </td> */}
-                                            {/* <td>{element.name}</td> */}
                                         </tr>
                                     )
-                                    // }
                                 })}
                             </tbody>
                         </table>
@@ -640,7 +738,185 @@ const PriceShowAll = (props) => {
     }
     else {
         return (
-            <ShowLotto3 dDate={props.dDate} />
+            // <ShowLotto3 dDate={props.dDate} />
+            <div className="row">
+                <div className="col-sm-6">
+                    <div className="input-group mb-3">
+                        <div className="input-group-prepend">
+                            <span className="input-group-text" id="inputGroup-sizing-default">ราคารวมเกิน</span></div>
+                        <select className="custom-select" defaultValue={limitPrice3} onChange={(e) => setLimitPrice3(e.target.value)}>
+                            <option value={50}>50</option>
+                            <option value={100}>100</option>
+                            <option value={200}>200</option>
+                            <option value={300}>300</option>
+                            <option value={400}>400</option>
+                            <option value={500}>500</option>
+                        </select>
+                        <div className="input-group-append">
+                            <button className="btn btn-outline-info" onClick={() => printJS({
+                                printable: LottoPintter3(showT3S100, limitPrice3),
+                                type: 'json',
+                                properties: [
+                                    { field: 'numLotto', displayName: '3ตัวบน' },
+                                    { field: 'sumTrong', displayName: 'ตรง' },
+                                    { field: 'sumTodd', displayName: 'โต๊ด' }
+                                ],
+                                header: '<h3 class="custom-h3">ระบบการจัดการตัวเลขของเอฟโอเวอร์</h3>',
+                                style: '.custom-h3 { color: red; }',
+                                font_size: '18pt',
+                                documentTitle: `ราคาเกิน ${limitPrice3}บาท`
+                            })}>print</button>
+                        </div>
+                    </div>
+
+                    <div style={{ overflow: "auto", maxHeight: "450px" }}>
+                        <table className="table table-sm table-striped ">
+                            <thead className="thead-dark headerTable">
+                                <tr>
+                                    <th className="headerTable" scope="col">3ตัวบน</th>
+                                    <th className="headerTable" scope="col">ตรง</th>
+                                    <th className="headerTable" scope="col">โต๊ด</th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-body-table">
+                                {showT3.map((element, index) => {
+                                    let limitTodd = limitPrice3 / 2
+
+                                    if (element.sumTrong - limitPrice3 > 0 || element.sumTodd - limitTodd > 0) {
+                                        return (
+                                            <tr key={index} className="">
+                                                <td>{element.numLotto}</td>
+                                                <td>{(element.sumTrong - limitPrice3) > 0 ? element.sumTrong - limitPrice3 : 0}</td>
+                                                <td>{(element.sumTodd - limitTodd) > 0 ? element.sumTodd - limitTodd : 0} </td>
+                                            </tr>
+                                        )
+                                    }
+
+                                })}
+                                {/* <tr>
+                                <td>รวม</td>
+                                <td>{showT3S100.reduce((accumulator, currentValue) => accumulator + currentValue.sumTrong, 0)}</td>
+                                <td>{showT3S100.reduce((accumulator, currentValue) => accumulator + currentValue.sumTodd, 0)}</td>
+                            </tr> */}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div className="col-sm-6">
+                    <ExportExcel3 data={sortData(showData, "name", false)} typeLotto={props.show} />
+
+                    <button className="btn btn-outline-info btn-sm " onClick={() => printJS({
+                        printable: LottoPintter3(showT3, 0),
+                        type: 'json',
+                        properties: [
+                            { field: 'numLotto', displayName: '3ตัวบน' },
+                            { field: 'sumTrong', displayName: 'ตรง' },
+                            { field: 'sumTodd', displayName: 'โต๊ด' }
+                        ],
+                        header: '<h3 class="custom-h3">ระบบการจัดการตัวเลขของเอฟโอเวอร์</h3>',
+                        style: '.custom-h3 { color: red; column-count: 2; column-gap: 40px;}',
+                        font_size: '18pt',
+                        // style:'column-count: 2; column-gap: 40px;',
+                        documentTitle: `ราคาเกิน ${limitPrice3}บาท`
+                    })}>print</button>
+
+                    <h6>ทั้งหมด {count(showData, props.show)} รายการ</h6>
+                    <div style={{ overflow: "auto", height: "450px" }}>
+                        <table className="table table-sm table-striped">
+                            <thead className="thead-dark headerTable">
+                                <tr>
+                                    <th className="headerTable" scope="col">3ตัวบน</th>
+                                    <th className="headerTable" scope="col">ตรง</th>
+                                    <th className="headerTable" scope="col">โต๊ด</th>
+                                    <th className="headerTable" scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {showT3.map((element, index) => {
+                                    if (element.numLotto != "") {
+                                        return (
+                                            <tr key={index}>
+                                                {/* <td>{index + 1}</td> */}
+                                                <td>{element.numLotto}</td>
+                                                <td>{element.sumTrong}</td>
+                                                <td>{element.sumTodd}</td>
+                                                <td><button className="btn btn-warning btn-sm"
+                                                    data-toggle="modal"
+                                                    data-target="#exampleModal"
+                                                    onClick={() => numberLottoTop3(element.numLotto)}>แก้ไข</button></td>
+                                                {/* <td>{element.name}</td> */}
+                                            </tr>
+                                        )
+                                    }
+                                    else {
+                                        console.log("err lotto3", index)
+                                    }
+                                })}
+
+
+                            </tbody>
+                            <tfoot className="bg-light fTable">
+                                <tr>
+                                    <td className="fTable">รวม</td>
+                                    <td className="fTable">{showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTrong, 0)}</td>
+                                    <td className="fTable">{showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTodd, 0)}</td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                {/* <!-- Modal --> */}
+                <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="exampleModalLabel">รายละเอียด 2ตัวบน </h5>
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">ชื่อ</th>
+                                            <th scope="col">3ตัวบน</th>
+                                            <th scope="col">ราคา</th>
+                                            <th scope="col">วันที่</th>
+                                            <th scope="col">เวลา</th>
+                                            <th scope="col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {dataNumber3.map((ele_num, index) => {
+                                            return (
+                                                <tr key={index}>
+                                                    <td>{ele_num.name}</td>
+                                                    <td>{ele_num.numLotto}</td>
+                                                    <td>{ele_num.priceLotto1} * {ele_num.priceLotto2}</td>
+                                                    <td>{ele_num.date}</td>
+                                                    <td>{ele_num.time}</td>
+                                                    <td><button className="btn btn-danger btn-sm"
+                                                        onClick={() => deletePriceLotto3(ele_num.id, ele_num.numLotto, ele_num.priceLotto1, ele_num.priceLotto2, index)}>
+                                                        ลบ
+                                                    </button>
+                                                    </td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         )
 
     }

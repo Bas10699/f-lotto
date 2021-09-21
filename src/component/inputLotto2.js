@@ -19,6 +19,7 @@ const InputLotto2 = () => {
     const [inputItem, setInputItem] = useState([])
     const [inputItemSend, setInputItemSend] = useState([])
     const [loading, setloading] = useState(false)
+    const [typeName, settypeName] = useState(2)
     const inputNumLottoUp = useRef(null)
     const inputPriceUp1 = useRef(null)
     const inputPriceUp2 = useRef(null)
@@ -177,7 +178,8 @@ const InputLotto2 = () => {
                     priceLotto2: element.priceLotto2,
                     date: element.date,
                     time: element.time,
-                    drawDate: element.drawDate
+                    drawDate: element.drawDate,
+                    typeName: typeName
                 }
                 // console.log("data", moment().format("YYYYMMDDTHHmmssSSSSSS"))
                 const docRef = db.collection("lotto3").doc(); //automatically generate unique id
@@ -192,7 +194,8 @@ const InputLotto2 = () => {
                     date: element.date,
                     time: element.time,
                     typeLotto: element.typeLotto,
-                    drawDate: element.drawDate
+                    drawDate: element.drawDate,
+                    typeName: typeName
                 }
                 const docRef = db.collection("lotto").doc(); //automatically generate unique id
                 batch.set(docRef, data)
@@ -204,7 +207,8 @@ const InputLotto2 = () => {
                         date: element.date,
                         time: element.time,
                         typeLotto: element.typeLotto,
-                        drawDate: element.drawDate
+                        drawDate: element.drawDate,
+                        typeName: typeName
                     }
                     const docRef = db.collection("lotto").doc(); //automatically generate unique id
                     batch.set(docRef, data)
@@ -354,7 +358,7 @@ const InputLotto2 = () => {
                 <div className="card-body " style={{ maxHeight: '40vh', overflow: 'auto' }} ref={messageEl}>
                     {inputItem.length === 0 ? <div>ไม่มีรายการ...</div> :
                         inputItem.map((item, index) => {
-                            let bg = index % 2 == 0 ? "" : "bg-secondary text-white"
+                            let bg = index % 2 == 0 ? "" : "alert-info"
                             let bt = index % 2 == 0 ? "btn-outline-danger" : "btn-danger"
                             let typelot = ""
                             if (item.typeLotto == 0) {
@@ -405,6 +409,39 @@ const InputLotto2 = () => {
                             </input>
                         </div>
                     </div>
+
+                    <div className="pb-3 float-right">
+                        <div className="form-check form-check-inline">
+                            <input className="form-check-input"
+                                type="radio"
+                                name="inlineRadioOptions"
+                                id="inlineRadio1"
+                                defaultValue="0"
+                                checked={typeName === 0}
+                                onChange={() => settypeName(0)} />
+                            <label className="form-check-label" htmlFor="inlineRadio1">พ่อ</label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                            <input className="form-check-input"
+                                type="radio" name="inlineRadioOptions"
+                                id="inlineRadio2"
+                                defaultValue="1"
+                                checked={typeName === 1}
+                                onChange={() => settypeName(1)} />
+                            <label className="form-check-label" htmlFor="inlineRadio2">แม่</label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                            <input className="form-check-input"
+                                type="radio"
+                                name="inlineRadioOptions"
+                                id="inlineRadio3"
+                                defaultValue="2"
+                                checked={typeName === 2}
+                                onChange={() => settypeName(2)} />
+                            <label className="form-check-label" htmlFor="inlineRadio3">อื่นๆ</label>
+                        </div>
+                    </div>
+
 
                     <div>
                         <nav>
@@ -591,32 +628,6 @@ const InputLotto2 = () => {
                                         </label>
                                     </div>
                                     {listLotto()}
-                                    {/* <div className="card mb-3" >
-                                        <div className="card-header">ตรวจสอบรายการ
-                                            <button className="float-right btn btn-outline-success btn-sm" onClick={() => send_click_2()}>
-                                                บันทึก
-                                            </button>
-                                        </div>
-                                        <div className="card-body " style={{ maxHeight: '40vh', overflow: 'auto' }} ref={messageEl}>
-                                            {inputItem.length === 0 ? <div>ไม่มีรายการ...</div> :
-                                                inputItem.map((item, index) => {
-                                                    return (
-                                                        <div className="row py-1 border-bottom" key={index} >
-                                                            <div className="col" >{item.numLotto}</div>
-                                                            <div className="col" >{item.priceLotto1}*{item.priceLotto2}</div>
-                                                            <div className="col" >{item.name}</div>
-                                                            <div className="col" >
-                                                                <button className="btn btn-outline-danger btn-sm float-right"
-                                                                    onClick={() => setInputItem(inputItem => inputItem.filter((item, i) => i !== index))}>
-                                                                    ลบ
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    )
-                                                })}
-                                        </div>
-                                    </div> */}
-
                                 </div>
                             </div>
                         </div>

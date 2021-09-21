@@ -106,12 +106,16 @@ const ReportLottoAll = () => {
 
     return (
         <div>
+            <div className="float-right">
+                <button onClick={() => deleteAllItem()} > ลบ 2ตัวทั้งหมด </button>
+                <button onClick={() => deleteAllItem3()} > ลบ 3ตัวทั้งหมด </button>
+            </div>
             <h1 > งวดวันที่ {drawDate()} </h1>
-            <button onClick={() => deleteAllItem()} > ลบ 2ตัวทั้งหมด </button>
-            <button onClick={() => deleteAllItem3()} > ลบ 3ตัวทั้งหมด </button>
-            {docId.map((elem, index) => {
+
+
+            {/* {docId.map((elem, index) => {
                 return (
-                    <div key={index} > {elem} {docData[index].name} {docData[index].numLotto} {docData[index].priceLotto}</div>
+                    <div key={index} > {elem} </div>
                 )
             })
             }
@@ -120,7 +124,61 @@ const ReportLottoAll = () => {
                     <div key={index} > {elem} </div>
                 )
             })
-            }
+            } */}
+            <div className="row">
+                <div className="col-sm-4" style={{ overflow: "auto", maxHeight: "75vh" }}>
+                    <table className="table" >
+                        <thead className="thead-dark headerTable">
+                            <tr>
+                                <th className="headerTable">3ตัวบน</th>
+                                <th className="headerTable">ตรง</th>
+                                <th className="headerTable">โต๊ด</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {docData3.map((elem, index) => {
+                                return (
+                                    <tr key={index}>
+                                        <td>{elem.name}</td>
+                                        <td>{elem.priceLotto1}</td>
+                                        <td>{elem.priceLotto2}</td>
+                                    </tr>
+                                )
+                            })
+                            }
+                        </tbody>
+                        <tfoot className="bg-light fTable">
+                            <tr>
+                                <td className="fTable">รวม</td>
+                                <td className="fTable">{docData3.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto1, 0)}</td>
+                                <td className="fTable">{docData3.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto2, 0)}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div className="col-sm-4">
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th>2ตัวบน</th>
+                                <th>ตรง</th>
+                                <th>โต๊ด</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div className="col-sm-4">
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th>2ตัวล่าง</th>
+                                <th>ตรง</th>
+                                <th>โต๊ด</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
         </div>
     )
 }
