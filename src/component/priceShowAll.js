@@ -438,7 +438,7 @@ const PriceShowAll = (props) => {
         return (
             <div className="row">
                 <div className="col-sm-6">
-                    <div className="input-group input-group-sm mb-3">
+                    <div className="input-group input-group-sm ">
                         <div className="input-group-prepend">
                             <span className="input-group-text" id="inputGroup-sizing-default">ราคารวมเกิน</span></div>
                         <select className="custom-select" defaultValue={limitPrice} onChange={(e) => setLimitPrice(e.target.value)}>
@@ -463,6 +463,7 @@ const PriceShowAll = (props) => {
                             })}>print</button>
                         </div>
                     </div>
+                    <h6>บาท</h6>
                     <div style={{ overflow: "auto", maxHeight: "450px" }}>
                         <table className="table table-sm table-striped">
                             <thead className="thead-dark headerTable">

@@ -31,6 +31,16 @@ const Report = () => {
         }
     }
 
+    const drawDateFs = () => {
+        if ((moment().format("DD") * 1) > 16) {
+            return "16/" + moment().format("MM/YYYY")
+        }
+        else {
+            return "01/" + moment().format("MM/YYYY")
+        }
+        // return "16/09/2021"
+    }
+
     const checkLotto = async (date) => {
         console.log("date", date)
         await get("?date=" + drawDate()).then((result) => {
@@ -89,17 +99,6 @@ const Report = () => {
                     console.log("No such document!");
                     checkLotto(moment().add(543, 'years').format("DDMMyyyy"))
                 }
-                // if (doc.size > 0) {
-                //     console.log("Document data:", doc.exists);
-                //     doc.forEach((doc) => {
-                //         // doc.data() is never undefined for query doc snapshots
-                //         console.log(doc.id, " => ", doc.data());
-                //     });
-                // } else {
-                //     // doc.data() will be undefined in this case
-                //     console.log("No such document!");
-                //     checkLotto(moment().add(543, 'years').format("DDMMyyyy"))
-                // }
             }).catch((error) => {
                 console.log("Error getting document:", error);
             });
@@ -174,13 +173,13 @@ const Report = () => {
                             id="v-pills-messages"
                             role="tabpanel"
                             aria-labelledby="v-pills-messages-tab">
-                            <ReportLotto2down result={resultLotto.result2down} />
+                            <ReportLotto2down result={resultLotto.result2down} dateDraw={drawDateFs()} />
                         </div>
                         <div className="tab-pane fade"
                             id="v-pills-settings"
                             role="tabpanel"
                             aria-labelledby="v-pills-settings-tab">
-                            <ReportLottoAll dateDraw={drawDate()} />
+                            <ReportLottoAll dateDraw={drawDateFs()} />
                         </div>
                     </div>
                 </div>

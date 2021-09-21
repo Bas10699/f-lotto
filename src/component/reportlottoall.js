@@ -5,44 +5,43 @@ import "../App.css"
 import Swal from 'sweetalert2'
 
 
-const ReportLottoAll = () => {
+const ReportLottoAll = (item) => {
     const [docId, setdocId] = useState([])
     const [docId3, setdocId3] = useState([])
-    const [docData, setdocData] = useState([])
+    const [docData2Up, setdocData2Up] = useState([])
+    const [docData2, setdocData2] = useState([])
     const [docData3, setdocData3] = useState([])
     const [loading, setloading] = useState(true)
     const [i, seti] = useState(0)
 
-    const drawDate = () => {
-        // if ((moment().format("DD") * 1) > 16) {
-        //     return "16/" + moment().add(543, "years").format("MM/YYYY")
-        // }
-        // else {
-        //     return "01/" + moment().add(543, "years").format("MM/YYYY")
-        // }
-        return "01/09/2021"
-    }
-
 
     useEffect(() => {
-        db.collection("lotto").where("drawDate", "==", drawDate())
+        db.collection("lotto").where("drawDate", "==", item.dateDraw)
             .get()
             .then((querySnapshot) => {
                 let doc_id = []
+                let doc_dataUp = []
                 let doc_data = []
                 querySnapshot.forEach((doc) => {
                     // doc.data() is never undefined for query doc snapshots
                     // console.log(doc.id, " => ", doc.data());
+                    if (doc.data().typeLotto === 0) {
+                        doc_dataUp.push(doc.data())
+                    }
+                    else {
+                        doc_data.push(doc.data())
+                    }
                     doc_id.push(doc.id)
-                    doc_data.push(doc.data())
+
                 });
                 setdocId(doc_id)
-                setdocData(doc_data)
+                setdocData2Up(doc_dataUp)
+                setdocData2(doc_data)
             })
             .catch((error) => {
                 console.log("Error getting documents: ", error);
             });
-        db.collection("lotto3").where("drawDate", "==", drawDate())
+        db.collection("lotto3").where("drawDate", "==", item.dateDraw)
             .get()
             .then((querySnapshot) => {
                 let doc_id = []
@@ -64,44 +63,71 @@ const ReportLottoAll = () => {
 
     const deleteAllItem = async () => {
         Swal.fire({
-            title: 'กำลังลบ',
-            text: 'รอแป๊ปนึงนะ...',
-            didOpen: () => Swal.showLoading(),
+            title: 'แน่ใจนะ?',
+            text: "คุณจะไม่สามารถย้อนกลับได้!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ใช่ ลบออก!',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'กำลังลบ',
+                    text: 'รอแป๊ปนึงนะ...',
+                    didOpen: () => Swal.showLoading(),
 
-        })
-        let writeBatch = db.batch();
-        let item = docId
-        item.map((elem) => {
-            let documentRef = db.collection('lotto').doc(elem);
-            writeBatch.delete(documentRef);
+                })
+                let writeBatch = db.batch();
+                let item = docId
+                item.map((elem) => {
+                    let documentRef = db.collection('lotto').doc(elem);
+                    writeBatch.delete(documentRef);
+                })
+
+                writeBatch.commit().then(() => {
+                    console.log('Successfully executed batch.');
+                    seti(i + 1)
+                    Swal.close()
+                });
+            }
         })
 
-        writeBatch.commit().then(() => {
-            console.log('Successfully executed batch.');
-            seti(i + 1)
-            Swal.close()
-        });
 
     }
     const deleteAllItem3 = () => {
         Swal.fire({
-            title: 'กำลังลบ',
-            text: 'รอแป๊ปนึงนะ...',
-            didOpen: () => Swal.showLoading(),
+            title: 'แน่ใจนะ?',
+            text: "คุณจะไม่สามารถย้อนกลับได้!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ใช่ ลบออก!',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'กำลังลบ',
+                    text: 'รอแป๊ปนึงนะ...',
+                    didOpen: () => Swal.showLoading(),
 
-        })
-        let writeBatch = db.batch();
-        let item = docId3
-        item.map((elem) => {
-            let documentRef = db.collection('lotto3').doc(elem);
-            writeBatch.delete(documentRef);
-        })
+                })
+                let writeBatch = db.batch();
+                let item = docId3
+                item.map((elem) => {
+                    let documentRef = db.collection('lotto3').doc(elem);
+                    writeBatch.delete(documentRef);
+                })
 
-        writeBatch.commit().then(() => {
-            console.log('Successfully executed batch.');
-            seti(i + 1)
-            Swal.close()
-        });
+                writeBatch.commit().then(() => {
+                    console.log('Successfully executed batch.');
+                    seti(i + 1)
+                    Swal.close()
+                });
+            }
+        })
     }
 
     return (
@@ -110,7 +136,7 @@ const ReportLottoAll = () => {
                 <button onClick={() => deleteAllItem()} > ลบ 2ตัวทั้งหมด </button>
                 <button onClick={() => deleteAllItem3()} > ลบ 3ตัวทั้งหมด </button>
             </div>
-            <h1 > งวดวันที่ {drawDate()} </h1>
+            <h1 > งวดวันที่ {item.dateDraw} </h1>
 
 
             {/* {docId.map((elem, index) => {
@@ -130,6 +156,7 @@ const ReportLottoAll = () => {
                     <table className="table" >
                         <thead className="thead-dark headerTable">
                             <tr>
+                                <th className="headerTable">ชื่อ</th>
                                 <th className="headerTable">3ตัวบน</th>
                                 <th className="headerTable">ตรง</th>
                                 <th className="headerTable">โต๊ด</th>
@@ -140,6 +167,7 @@ const ReportLottoAll = () => {
                                 return (
                                     <tr key={index}>
                                         <td>{elem.name}</td>
+                                        <td>{elem.numLotto}</td>
                                         <td>{elem.priceLotto1}</td>
                                         <td>{elem.priceLotto2}</td>
                                     </tr>
@@ -149,33 +177,69 @@ const ReportLottoAll = () => {
                         </tbody>
                         <tfoot className="bg-light fTable">
                             <tr>
-                                <td className="fTable">รวม</td>
+                                <td className="fTable" colspan="2">รวม</td>
                                 <td className="fTable">{docData3.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto1, 0)}</td>
                                 <td className="fTable">{docData3.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto2, 0)}</td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
-                <div className="col-sm-4">
+                <div className="col-sm-4" style={{ overflow: "auto", maxHeight: "75vh" }}>
                     <table className="table">
-                        <thead>
+                        <thead className="thead-dark headerTable">
                             <tr>
+                                <th>ชื่อ</th>
                                 <th>2ตัวบน</th>
-                                <th>ตรง</th>
-                                <th>โต๊ด</th>
+                                <th>ราคา</th>
                             </tr>
                         </thead>
+                        <tbody>
+                            {docData2Up.map((elem, index) => {
+                                return (
+                                    <tr key={index}>
+                                        <td>{elem.name}</td>
+                                        <td>{elem.numLotto}</td>
+                                        <td>{elem.priceLotto}</td>
+                                    </tr>
+                                )
+                            })
+                            }
+                        </tbody>
+                        <tfoot className="bg-light fTable">
+                            <tr>
+                                <td className="fTable" colspan="2">รวม</td>
+                                <td className="fTable">{docData2Up.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto, 0)}</td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
-                <div className="col-sm-4">
+                <div className="col-sm-4" style={{ overflow: "auto", maxHeight: "75vh" }}>
                     <table className="table">
-                        <thead>
+                        <thead className="thead-dark headerTable">
                             <tr>
+                                <th>ชื่อ</th>
                                 <th>2ตัวล่าง</th>
-                                <th>ตรง</th>
-                                <th>โต๊ด</th>
+                                <th>ราคา</th>
                             </tr>
                         </thead>
+                        <tbody>
+                            {docData2.map((elem, index) => {
+                                return (
+                                    <tr key={index}>
+                                        <td>{elem.name}</td>
+                                        <td>{elem.numLotto}</td>
+                                        <td>{elem.priceLotto}</td>
+                                    </tr>
+                                )
+                            })
+                            }
+                        </tbody>
+                        <tfoot className="bg-light fTable">
+                            <tr>
+                                <td className="fTable" colspan="2">รวม</td>
+                                <td className="fTable">{docData2.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto, 0)}</td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
