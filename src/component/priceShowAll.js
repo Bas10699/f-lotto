@@ -804,7 +804,7 @@ const PriceShowAll = (props) => {
                 </div>
 
                 <div className="col-sm-6">
-                    <ExportExcel3 data={sortData(showData, "name", false)} typeLotto={props.show} />
+                    <ExportExcel3 data={sortData(showData3, "name", false)} typeLotto={props.show} />
 
                     <button className="btn btn-outline-info btn-sm " onClick={() => printJS({
                         printable: LottoPintter3(showT3, 0),

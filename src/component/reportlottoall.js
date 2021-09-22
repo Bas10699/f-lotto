@@ -15,51 +15,51 @@ const ReportLottoAll = (item) => {
     const [i, seti] = useState(0)
 
 
-    useEffect(() => {
-        db.collection("lotto").where("drawDate", "==", item.dateDraw)
-            .get()
-            .then((querySnapshot) => {
-                let doc_id = []
-                let doc_dataUp = []
-                let doc_data = []
-                querySnapshot.forEach((doc) => {
-                    // doc.data() is never undefined for query doc snapshots
-                    // console.log(doc.id, " => ", doc.data());
-                    if (doc.data().typeLotto === 0) {
-                        doc_dataUp.push(doc.data())
-                    }
-                    else {
-                        doc_data.push(doc.data())
-                    }
-                    doc_id.push(doc.id)
+    // useEffect(() => {
+    //     db.collection("lotto").where("drawDate", "==", item.dateDraw)
+    //         .get()
+    //         .then((querySnapshot) => {
+    //             let doc_id = []
+    //             let doc_dataUp = []
+    //             let doc_data = []
+    //             querySnapshot.forEach((doc) => {
+    //                 // doc.data() is never undefined for query doc snapshots
+    //                 // console.log(doc.id, " => ", doc.data());
+    //                 if (doc.data().typeLotto === 0) {
+    //                     doc_dataUp.push(doc.data())
+    //                 }
+    //                 else {
+    //                     doc_data.push(doc.data())
+    //                 }
+    //                 doc_id.push(doc.id)
 
-                });
-                setdocId(doc_id)
-                setdocData2Up(doc_dataUp)
-                setdocData2(doc_data)
-            })
-            .catch((error) => {
-                console.log("Error getting documents: ", error);
-            });
-        db.collection("lotto3").where("drawDate", "==", item.dateDraw)
-            .get()
-            .then((querySnapshot) => {
-                let doc_id = []
-                let doc_data = []
-                querySnapshot.forEach((doc) => {
-                    // doc.data() is never undefined for query doc snapshots
-                    // console.log(doc.id, " => ", doc.data());
-                    doc_id.push(doc.id)
-                    doc_data.push(doc.data())
-                });
-                setdocId3(doc_id)
-                setdocData3(doc_data)
-            })
-            .catch((error) => {
-                console.log("Error getting documents: ", error);
-            });
+    //             });
+    //             setdocId(doc_id)
+    //             setdocData2Up(doc_dataUp)
+    //             setdocData2(doc_data)
+    //         })
+    //         .catch((error) => {
+    //             console.log("Error getting documents: ", error);
+    //         });
+    //     db.collection("lotto3").where("drawDate", "==", item.dateDraw)
+    //         .get()
+    //         .then((querySnapshot) => {
+    //             let doc_id = []
+    //             let doc_data = []
+    //             querySnapshot.forEach((doc) => {
+    //                 // doc.data() is never undefined for query doc snapshots
+    //                 // console.log(doc.id, " => ", doc.data());
+    //                 doc_id.push(doc.id)
+    //                 doc_data.push(doc.data())
+    //             });
+    //             setdocId3(doc_id)
+    //             setdocData3(doc_data)
+    //         })
+    //         .catch((error) => {
+    //             console.log("Error getting documents: ", error);
+    //         });
 
-    }, [i])
+    // }, [i])
 
     const deleteAllItem = async () => {
         Swal.fire({
@@ -163,7 +163,7 @@ const ReportLottoAll = (item) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {docData3.map((elem, index) => {
+                            {item.docData3.map((elem, index) => {
                                 return (
                                     <tr key={index}>
                                         <td>{elem.name}</td>
@@ -178,8 +178,8 @@ const ReportLottoAll = (item) => {
                         <tfoot className="bg-light fTable">
                             <tr>
                                 <td className="fTable" colspan="2">รวม</td>
-                                <td className="fTable">{docData3.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto1, 0)}</td>
-                                <td className="fTable">{docData3.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto2, 0)}</td>
+                                <td className="fTable">{item.docData3.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto1, 0)}</td>
+                                <td className="fTable">{item.docData3.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto2, 0)}</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -194,7 +194,7 @@ const ReportLottoAll = (item) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {docData2Up.map((elem, index) => {
+                            {item.docData2Up.map((elem, index) => {
                                 return (
                                     <tr key={index}>
                                         <td>{elem.name}</td>
@@ -208,7 +208,7 @@ const ReportLottoAll = (item) => {
                         <tfoot className="bg-light fTable">
                             <tr>
                                 <td className="fTable" colspan="2">รวม</td>
-                                <td className="fTable">{docData2Up.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto, 0)}</td>
+                                <td className="fTable">{item.docData2Up.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto, 0)}</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -223,7 +223,7 @@ const ReportLottoAll = (item) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {docData2.map((elem, index) => {
+                            {item.docData2.map((elem, index) => {
                                 return (
                                     <tr key={index}>
                                         <td>{elem.name}</td>
@@ -236,8 +236,8 @@ const ReportLottoAll = (item) => {
                         </tbody>
                         <tfoot className="bg-light fTable">
                             <tr>
-                                <td className="fTable" colspan="2">รวม</td>
-                                <td className="fTable">{docData2.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto, 0)}</td>
+                                <td className="fTable" colSpan="2">รวม</td>
+                                <td className="fTable">{item.docData2.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto, 0)}</td>
                             </tr>
                         </tfoot>
                     </table>

@@ -14,6 +14,12 @@ const Report = () => {
     const [resultLotto, setresultLotto] = useState([])
     const [i, seti] = useState(0)
 
+    const [docId, setdocId] = useState([])
+    const [docId3, setdocId3] = useState([])
+    const [docData2Up, setdocData2Up] = useState([])
+    const [docData2, setdocData2] = useState([])
+    const [docData3, setdocData3] = useState([])
+
     const drawDate = () => {
         if ((moment().format("DD") * 1) > 16) {
             return "16" + moment().add(543, "years").format("MMYYYY")
@@ -68,7 +74,7 @@ const Report = () => {
                 })
                     .then(() => {
                         console.log("Document successfully written!");
-                        seti(i + 1)
+                        getResults()
                     })
                     .catch((error) => {
                         console.error("Error writing document: ", error);
@@ -80,9 +86,8 @@ const Report = () => {
         })
     }
 
-    useEffect(() => {
+    const getResults = () => {
         db.collection("results")
-            // .where("drawdate", "==", drawDate())
             .doc(drawDate())
             .get().then((doc) => {
                 console.log(doc.exists)
@@ -102,7 +107,57 @@ const Report = () => {
             }).catch((error) => {
                 console.log("Error getting document:", error);
             });
-    }, [i])
+    }
+
+    const getAllData = () => {
+        db.collection("lotto").where("drawDate", "==", drawDateFs())
+            .get()
+            .then((querySnapshot) => {
+                let doc_id = []
+                let doc_dataUp = []
+                let doc_data = []
+                querySnapshot.forEach((doc) => {
+                    // doc.data() is never undefined for query doc snapshots
+                    // console.log(doc.id, " => ", doc.data());
+                    if (doc.data().typeLotto === 0) {
+                        doc_dataUp.push(doc.data())
+                    }
+                    else {
+                        doc_data.push(doc.data())
+                    }
+                    doc_id.push(doc.id)
+
+                });
+                setdocId(doc_id)
+                setdocData2Up(doc_dataUp)
+                setdocData2(doc_data)
+            })
+            .catch((error) => {
+                console.log("Error getting documents: ", error);
+            });
+        db.collection("lotto3").where("drawDate", "==", drawDateFs())
+            .get()
+            .then((querySnapshot) => {
+                let doc_id = []
+                let doc_data = []
+                querySnapshot.forEach((doc) => {
+                    // doc.data() is never undefined for query doc snapshots
+                    // console.log(doc.id, " => ", doc.data());
+                    doc_id.push(doc.id)
+                    doc_data.push(doc.data())
+                });
+                setdocId3(doc_id)
+                setdocData3(doc_data)
+            })
+            .catch((error) => {
+                console.log("Error getting documents: ", error);
+            });
+    }
+
+    useEffect(() => {
+        getResults()
+        getAllData()
+    }, [])
     return (
         loading ? <div className="loading">
             <h2>F Lotto Loading...</h2>
@@ -126,6 +181,15 @@ const Report = () => {
                             role="tab"
                             aria-controls="v-pills-home"
                             aria-selected="true">
+                            หน้าแรก
+                        </a>
+                        <a className="nav-link"
+                            id="v-pills-lotto3-tab"
+                            data-toggle="pill"
+                            href="#v-pills-lotto3"
+                            role="tab"
+                            aria-controls="v-pills-lotto3"
+                            aria-selected="false">
                             3ตัว บน
                         </a>
                         <a className="nav-link"
@@ -161,25 +225,39 @@ const Report = () => {
                             id="v-pills-home"
                             role="tabpanel"
                             aria-labelledby="v-pills-home-tab">
+                            หน้าแรก
+                            {/* <ReportLotto3 result={resultLotto.result3} /> */}
+                        </div>
+                        <div className="tab-pane fade"
+                            id="v-pills-lotto3"
+                            role="tabpanel"
+                            aria-labelledby="v-pills-lotto3-tab"
+                        >
                             <ReportLotto3 result={resultLotto.result3} />
                         </div>
                         <div className="tab-pane fade"
                             id="v-pills-profile"
                             role="tabpanel"
                             aria-labelledby="v-pills-profile-tab">
-                            <ReportLotto2Up result={resultLotto.result2up} />
+                            <ReportLotto2Up result={resultLotto.result2up} docData2Up={docData2Up} />
                         </div>
                         <div className="tab-pane fade"
                             id="v-pills-messages"
                             role="tabpanel"
                             aria-labelledby="v-pills-messages-tab">
-                            <ReportLotto2down result={resultLotto.result2down} dateDraw={drawDateFs()} />
+                            <ReportLotto2down result={resultLotto.result2down} dateDraw={drawDateFs()} docData2={docData2} />
                         </div>
                         <div className="tab-pane fade"
                             id="v-pills-settings"
                             role="tabpanel"
                             aria-labelledby="v-pills-settings-tab">
-                            <ReportLottoAll dateDraw={drawDateFs()} />
+                            <ReportLottoAll
+                                dateDraw={drawDateFs()}
+                                docId={docId}
+                                docId3={docId3}
+                                docData2Up={docData2Up}
+                                docData2={docData2}
+                                docData3={docData3} />
                         </div>
                     </div>
                 </div>
