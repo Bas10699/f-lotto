@@ -16,7 +16,9 @@ const ReportLotto2Up = (item) => {
         setlotto2(updatedList)
     }
     useEffect(() => {
+
         filterLotto()
+
     }, [])
 
     return (
@@ -32,14 +34,14 @@ const ReportLotto2Up = (item) => {
                     <DoughnutChart />
                 </div>
                 <div className="col-sm-4">
-                    <h5>ข้อมูลที่ถูกรางวัล 2ตัวล่าง</h5>
+                    <h5>ข้อมูลที่ถูกรางวัล 2ตัวบน</h5>
                     <table className="table table-sm " >
                         <thead className="thead-dark">
                             <tr>
-                                <th
+                                <th style={{cursor:"pointer"}}
                                     onClick={() => { sortData(lotto2, "name", check) && setcheck(!check) }}
-                                >ชื่อ</th>
-                                <th>2ตัวล่าง</th>
+                                >ชื่อ <i class="fas fa-sort"></i></th>
+                                <th>2ตัวบน</th>
                                 <th>ราคา</th>
                                 <th>จ่าย</th>
                             </tr>

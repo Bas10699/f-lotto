@@ -155,8 +155,9 @@ const Report = () => {
     }
 
     useEffect(() => {
-        getResults()
         getAllData()
+        getResults()
+        
     }, [])
     return (
         loading ? <div className="loading">
