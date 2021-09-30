@@ -7,8 +7,10 @@ import { get } from "../const/servive"
 import ReportLotto2Up from "./reportlotto2up"
 import ReportLotto2down from "./reportlotto2down"
 import ReportLottoAll from "./reportlottoall"
+import { useHistory } from "react-router"
 
 const Report = () => {
+    let history = useHistory();
     const [drawdate, setDrawdate] = useState('')
     const [loading, setLoading] = useState(true)
     const [resultLotto, setresultLotto] = useState([])
@@ -38,7 +40,7 @@ const Report = () => {
     }
 
     const drawDateFs = () => {
-        if ((moment().format("DD") * 1) > 16) {
+        if ((moment().format("DD") * 1) > 15) {
             return "16/" + moment().format("MM/YYYY")
         }
         else {
@@ -155,9 +157,22 @@ const Report = () => {
     }
 
     useEffect(() => {
-        getAllData()
-        getResults()
-        
+        if (moment().format("HH") > 16) {
+            getAllData()
+            getResults()
+        }
+        else {
+            Swal.fire({
+                title: 'กรุณาเข้าดูหลัง 15:00 น.',
+                text: "เพื่อป้องกันการอ่านข้อมูลเกินขีดจำกัด",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+            }).then((result) => {
+                history.push("/")
+            })
+        }
     }, [])
     return (
         loading ? <div className="loading">

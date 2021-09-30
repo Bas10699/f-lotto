@@ -58,13 +58,14 @@ const PriceShowAll = (props) => {
     const LottoPintter3 = (item, limit) => {
         let dataPinter = []
 
+        let limitTodd = limit / 5
         item.map((element, index) => {
 
-            if (element.sumTrong - limit > 0 || element.sumTodd - limit > 0) {
+            if (element.sumTrong - limit > 0 || element.sumTodd - limitTodd > 0) {
                 dataPinter.push({
                     numLotto: element.numLotto,
                     sumTrong: (element.sumTrong - limit) > 0 ? element.sumTrong - limit : 0,
-                    sumTodd: (element.sumTodd - limit) > 0 ? element.sumTodd - limit : 0
+                    sumTodd: (element.sumTodd - limitTodd) > 0 ? element.sumTodd - limitTodd : 0
                 })
 
             }
@@ -421,7 +422,6 @@ const PriceShowAll = (props) => {
 
             sortData(lottoT3, "numLotto", false)
             setShowT3(lottoT3)
-            setShowT3S100(LottosumTodd(lottoT3))
 
         });
     }
@@ -753,7 +753,7 @@ const PriceShowAll = (props) => {
                         </select>
                         <div className="input-group-append">
                             <button className="btn btn-outline-info" onClick={() => printJS({
-                                printable: LottoPintter3(showT3S100, limitPrice3),
+                                printable: LottoPintter3(showT3, limitPrice3),
                                 type: 'json',
                                 properties: [
                                     { field: 'numLotto', displayName: '3ตัวบน' },
@@ -779,7 +779,7 @@ const PriceShowAll = (props) => {
                             </thead>
                             <tbody className="bg-body-table">
                                 {showT3.map((element, index) => {
-                                    let limitTodd = limitPrice3 / 2
+                                    let limitTodd = limitPrice3 / 5
 
                                     if (element.sumTrong - limitPrice3 > 0 || element.sumTodd - limitTodd > 0) {
                                         return (
