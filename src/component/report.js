@@ -8,6 +8,7 @@ import ReportLotto2Up from "./reportlotto2up"
 import ReportLotto2down from "./reportlotto2down"
 import ReportLottoAll from "./reportlottoall"
 import { useHistory } from "react-router"
+import Swal from "sweetalert2"
 
 const Report = () => {
     let history = useHistory();
@@ -157,18 +158,17 @@ const Report = () => {
     }
 
     useEffect(() => {
-        if (moment().format("HH") > 16) {
+        const dd = moment().format("DD") * 1
+        if ((dd == 1 || dd == 16) && moment().format("HH") > 15) {
             getAllData()
             getResults()
         }
         else {
             Swal.fire({
-                title: 'กรุณาเข้าดูหลัง 15:00 น.',
+                title: 'กรุณาเข้าดูหลัง 15:00',
                 text: "เพื่อป้องกันการอ่านข้อมูลเกินขีดจำกัด",
                 icon: 'warning',
-                showCancelButton: true,
                 confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
             }).then((result) => {
                 history.push("/")
             })
