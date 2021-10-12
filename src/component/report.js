@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import { BrowserRouter, HashRouter, Link, NavLink } from "react-router-dom"
 import moment from "moment"
 import '../App.css'
 import ReportLotto3 from "./reportlotto3"
@@ -7,8 +8,10 @@ import { get } from "../const/servive"
 import ReportLotto2Up from "./reportlotto2up"
 import ReportLotto2down from "./reportlotto2down"
 import ReportLottoAll from "./reportlottoall"
-import { useHistory } from "react-router"
+import { Route, useHistory } from "react-router"
 import Swal from "sweetalert2"
+import ReportHome from "./reportHome"
+import { drawDate } from "../const/constance"
 
 const Report = () => {
     let history = useHistory();
@@ -16,21 +19,13 @@ const Report = () => {
     const [loading, setLoading] = useState(true)
     const [resultLotto, setresultLotto] = useState([])
     const [i, seti] = useState(0)
-
+    const [sumPrice, setsumPrice] = useState('')
     const [docId, setdocId] = useState([])
     const [docId3, setdocId3] = useState([])
     const [docData2Up, setdocData2Up] = useState([])
     const [docData2, setdocData2] = useState([])
     const [docData3, setdocData3] = useState([])
 
-    const drawDate = () => {
-        if ((moment().format("DD") * 1) > 16) {
-            return "16" + moment().add(543, "years").format("MMYYYY")
-        }
-        else {
-            return "01" + moment().add(543, "years").format("MMYYYY")
-        }
-    }
     const drawDateShow = () => {
         if ((moment().format("DD") * 1) > 16) {
             return "16/" + moment().add(543, "years").format("MM/YYYY")
@@ -111,6 +106,33 @@ const Report = () => {
                 console.log("Error getting document:", error);
             });
     }
+    const addSumData = (up, down) => {
+
+
+        db.collection("sumresults").doc(drawDate()).set({
+            // drawdate: drawDate(),
+            // result: result.result,
+            result2down: {
+                name: "2ตัวล่าง",
+                sumprice: down.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto, 0)
+            },
+            // result3: {
+            //     name: "3ตัวบน",
+            //     number: result[0][1].slice(3)
+            // },
+            result2up: {
+                name: "2ตัวบน",
+                sumprice: up.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto, 0)
+            }
+        })
+            .then(() => {
+                console.log("Document successfully written!");
+                getResults()
+            })
+            .catch((error) => {
+                console.error("Error writing document: ", error);
+            });
+    }
 
     const getAllData = () => {
         db.collection("lotto").where("drawDate", "==", drawDateFs())
@@ -134,6 +156,7 @@ const Report = () => {
                 setdocId(doc_id)
                 setdocData2Up(doc_dataUp)
                 setdocData2(doc_data)
+                addSumData(doc_dataUp, doc_data)
             })
             .catch((error) => {
                 console.log("Error getting documents: ", error);
@@ -156,22 +179,50 @@ const Report = () => {
                 console.log("Error getting documents: ", error);
             });
     }
+    const getSumResult = () => {
+        db.collection("sumresults")
+            .doc(drawDate())
+            .get().then((doc) => {
+                console.log(doc.exists)
+                if (doc.exists) {
+                    console.log("Document data:", doc.data());
+                    setsumPrice(doc.data())
+                    setLoading(false)
+                    // doc.forEach((doc) => {
+                    //     // doc.data() is never undefined for query doc snapshots
+                    //     console.log(doc.id, " => ", doc.data());
+                    // });
+                } else {
+                    // doc.data() will be undefined in this case
+                    console.log("No such document!");
+                    getAllData()
+                }
+            }).catch((error) => {
+                console.log("Error getting document:", error);
+            });
+    }
 
     useEffect(() => {
         const dd = moment().format("DD") * 1
-        if ((dd == 1 || dd == 16) && moment().format("HH") > 15) {
-            getAllData()
-            getResults()
+        if (dd == 1 || dd == 16) {
+            if (moment().format("HH") > 15) {
+                getSumResult()
+                getResults()
+            }
+            else {
+                Swal.fire({
+                    title: 'กรุณาเข้าดูหลัง 15:00',
+                    text: "เพื่อป้องกันการอ่านข้อมูลเกินขีดจำกัด",
+                    icon: 'warning',
+                    confirmButtonColor: '#3085d6',
+                }).then((result) => {
+                    history.push("/")
+                })
+            }
         }
         else {
-            Swal.fire({
-                title: 'กรุณาเข้าดูหลัง 15:00',
-                text: "เพื่อป้องกันการอ่านข้อมูลเกินขีดจำกัด",
-                icon: 'warning',
-                confirmButtonColor: '#3085d6',
-            }).then((result) => {
-                history.push("/")
-            })
+            getSumResult()
+            getResults()
         }
     }, [])
     return (
@@ -186,87 +237,43 @@ const Report = () => {
             <span />
         </div> :
             <div className="container-fluid">
-                <div className="p-3 sidenav">
-                    <h5>สรุปข้อมูลงวดวันที่ {drawDateShow()}</h5>
-                    <hr />
-                    <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                        <a className="nav-link active"
-                            id="v-pills-home-tab"
-                            data-toggle="pill"
-                            href="#v-pills-home"
-                            role="tab"
-                            aria-controls="v-pills-home"
-                            aria-selected="true">
-                            หน้าแรก
-                        </a>
-                        <a className="nav-link"
-                            id="v-pills-lotto3-tab"
-                            data-toggle="pill"
-                            href="#v-pills-lotto3"
-                            role="tab"
-                            aria-controls="v-pills-lotto3"
-                            aria-selected="false">
-                            3ตัว บน
-                        </a>
-                        <a className="nav-link"
-                            id="v-pills-profile-tab"
-                            data-toggle="pill"
-                            href="#v-pills-profile"
-                            role="tab"
-                            aria-controls="v-pills-profile"
-                            aria-selected="false">
-                            2ตัว บน
-                        </a>
-                        <a className="nav-link"
-                            id="v-pills-messages-tab"
-                            data-toggle="pill"
-                            href="#v-pills-messages"
-                            role="tab"
-                            aria-controls="v-pills-messages"
-                            aria-selected="false">
-                            2ตัว ล่าง
-                        </a>
-                        <a className="nav-link"
-                            id="v-pills-settings-tab"
-                            data-toggle="pill"
-                            href="#v-pills-settings"
-                            role="tab"
-                            aria-controls="v-pills-settings"
-                            aria-selected="false">สรุปรวม</a>
+                <BrowserRouter basename="/report">
+                    <div className="p-3 sidenav">
+                        <h5>สรุปข้อมูลงวดวันที่ {drawDateShow()}</h5>
+                        <hr />
+                        <div className="nav flex-column nav-pills">
+                            <NavLink exact to="/" className="nav-link" activeClassName="active">
+                                หน้าแรก
+                            </NavLink>
+                            <NavLink to="/Lotto3" className="nav-link" activeClassName="active">
+                                3ตัวบน
+                            </NavLink>
+                            <NavLink to="/Lotto2Up" className="nav-link" activeClassName="active">
+                                2ตัวบน
+                            </NavLink>
+                            <NavLink to="/Lotto2down" className="nav-link" activeClassName="active">
+                                2ตัวล่าง
+                            </NavLink>
+                            <NavLink to="/LottoAll" className="nav-link" activeClassName="active">
+                                สรุปรวม
+                            </NavLink>
+                        </div>
                     </div>
-                </div>
-                <div className="page-sh p-3">
-                    <div className="tab-content" id="v-pills-tabContent">
-                        <div className="tab-pane fade show active"
-                            id="v-pills-home"
-                            role="tabpanel"
-                            aria-labelledby="v-pills-home-tab">
-                            หน้าแรก
-                            {/* <ReportLotto3 result={resultLotto.result3} /> */}
-                        </div>
-                        <div className="tab-pane fade"
-                            id="v-pills-lotto3"
-                            role="tabpanel"
-                            aria-labelledby="v-pills-lotto3-tab"
-                        >
+                    <div className="page-sh p-3">
+                        {/* <ReportLotto3 result={resultLotto.result3} /> */}
+                        <Route exact path="/">
+                            <ReportHome sumprice={sumPrice} />
+                        </Route>
+                        <Route path="/Lotto3">
                             <ReportLotto3 result={resultLotto.result3} />
-                        </div>
-                        <div className="tab-pane fade"
-                            id="v-pills-profile"
-                            role="tabpanel"
-                            aria-labelledby="v-pills-profile-tab">
+                        </Route>
+                        <Route path="/Lotto2Up">
                             <ReportLotto2Up result={resultLotto.result2up} docData2Up={docData2Up} />
-                        </div>
-                        <div className="tab-pane fade"
-                            id="v-pills-messages"
-                            role="tabpanel"
-                            aria-labelledby="v-pills-messages-tab">
+                        </Route>
+                        <Route path="/Lotto2down">
                             <ReportLotto2down result={resultLotto.result2down} dateDraw={drawDateFs()} docData2={docData2} />
-                        </div>
-                        <div className="tab-pane fade"
-                            id="v-pills-settings"
-                            role="tabpanel"
-                            aria-labelledby="v-pills-settings-tab">
+                        </Route>
+                        <Route path="/LottoAll">
                             <ReportLottoAll
                                 dateDraw={drawDateFs()}
                                 docId={docId}
@@ -274,9 +281,9 @@ const Report = () => {
                                 docData2Up={docData2Up}
                                 docData2={docData2}
                                 docData3={docData3} />
-                        </div>
+                        </Route>
                     </div>
-                </div>
+                </BrowserRouter>
             </div>
 
     )

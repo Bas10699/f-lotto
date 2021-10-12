@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const addComma = (x) => {
     var parts = x.toString().split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -98,4 +100,13 @@ export const sortlotto3 = (item) => {
     })
     // console.log("trong", item_trong)
     // console.log("todd", item_todd)
+}
+
+export const drawDate = () => {
+    if ((moment().format("DD") * 1) > 16) {
+        return "16" + moment().add(543, "years").format("MMYYYY")
+    }
+    else {
+        return "01" + moment().add(543, "years").format("MMYYYY")
+    }
 }
