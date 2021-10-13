@@ -49,7 +49,7 @@ const InputLotto2 = () => {
         else {
             return "01/" + moment().add(1, 'months').format("MM/YYYY")
         }
-        // return "01/09/2021"
+        // return "01/10/2021"
     }
     const send_click = async (typeLotto) => {
 

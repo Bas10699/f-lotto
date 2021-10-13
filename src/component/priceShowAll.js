@@ -438,6 +438,7 @@ const PriceShowAll = (props) => {
         return (
             <div className="row">
                 <div className="col-sm-6">
+
                     <div className="input-group input-group-sm ">
                         <div className="input-group-prepend">
                             <span className="input-group-text" id="inputGroup-sizing-default">ราคารวมเกิน</span></div>
@@ -456,14 +457,18 @@ const PriceShowAll = (props) => {
                                     { field: 'sumTrong', displayName: 'ตรง' },
                                     { field: 'sumTodd', displayName: 'โต๊ด' }
                                 ],
-                                header: '<h3 class="custom-h3">ระบบการจัดการตัวเลขของเอฟโอเวอร์</h3>',
                                 style: '.custom-h3 { color: red; }',
                                 font_size: '18pt',
                                 documentTitle: `ราคาเกิน ${limitPrice}บาท`
                             })}>print</button>
                         </div>
                     </div>
-                    <h6>บาท</h6>
+                    <h6>
+                        ทั้งหมด
+                        <div className="float-right">
+                            {addComma(showDown.reduce((accumulator, currentValue) => accumulator + (currentValue.sumPrice - limitPrice > 0 ? currentValue.sumPrice - limitPrice : 0), 0))} บาท
+                        </div>
+                    </h6>
                     <div style={{ overflow: "auto", maxHeight: "450px" }}>
                         <table className="table table-sm table-striped">
                             <thead className="thead-dark headerTable">
@@ -589,7 +594,7 @@ const PriceShowAll = (props) => {
         return (
             <div className="row">
                 <div className="col-sm-6">
-                    <div className="input-group mb-3">
+                    <div className="input-group input-group-sm">
                         <div className="input-group-prepend">
                             <span className="input-group-text" id="inputGroup-sizing-default">ราคารวมเกิน</span></div>
                         <select className="custom-select" defaultValue={limitPrice} onChange={(e) => setLimitPrice(e.target.value)}>
@@ -607,13 +612,18 @@ const PriceShowAll = (props) => {
                                     { field: 'sumTrong', displayName: 'ตรง' },
                                     { field: 'sumTodd', displayName: 'โต๊ด' }
                                 ],
-                                header: '<h3 class="custom-h3">ระบบการจัดการตัวเลขของเอฟโอเวอร์</h3>',
                                 style: '.custom-h3 { color: red; }',
                                 font_size: '18pt',
                                 documentTitle: `ราคาเกิน ${limitPrice}บาท`
                             })}>print</button>
                         </div>
                     </div>
+                    <h6>
+                        ทั้งหมด
+                        <div className="float-right">
+                            {addComma(showTop.reduce((accumulator, currentValue) => accumulator + (currentValue.sumPrice - limitPrice > 0 ? currentValue.sumPrice - limitPrice : 0), 0))} บาท
+                        </div>
+                    </h6>
                     <div style={{ overflow: "auto", maxHeight: "450px" }}>
                         <table className="table table-sm table-striped ">
                             <thead className="thead-dark headerTable">
@@ -760,7 +770,6 @@ const PriceShowAll = (props) => {
                                     { field: 'sumTrong', displayName: 'ตรง' },
                                     { field: 'sumTodd', displayName: 'โต๊ด' }
                                 ],
-                                header: '<h3 class="custom-h3">ระบบการจัดการตัวเลขของเอฟโอเวอร์</h3>',
                                 style: '.custom-h3 { color: red; }',
                                 font_size: '18pt',
                                 documentTitle: `ราคาเกิน ${limitPrice3}บาท`
@@ -814,14 +823,15 @@ const PriceShowAll = (props) => {
                             { field: 'sumTrong', displayName: 'ตรง' },
                             { field: 'sumTodd', displayName: 'โต๊ด' }
                         ],
-                        header: '<h3 class="custom-h3">ระบบการจัดการตัวเลขของเอฟโอเวอร์</h3>',
                         style: '.custom-h3 { color: red; column-count: 2; column-gap: 40px;}',
                         font_size: '18pt',
                         // style:'column-count: 2; column-gap: 40px;',
                         documentTitle: `ราคาเกิน ${limitPrice3}บาท`
                     })}>print</button>
 
-                    <h6>ทั้งหมด {count(showData, props.show)} รายการ</h6>
+                    <h6>
+                        {/* ทั้งหมด {count(showData, props.show)} รายการ */}
+                    </h6>
                     <div style={{ overflow: "auto", height: "450px" }}>
                         <table className="table table-sm table-striped">
                             <thead className="thead-dark headerTable">

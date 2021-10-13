@@ -11,7 +11,7 @@ import ReportLottoAll from "./reportlottoall"
 import { Route, useHistory } from "react-router"
 import Swal from "sweetalert2"
 import ReportHome from "./reportHome"
-import { drawDate } from "../const/constance"
+import { drawDate, sortReversedData } from "../const/constance"
 
 const Report = () => {
     let history = useHistory();
@@ -107,14 +107,13 @@ const Report = () => {
             });
     }
     const addSumData = (up, down) => {
-
-
         db.collection("sumresults").doc(drawDate()).set({
             // drawdate: drawDate(),
             // result: result.result,
             result2down: {
                 name: "2ตัวล่าง",
-                sumprice: down.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto, 0)
+                sumprice: down.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0),
+                sum500over: down.reduce((accumulator, currentValue) => accumulator + (currentValue.sumPrice - 500 > 0 ? currentValue.sumPrice - 500 : 0), 0)
             },
             // result3: {
             //     name: "3ตัวบน",
@@ -122,7 +121,8 @@ const Report = () => {
             // },
             result2up: {
                 name: "2ตัวบน",
-                sumprice: up.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto, 0)
+                sumprice: up.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0),
+                sum500over: up.reduce((accumulator, currentValue) => accumulator + (currentValue.sumPrice - 500 > 0 ? currentValue.sumPrice - 500 : 0), 0)
             }
         })
             .then(() => {
@@ -141,9 +141,23 @@ const Report = () => {
                 let doc_id = []
                 let doc_dataUp = []
                 let doc_data = []
+                let lotto = []
+                let shData = []
                 querySnapshot.forEach((doc) => {
                     // doc.data() is never undefined for query doc snapshots
                     // console.log(doc.id, " => ", doc.data());
+                    shData.unshift({ id: doc.id, ...doc.data() })
+
+                    let index = lotto.findIndex((elem) => elem === doc.data().numLotto)
+                    if (index < 0) {
+                        if (doc.data().numLotto !== null && doc.data().numLotto !== undefined) {
+                            // console.log(ele_data.plant)
+                            lotto.push(
+                                doc.data().numLotto
+                            )
+                        }
+                    }
+
                     if (doc.data().typeLotto === 0) {
                         doc_dataUp.push(doc.data())
                     }
@@ -153,31 +167,62 @@ const Report = () => {
                     doc_id.push(doc.id)
 
                 });
+                let lottoTop = []
+                let lottoDown = []
+
+                let lottoset = sortReversedData(lotto.sort())
+                // console.log("lot", lottoset)
+                lottoset.map((eleLotto) => {
+                    let sumTop = 0
+                    let sumDown = 0
+                    shData.map((eleData) => {
+                        if ((eleLotto === eleData.numLotto) && (eleData.typeLotto === 0)) {
+                            sumTop += eleData.priceLotto
+                        }
+                        else if ((eleLotto === eleData.numLotto) && (eleData.typeLotto === 1)) {
+                            sumDown += eleData.priceLotto
+                        }
+                    })
+                    if (sumTop > 0) {
+                        lottoTop.push({
+                            numLotto: eleLotto,
+                            sumPrice: sumTop
+                        })
+                    }
+                    if (sumDown > 0) {
+                        lottoDown.push({
+                            numLotto: eleLotto,
+                            sumPrice: sumDown
+                        })
+                    }
+
+                })
+
                 setdocId(doc_id)
                 setdocData2Up(doc_dataUp)
                 setdocData2(doc_data)
-                addSumData(doc_dataUp, doc_data)
+                addSumData(lottoTop, lottoDown)
             })
             .catch((error) => {
                 console.log("Error getting documents: ", error);
             });
-        db.collection("lotto3").where("drawDate", "==", drawDateFs())
-            .get()
-            .then((querySnapshot) => {
-                let doc_id = []
-                let doc_data = []
-                querySnapshot.forEach((doc) => {
-                    // doc.data() is never undefined for query doc snapshots
-                    // console.log(doc.id, " => ", doc.data());
-                    doc_id.push(doc.id)
-                    doc_data.push(doc.data())
-                });
-                setdocId3(doc_id)
-                setdocData3(doc_data)
-            })
-            .catch((error) => {
-                console.log("Error getting documents: ", error);
-            });
+        // db.collection("lotto3").where("drawDate", "==", drawDateFs())
+        //     .get()
+        //     .then((querySnapshot) => {
+        //         let doc_id = []
+        //         let doc_data = []
+        //         querySnapshot.forEach((doc) => {
+        //             // doc.data() is never undefined for query doc snapshots
+        //             // console.log(doc.id, " => ", doc.data());
+        //             doc_id.push(doc.id)
+        //             doc_data.push(doc.data())
+        //         });
+        //         setdocId3(doc_id)
+        //         setdocData3(doc_data)
+        //     })
+        //     .catch((error) => {
+        //         console.log("Error getting documents: ", error);
+        //     });
     }
     const getSumResult = () => {
         db.collection("sumresults")
