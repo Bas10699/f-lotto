@@ -50,7 +50,7 @@ const Report = () => {
         await get("?date=" + drawDate()).then((result) => {
             setLoading(true)
             if (result[0]) {
-                console.log(result)
+                // console.log(result)
                 // setDrawdate(result.drawdate)
                 // setresultLotto(result.result)
                 // setLoading(false)
@@ -310,10 +310,10 @@ const Report = () => {
                             <ReportHome sumprice={sumPrice} />
                         </Route>
                         <Route path="/Lotto3">
-                            <ReportLotto3 result={resultLotto.result3} />
+                            <ReportLotto3 result={resultLotto.result3} dateDraw={drawDateFs()} />
                         </Route>
                         <Route path="/Lotto2Up">
-                            <ReportLotto2Up result={resultLotto.result2up} docData2Up={docData2Up} />
+                            <ReportLotto2Up result={resultLotto.result2up } dateDraw={drawDateFs()} docData2Up={docData2Up} />
                         </Route>
                         <Route path="/Lotto2down">
                             <ReportLotto2down result={resultLotto.result2down} dateDraw={drawDateFs()} docData2={docData2} />

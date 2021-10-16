@@ -36,7 +36,7 @@ const PriceShowAll = (props) => {
         item.map((element, index) => {
 
             if (element.sumTrong - limitPrice > 0 || element.sumTodd - limitPrice > 0) {
-                sum = sum + (element.sumTrong - limitPrice) * 1 + (element.sumTodd - limitPrice) * 1
+                sum = sum + ((element.sumTrong - limitPrice) > 0 ? element.sumTrong - limitPrice : 0) + ((element.sumTodd - limitPrice) > 0 ? element.sumTodd - limitPrice : 0)
                 dataPinter.push({
                     numLotto: element.numLotto,
                     sumTrong: (element.sumTrong - limitPrice) > 0 ? element.sumTrong - limitPrice : 0,

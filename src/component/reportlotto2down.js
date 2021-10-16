@@ -20,7 +20,7 @@ const ReportLotto2down = (item) => {
                 let doc_data = []
                 querySnapshot.forEach((doc) => {
                     // doc.data() is never undefined for query doc snapshots
-                    console.log(doc.id, " => ", doc.data());
+                    // console.log(doc.id, " => ", doc.data());
                     doc_data.push(doc.data())
                     doc_id.push(doc.id)
 

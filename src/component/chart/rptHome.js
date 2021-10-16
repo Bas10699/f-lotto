@@ -33,6 +33,7 @@ const RptHome = (item) => {
                     plugins: {
                         datalabels: {
                             display: true,
+                            color: 'white',
                             font: {
                                 size: 16,
                             }

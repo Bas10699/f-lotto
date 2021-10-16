@@ -1,5 +1,6 @@
 import React, { useState, useEffect, use } from 'react'
 import { sortData } from '../const/constance';
+import { db } from '../firebase';
 import DoughnutChart from './chart/price2';
 
 const ReportLotto2Up = (item) => {
@@ -7,18 +8,28 @@ const ReportLotto2Up = (item) => {
     const [reward, setreward] = useState(60)
     const [check, setcheck] = useState(true)
 
-    const filterLotto = () => {
-        let updatedList = item.docData2Up;
-        let number = item.result.number
-        updatedList = updatedList.filter(function (item) {
-            return item.numLotto.search(number) !== -1;
-        });
-        setlotto2(updatedList)
-    }
     useEffect(() => {
+        db.collection("lotto")
+            .where("drawDate", "==", item.dateDraw)
+            .where("numLotto", "==", item.result.number)
+            .where("typeLotto", "==", 0)
+            .get()
+            .then((querySnapshot) => {
+                let doc_id = []
+                let doc_data = []
+                querySnapshot.forEach((doc) => {
+                    // doc.data() is never undefined for query doc snapshots
+                    // console.log(doc.id, " => ", doc.data());
+                    doc_data.push(doc.data())
+                    doc_id.push(doc.id)
 
-        filterLotto()
-
+                });
+                // setdocId(doc_id)
+                setlotto2(doc_data)
+            })
+            .catch((error) => {
+                console.log("Error getting documents: ", error);
+            });
     }, [])
 
     return (
@@ -40,7 +51,7 @@ const ReportLotto2Up = (item) => {
                             <tr>
                                 <th style={{cursor:"pointer"}}
                                     onClick={() => { sortData(lotto2, "name", check) && setcheck(!check) }}
-                                >ชื่อ <i class="fas fa-sort"></i></th>
+                                >ชื่อ <i className="fas fa-sort"></i></th>
                                 <th>2ตัวบน</th>
                                 <th>ราคา</th>
                                 <th>จ่าย</th>

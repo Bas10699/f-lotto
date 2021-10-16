@@ -103,7 +103,7 @@ export const sortlotto3 = (item) => {
 }
 
 export const drawDate = () => {
-    if ((moment().format("DD") * 1) > 16) {
+    if ((moment().format("DD") * 1) >= 16) {
         return "16" + moment().add(543, "years").format("MMYYYY")
     }
     else {
