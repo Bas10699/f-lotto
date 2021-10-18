@@ -635,7 +635,7 @@ const InputLotto2 = () => {
 
                 </div >
                 <div className="col-lg-6">
-                    <h4>แสดงข้อมูลรวม</h4>
+                    {/* <h4>แสดงข้อมูลรวม</h4> */}
                     <PriceShowAll show={show} dDate={drawDate()} />
                 </div>
             </div >

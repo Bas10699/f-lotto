@@ -21,7 +21,8 @@ const PriceShowAll = (props) => {
     const [showData3, setShowData3] = useState([])
     const [showT3, setShowT3] = useState([])
     const [showT3S100, setShowT3S100] = useState([])
-    const [limitPrice3, setLimitPrice3] = useState(50)
+    const [limitPrice3, setLimitPrice3] = useState(10)
+    const [limitPrice3todd, setLimitPrice3todd] = useState(10)
     const [dataNumber3, setdataNumber3] = useState([])
 
     const reversedNum = num => num.toString().split('').reverse().join('')
@@ -55,10 +56,8 @@ const PriceShowAll = (props) => {
 
         return dataPinter
     }
-    const LottoPintter3 = (item, limit) => {
+    const LottoPintter3 = (item, limit, limitTodd) => {
         let dataPinter = []
-
-        let limitTodd = limit / 5
         item.map((element, index) => {
 
             if (element.sumTrong - limit > 0 || element.sumTodd - limitTodd > 0) {
@@ -436,495 +435,533 @@ const PriceShowAll = (props) => {
 
     if (props.show === 1) {
         return (
-            <div className="row">
-                <div className="col-sm-6">
+            <div>
+                <h4>แสดงข้อมูล <div className="text-danger d-inline">รับเอง {addComma(showDown.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0) - showDown.reduce((accumulator, currentValue) => accumulator + (currentValue.sumPrice - limitPrice > 0 ? currentValue.sumPrice - limitPrice : 0), 0))} บาท</div>
+                </h4>
 
-                    <div className="input-group input-group-sm ">
-                        <div className="input-group-prepend">
-                            <span className="input-group-text" id="inputGroup-sizing-default">ราคารวมเกิน</span></div>
-                        <select className="custom-select" defaultValue={limitPrice} onChange={(e) => setLimitPrice(e.target.value)}>
-                            <option value={200}>200</option>
-                            <option value={300}>300</option>
-                            <option value={400}>400</option>
-                            <option value={500}>500</option>
-                        </select>
-                        <div className="input-group-append">
-                            <button className="btn btn-outline-info" onClick={() => printJS({
-                                printable: LottoPintter(showDown200),
-                                type: 'json',
-                                properties: [
-                                    { field: 'numLotto', displayName: '2ตัวล่าง' },
-                                    { field: 'sumTrong', displayName: 'ตรง' },
-                                    { field: 'sumTodd', displayName: 'โต๊ด' }
-                                ],
-                                style: '.custom-h3 { color: red; }',
-                                font_size: '18pt',
-                                documentTitle: `ราคาเกิน ${limitPrice}บาท`
-                            })}>print</button>
-                        </div>
-                    </div>
-                    <h6>
-                        ทั้งหมด
-                        <div className="float-right">
-                            {addComma(showDown.reduce((accumulator, currentValue) => accumulator + (currentValue.sumPrice - limitPrice > 0 ? currentValue.sumPrice - limitPrice : 0), 0))} บาท
-                        </div>
-                    </h6>
-                    <div style={{ overflow: "auto", maxHeight: "450px" }}>
-                        <table className="table table-sm table-striped">
-                            <thead className="thead-dark headerTable">
-                                <tr>
-                                    {/* <th scope="col">#</th> */}
-                                    <th className="headerTable" scope="col">2ตัวล่าง</th>
-                                    <th className="headerTable" scope="col">ตรง</th>
-                                    <th className="headerTable" scope="col">โต๊ด</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-body-table">
-                                {showDown200.map((element, index) => {
+                <div className="row">
+                    <div className="col-sm-6">
 
-                                    if (element.sumTrong - limitPrice > 0 || element.sumTodd - limitPrice > 0) {
-                                        let todd = element.sumTodd - limitPrice
-                                        let trong = element.sumTrong - limitPrice
-                                        return (
-                                            <tr key={index} >
-                                                {/* <td>{index + 1}</td> */}
-                                                <td>{element.numLotto}</td>
-                                                <td>{trong > 0 ? trong : 0}</td>
-                                                <td>{todd > 0 ? todd : 0}</td>
-                                            </tr>
-                                        )
-                                    }
-                                })}
-
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div className="col-sm-6">
-                    <ExportExcel data={sortData(showData, "name", false)} typeLotto={props.show} />
-                    <h6>ทั้งหมด {count(showData, props.show)} รายการ  <div className="float-right">{addComma(showDown.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0))} บาท</div></h6>
-                    <div style={{ overflow: "auto", maxHeight: "450px" }}>
-                        <table className="table table-sm table-striped">
-                            <thead className="thead-dark headerTable">
-                                <tr>
-                                    <th className="headerTable" scope="col">2ตัวล่าง</th>
-                                    <th className="headerTable" scope="col">ตรง</th>
-                                    <th className="headerTable" scope="col">โต๊ด</th>
-                                    <th scope="col"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {showDown200.map((element, index) => {
-                                    if (element.numLotto == reversedNum(element.numLotto)) element.sumTodd = 0
-                                    return (
-                                        <tr key={index}>
-                                            <td>{element.numLotto}</td>
-                                            <td>{element.sumTrong}</td>
-                                            <td>{element.sumTodd}</td>
-                                            <td><button className="btn btn-warning btn-sm"
-                                                data-toggle="modal"
-                                                data-target="#exampleModal"
-                                                onClick={() => numberLottoDown(element.numLotto, props.show)}>แก้ไข</button>
-                                            </td>
-                                        </tr>
-                                    )
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                {/* <!-- Modal --> */}
-                <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">รายละเอียด 2ตัวล่าง </h5>
-                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
+                        <div className="input-group input-group-sm ">
+                            <div className="input-group-prepend">
+                                <span className="input-group-text" id="inputGroup-sizing-default">ราคารวมเกิน</span></div>
+                            <select className="custom-select" defaultValue={limitPrice} onChange={(e) => setLimitPrice(e.target.value)}>
+                                <option value={200}>200</option>
+                                <option value={300}>300</option>
+                                <option value={400}>400</option>
+                                <option value={500}>500</option>
+                            </select>
+                            <div className="input-group-append">
+                                <button className="btn btn-outline-info" onClick={() => printJS({
+                                    printable: LottoPintter(showDown200),
+                                    type: 'json',
+                                    properties: [
+                                        { field: 'numLotto', displayName: '2ตัวล่าง' },
+                                        { field: 'sumTrong', displayName: 'ตรง' },
+                                        { field: 'sumTodd', displayName: 'โต๊ด' }
+                                    ],
+                                    style: '.custom-h3 { color: red; }',
+                                    font_size: '18pt',
+                                    documentTitle: `ราคาเกิน ${limitPrice}บาท`
+                                })}>print</button>
                             </div>
-                            <div className="modal-body">
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">ชื่อ</th>
-                                            <th scope="col">2ตัวล่าง</th>
-                                            <th scope="col">ราคา</th>
-                                            <th scope="col">วันที่</th>
-                                            <th scope="col">เวลา</th>
-                                            <th scope="col"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {dataNumber.map((ele_num, index) => {
+                        </div>
+                        <h6>
+                            ทั้งหมด
+                            <div className="float-right">
+                                {addComma(showDown.reduce((accumulator, currentValue) => accumulator + (currentValue.sumPrice - limitPrice > 0 ? currentValue.sumPrice - limitPrice : 0), 0))} บาท
+                            </div>
+                        </h6>
+                        <div style={{ overflow: "auto", maxHeight: "450px" }}>
+                            <table className="table table-sm table-striped">
+                                <thead className="thead-dark headerTable">
+                                    <tr>
+                                        {/* <th scope="col">#</th> */}
+                                        <th className="headerTable" scope="col">2ตัวล่าง</th>
+                                        <th className="headerTable" scope="col">ตรง</th>
+                                        <th className="headerTable" scope="col">โต๊ด</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-body-table">
+                                    {showDown200.map((element, index) => {
+
+                                        if (element.sumTrong - limitPrice > 0 || element.sumTodd - limitPrice > 0) {
+                                            let todd = element.sumTodd - limitPrice
+                                            let trong = element.sumTrong - limitPrice
                                             return (
-                                                <tr key={index}>
-                                                    <td>{ele_num.name}</td>
-                                                    <td>{ele_num.numLotto}</td>
-                                                    <td>{ele_num.priceLotto}</td>
-                                                    <td>{ele_num.date}</td>
-                                                    <td>{ele_num.time}</td>
-                                                    <td><button className="btn btn-danger btn-sm"
-                                                        onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto)}>
-                                                        ลบ
-                                                    </button>
-                                                    </td>
+                                                <tr key={index} >
+                                                    {/* <td>{index + 1}</td> */}
+                                                    <td>{element.numLotto}</td>
+                                                    <td>{trong > 0 ? trong : 0}</td>
+                                                    <td>{todd > 0 ? todd : 0}</td>
                                                 </tr>
-                                                // <div>{ele_num.numLotto} = {ele_num.priceLotto} บาท ลงวันที่ {ele_num.date} เวลา {ele_num.time} <button className="btn btn-danger btn-sm" onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto)}>ลบ</button></div>
                                             )
-                                        })}
-                                    </tbody>
-                                </table>
-                            </div>
-                            {/* <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" className="btn btn-primary">Save changes</button>
-                            </div> */}
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        )
-    }
-    else if (props.show === 0) {
-        return (
-            <div className="row">
-                <div className="col-sm-6">
-                    <div className="input-group input-group-sm">
-                        <div className="input-group-prepend">
-                            <span className="input-group-text" id="inputGroup-sizing-default">ราคารวมเกิน</span></div>
-                        <select className="custom-select" defaultValue={limitPrice} onChange={(e) => setLimitPrice(e.target.value)}>
-                            <option value={200}>200</option>
-                            <option value={300}>300</option>
-                            <option value={400}>400</option>
-                            <option value={500}>500</option>
-                        </select>
-                        <div className="input-group-append">
-                            <button className="btn btn-outline-info" onClick={() => printJS({
-                                printable: LottoPintter(showTop200),
-                                type: 'json',
-                                properties: [
-                                    { field: 'numLotto', displayName: '2ตัวบน' },
-                                    { field: 'sumTrong', displayName: 'ตรง' },
-                                    { field: 'sumTodd', displayName: 'โต๊ด' }
-                                ],
-                                style: '.custom-h3 { color: red; }',
-                                font_size: '18pt',
-                                documentTitle: `ราคาเกิน ${limitPrice}บาท`
-                            })}>print</button>
-                        </div>
-                    </div>
-                    <h6>
-                        ทั้งหมด
-                        <div className="float-right">
-                            {addComma(showTop.reduce((accumulator, currentValue) => accumulator + (currentValue.sumPrice - limitPrice > 0 ? currentValue.sumPrice - limitPrice : 0), 0))} บาท
-                        </div>
-                    </h6>
-                    <div style={{ overflow: "auto", maxHeight: "450px" }}>
-                        <table className="table table-sm table-striped ">
-                            <thead className="thead-dark headerTable">
-                                <tr>
-                                    <th className="headerTable" scope="col">2ตัวบน</th>
-                                    <th className="headerTable" scope="col">ตรง</th>
-                                    <th className="headerTable" scope="col">โต๊ด</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-body-table">
-                                {showTop200.map((element, index) => {
-
-                                    if (element.sumTrong - limitPrice > 0 || element.sumTodd - limitPrice > 0) {
-                                        return (
-                                            <tr key={index} className="">
-                                                <td>{element.numLotto}</td>
-                                                <td>{element.sumTrong - limitPrice > 0 ? element.sumTrong - limitPrice : 0}</td>
-                                                <td>{element.sumTodd - limitPrice > 0 ? element.sumTodd - limitPrice : 0}</td>
-                                            </tr>
-                                        )
-                                    }
-
-                                })}
+                                        }
+                                    })}
 
 
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div className="col-sm-6">
-                    <ExportExcel data={sortData(showData, "name", false)} typeLotto={props.show} />
-                    <h6>ทั้งหมด {count(showData, props.show)} รายการ
-                        <div className="float-right">
-                            {addComma(showTop.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0))} บาท</div>
-                    </h6>
-                    <div style={{ overflow: "auto", height: "450px" }}>
-                        <table className="table table-sm table-striped">
-                            <thead className="thead-dark headerTable">
-                                <tr>
-                                    <th className="headerTable" scope="col">2ตัวบน</th>
-                                    <th className="headerTable" scope="col">ตรง</th>
-                                    <th className="headerTable" scope="col">โต๊ด</th>
-                                    <th className="headerTable" scope="col"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {showTop200.map((element, index) => {
-                                    if (element.numLotto == reversedNum(element.numLotto)) element.sumTodd = 0
-                                    return (
-                                        <tr key={index}>
-                                            <td>{element.numLotto}</td>
-                                            <td>{element.sumTrong}</td>
-                                            <td>{element.sumTodd}</td>
-
-                                            <td><button className="btn btn-warning btn-sm"
-                                                data-toggle="modal"
-                                                data-target="#exampleModal"
-                                                onClick={() => numberLottoTop(element.numLotto, props.show)}>แก้ไข</button>
-                                            </td>
-                                        </tr>
-                                    )
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                {/* <!-- Modal --> */}
-                <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">รายละเอียด 2ตัวบน </h5>
-                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                            <div className="modal-body">
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">ชื่อ</th>
-                                            <th scope="col">2ตัวบน</th>
-                                            <th scope="col">ราคา</th>
-                                            <th scope="col">วันที่</th>
-                                            <th scope="col">เวลา</th>
-                                            <th scope="col"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {dataNumber.map((ele_num, index) => {
-                                            return (
-                                                <tr key={index}>
-                                                    <td>{ele_num.name}</td>
-                                                    <td>{ele_num.numLotto}</td>
-                                                    <td>{ele_num.priceLotto}</td>
-                                                    <td>{ele_num.date}</td>
-                                                    <td>{ele_num.time}</td>
-                                                    <td><button className="btn btn-danger btn-sm"
-                                                        onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto, index)}>
-                                                        ลบ
-                                                    </button>
-                                                    </td>
-                                                </tr>
-                                                // <div>{ele_num.numLotto} = {ele_num.priceLotto} บาท ลงวันที่ {ele_num.date} เวลา {ele_num.time} <button className="btn btn-danger btn-sm" onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto)}>ลบ</button></div>
-                                            )
-                                        })}
-                                    </tbody>
-                                </table>
-                            </div>
-                            {/* <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" className="btn btn-primary">Save changes</button>
-                            </div> */}
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        )
-    }
-    else {
-        return (
-            <div className="row">
-                <div className="col-sm-6">
-                    <div className="input-group mb-3">
-                        <div className="input-group-prepend">
-                            <span className="input-group-text" id="inputGroup-sizing-default">ราคารวมเกิน</span></div>
-                        <select className="custom-select" defaultValue={limitPrice3} onChange={(e) => setLimitPrice3(e.target.value)}>
-                            <option value={50}>50</option>
-                            <option value={100}>100</option>
-                            <option value={200}>200</option>
-                            <option value={300}>300</option>
-                            <option value={400}>400</option>
-                            <option value={500}>500</option>
-                        </select>
-                        <div className="input-group-append">
-                            <button className="btn btn-outline-info" onClick={() => printJS({
-                                printable: LottoPintter3(showT3, limitPrice3),
-                                type: 'json',
-                                properties: [
-                                    { field: 'numLotto', displayName: '3ตัวบน' },
-                                    { field: 'sumTrong', displayName: 'ตรง' },
-                                    { field: 'sumTodd', displayName: 'โต๊ด' }
-                                ],
-                                style: '.custom-h3 { color: red; }',
-                                font_size: '18pt',
-                                documentTitle: `ราคาเกิน ${limitPrice3}บาท`
-                            })}>print</button>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
-                    <div style={{ overflow: "auto", maxHeight: "450px" }}>
-                        <table className="table table-sm table-striped ">
-                            <thead className="thead-dark headerTable">
-                                <tr>
-                                    <th className="headerTable" scope="col">3ตัวบน</th>
-                                    <th className="headerTable" scope="col">ตรง</th>
-                                    <th className="headerTable" scope="col">โต๊ด</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-body-table">
-                                {showT3.map((element, index) => {
-                                    let limitTodd = limitPrice3 / 5
-
-                                    if (element.sumTrong - limitPrice3 > 0 || element.sumTodd - limitTodd > 0) {
-                                        return (
-                                            <tr key={index} className="">
-                                                <td>{element.numLotto}</td>
-                                                <td>{(element.sumTrong - limitPrice3) > 0 ? element.sumTrong - limitPrice3 : 0}</td>
-                                                <td>{(element.sumTodd - limitTodd) > 0 ? element.sumTodd - limitTodd : 0} </td>
-                                            </tr>
-                                        )
-                                    }
-
-                                })}
-                                {/* <tr>
-                                <td>รวม</td>
-                                <td>{showT3S100.reduce((accumulator, currentValue) => accumulator + currentValue.sumTrong, 0)}</td>
-                                <td>{showT3S100.reduce((accumulator, currentValue) => accumulator + currentValue.sumTodd, 0)}</td>
-                            </tr> */}
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div className="col-sm-6">
-                    <ExportExcel3 data={sortData(showData3, "name", false)} typeLotto={props.show} />
-
-                    <button className="btn btn-outline-info btn-sm " onClick={() => printJS({
-                        printable: LottoPintter3(showT3, 0),
-                        type: 'json',
-                        properties: [
-                            { field: 'numLotto', displayName: '3ตัวบน' },
-                            { field: 'sumTrong', displayName: 'ตรง' },
-                            { field: 'sumTodd', displayName: 'โต๊ด' }
-                        ],
-                        style: '.custom-h3 { color: red; column-count: 2; column-gap: 40px;}',
-                        font_size: '18pt',
-                        // style:'column-count: 2; column-gap: 40px;',
-                        documentTitle: `ราคาเกิน ${limitPrice3}บาท`
-                    })}>print</button>
-
-                    <h6>
-                        {/* ทั้งหมด {count(showData, props.show)} รายการ */}
-                    </h6>
-                    <div style={{ overflow: "auto", height: "450px" }}>
-                        <table className="table table-sm table-striped">
-                            <thead className="thead-dark headerTable">
-                                <tr>
-                                    <th className="headerTable" scope="col">3ตัวบน</th>
-                                    <th className="headerTable" scope="col">ตรง</th>
-                                    <th className="headerTable" scope="col">โต๊ด</th>
-                                    <th className="headerTable" scope="col"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {showT3.map((element, index) => {
-                                    if (element.numLotto != "") {
+                    <div className="col-sm-6">
+                        <ExportExcel data={sortData(showData, "name", false)} typeLotto={props.show} />
+                        <h6>ทั้งหมด {count(showData, props.show)} รายการ  <div className="float-right">{addComma(showDown.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0))} บาท</div></h6>
+                        <div style={{ overflow: "auto", maxHeight: "450px" }}>
+                            <table className="table table-sm table-striped">
+                                <thead className="thead-dark headerTable">
+                                    <tr>
+                                        <th className="headerTable" scope="col">2ตัวล่าง</th>
+                                        <th className="headerTable" scope="col">ตรง</th>
+                                        <th className="headerTable" scope="col">โต๊ด</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {showDown200.map((element, index) => {
+                                        if (element.numLotto == reversedNum(element.numLotto)) element.sumTodd = 0
                                         return (
                                             <tr key={index}>
-                                                {/* <td>{index + 1}</td> */}
                                                 <td>{element.numLotto}</td>
                                                 <td>{element.sumTrong}</td>
                                                 <td>{element.sumTodd}</td>
                                                 <td><button className="btn btn-warning btn-sm"
                                                     data-toggle="modal"
                                                     data-target="#exampleModal"
-                                                    onClick={() => numberLottoTop3(element.numLotto)}>แก้ไข</button></td>
-                                                {/* <td>{element.name}</td> */}
+                                                    onClick={() => numberLottoDown(element.numLotto, props.show)}>แก้ไข</button>
+                                                </td>
                                             </tr>
                                         )
-                                    }
-                                    else {
-                                        console.log("err lotto3", index)
-                                    }
-                                })}
-
-
-                            </tbody>
-                            <tfoot className="bg-light fTable">
-                                <tr>
-                                    <td className="fTable">รวม</td>
-                                    <td className="fTable">{showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTrong, 0)}</td>
-                                    <td className="fTable">{showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTodd, 0)}</td>
-                                    <td></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-
-                {/* <!-- Modal --> */}
-                <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">รายละเอียด 2ตัวบน </h5>
-                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                            <div className="modal-body">
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">ชื่อ</th>
-                                            <th scope="col">3ตัวบน</th>
-                                            <th scope="col">ราคา</th>
-                                            <th scope="col">วันที่</th>
-                                            <th scope="col">เวลา</th>
-                                            <th scope="col"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {dataNumber3.map((ele_num, index) => {
-                                            return (
-                                                <tr key={index}>
-                                                    <td>{ele_num.name}</td>
-                                                    <td>{ele_num.numLotto}</td>
-                                                    <td>{ele_num.priceLotto1} * {ele_num.priceLotto2}</td>
-                                                    <td>{ele_num.date}</td>
-                                                    <td>{ele_num.time}</td>
-                                                    <td><button className="btn btn-danger btn-sm"
-                                                        onClick={() => deletePriceLotto3(ele_num.id, ele_num.numLotto, ele_num.priceLotto1, ele_num.priceLotto2, index)}>
-                                                        ลบ
-                                                    </button>
-                                                    </td>
-                                                </tr>
-                                            )
-                                        })}
-                                    </tbody>
-                                </table>
-                            </div>
-
+                                    })}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                </div>
 
+                    {/* <!-- Modal --> */}
+                    <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="exampleModalLabel">รายละเอียด 2ตัวล่าง </h5>
+                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div className="modal-body">
+                                    <table className="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">ชื่อ</th>
+                                                <th scope="col">2ตัวล่าง</th>
+                                                <th scope="col">ราคา</th>
+                                                <th scope="col">วันที่</th>
+                                                <th scope="col">เวลา</th>
+                                                <th scope="col"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {dataNumber.map((ele_num, index) => {
+                                                return (
+                                                    <tr key={index}>
+                                                        <td>{ele_num.name}</td>
+                                                        <td>{ele_num.numLotto}</td>
+                                                        <td>{ele_num.priceLotto}</td>
+                                                        <td>{ele_num.date}</td>
+                                                        <td>{ele_num.time}</td>
+                                                        <td><button className="btn btn-danger btn-sm"
+                                                            onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto)}>
+                                                            ลบ
+                                                        </button>
+                                                        </td>
+                                                    </tr>
+                                                    // <div>{ele_num.numLotto} = {ele_num.priceLotto} บาท ลงวันที่ {ele_num.date} เวลา {ele_num.time} <button className="btn btn-danger btn-sm" onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto)}>ลบ</button></div>
+                                                )
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {/* <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" className="btn btn-primary">Save changes</button>
+                            </div> */}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        )
+    }
+    else if (props.show === 0) {
+        return (
+            <div>
+                <h4>แสดงข้อมูล <div className="text-danger d-inline">
+                    รับเอง {addComma(showTop.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0) - showTop.reduce((accumulator, currentValue) => accumulator + (currentValue.sumPrice - limitPrice > 0 ? currentValue.sumPrice - limitPrice : 0), 0))} บาท</div>
+                </h4>
+                <div className="row">
+                    <div className="col-sm-6">
+                        <div className="input-group input-group-sm">
+                            <div className="input-group-prepend">
+                                <span className="input-group-text" id="inputGroup-sizing-default">ราคารวมเกิน</span></div>
+                            <select className="custom-select" defaultValue={limitPrice} onChange={(e) => setLimitPrice(e.target.value)}>
+                                <option value={200}>200</option>
+                                <option value={300}>300</option>
+                                <option value={400}>400</option>
+                                <option value={500}>500</option>
+                            </select>
+                            <div className="input-group-append">
+                                <button className="btn btn-outline-info" onClick={() => printJS({
+                                    printable: LottoPintter(showTop200),
+                                    type: 'json',
+                                    properties: [
+                                        { field: 'numLotto', displayName: '2ตัวบน' },
+                                        { field: 'sumTrong', displayName: 'ตรง' },
+                                        { field: 'sumTodd', displayName: 'โต๊ด' }
+                                    ],
+                                    style: '.custom-h3 { color: red; }',
+                                    font_size: '18pt',
+                                    documentTitle: `ราคาเกิน ${limitPrice}บาท`
+                                })}>print</button>
+                            </div>
+                        </div>
+                        <h6>
+                            ทั้งหมด
+                            <div className="float-right">
+                                {addComma(showTop.reduce((accumulator, currentValue) => accumulator + (currentValue.sumPrice - limitPrice > 0 ? currentValue.sumPrice - limitPrice : 0), 0))} บาท
+                            </div>
+                        </h6>
+                        <div style={{ overflow: "auto", maxHeight: "450px" }}>
+                            <table className="table table-sm table-striped ">
+                                <thead className="thead-dark headerTable">
+                                    <tr>
+                                        <th className="headerTable" scope="col">2ตัวบน</th>
+                                        <th className="headerTable" scope="col">ตรง</th>
+                                        <th className="headerTable" scope="col">โต๊ด</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-body-table">
+                                    {showTop200.map((element, index) => {
+
+                                        if (element.sumTrong - limitPrice > 0 || element.sumTodd - limitPrice > 0) {
+                                            return (
+                                                <tr key={index} className="">
+                                                    <td>{element.numLotto}</td>
+                                                    <td>{element.sumTrong - limitPrice > 0 ? element.sumTrong - limitPrice : 0}</td>
+                                                    <td>{element.sumTodd - limitPrice > 0 ? element.sumTodd - limitPrice : 0}</td>
+                                                </tr>
+                                            )
+                                        }
+
+                                    })}
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div className="col-sm-6">
+                        <ExportExcel data={sortData(showData, "name", false)} typeLotto={props.show} />
+                        <h6>ทั้งหมด {count(showData, props.show)} รายการ
+                            <div className="float-right">
+                                {addComma(showTop.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0))} บาท</div>
+                        </h6>
+                        <div style={{ overflow: "auto", height: "450px" }}>
+                            <table className="table table-sm table-striped">
+                                <thead className="thead-dark headerTable">
+                                    <tr>
+                                        <th className="headerTable" scope="col">2ตัวบน</th>
+                                        <th className="headerTable" scope="col">ตรง</th>
+                                        <th className="headerTable" scope="col">โต๊ด</th>
+                                        <th className="headerTable" scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {showTop200.map((element, index) => {
+                                        if (element.numLotto == reversedNum(element.numLotto)) element.sumTodd = 0
+                                        return (
+                                            <tr key={index}>
+                                                <td>{element.numLotto}</td>
+                                                <td>{element.sumTrong}</td>
+                                                <td>{element.sumTodd}</td>
+
+                                                <td><button className="btn btn-warning btn-sm"
+                                                    data-toggle="modal"
+                                                    data-target="#exampleModal"
+                                                    onClick={() => numberLottoTop(element.numLotto, props.show)}>แก้ไข</button>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {/* <!-- Modal --> */}
+                    <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="exampleModalLabel">รายละเอียด 2ตัวบน </h5>
+                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div className="modal-body">
+                                    <table className="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">ชื่อ</th>
+                                                <th scope="col">2ตัวบน</th>
+                                                <th scope="col">ราคา</th>
+                                                <th scope="col">วันที่</th>
+                                                <th scope="col">เวลา</th>
+                                                <th scope="col"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {dataNumber.map((ele_num, index) => {
+                                                return (
+                                                    <tr key={index}>
+                                                        <td>{ele_num.name}</td>
+                                                        <td>{ele_num.numLotto}</td>
+                                                        <td>{ele_num.priceLotto}</td>
+                                                        <td>{ele_num.date}</td>
+                                                        <td>{ele_num.time}</td>
+                                                        <td><button className="btn btn-danger btn-sm"
+                                                            onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto, index)}>
+                                                            ลบ
+                                                        </button>
+                                                        </td>
+                                                    </tr>
+                                                    // <div>{ele_num.numLotto} = {ele_num.priceLotto} บาท ลงวันที่ {ele_num.date} เวลา {ele_num.time} <button className="btn btn-danger btn-sm" onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto)}>ลบ</button></div>
+                                                )
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {/* <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" className="btn btn-primary">Save changes</button>
+                            </div> */}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        )
+    }
+    else {
+        return (
+            <div>
+                <h4>แสดงข้อมูล <div className="text-danger d-inline">
+                        รับเอง ตรง {addComma(showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTrong, 0) - showT3.reduce((accumulator, currentValue) => accumulator + (currentValue.sumTrong - limitPrice3 > 0 ? currentValue.sumTrong - limitPrice3 : 0), 0))} .-
+                        โต๊ด {addComma(showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTodd, 0) - showT3.reduce((accumulator, currentValue) => accumulator + (currentValue.sumTodd - limitPrice3todd > 0 ? currentValue.sumTodd - limitPrice3todd : 0), 0))} .-
+                    </div>
+
+                </h4>
+
+                <div className="row">
+                    <div className="col-sm-6">
+                        <div className="input-group mb-3 input-group-sm">
+                            <select className="custom-select" hidden>
+                                <option value={50}>50</option>
+                            </select>
+                            <div className="input-group-prepend">
+                                <span className="input-group-text" >ตรง</span></div>
+                            <select className="custom-select" defaultValue={limitPrice3} onChange={(e) => setLimitPrice3(e.target.value)}>
+                                <option value={10}>10</option>
+                                <option value={20}>20</option>
+                                <option value={50}>50</option>
+                                <option value={100}>100</option>
+                                <option value={200}>200</option>
+                                <option value={300}>300</option>
+                                <option value={400}>400</option>
+                                <option value={500}>500</option>
+                            </select>
+                            <div className="input-group-prepend">
+                                <span className="input-group-text">โต๊ด</span></div>
+                            <select className="custom-select" defaultValue={limitPrice3todd} onChange={(e) => setLimitPrice3todd(e.target.value)}>
+                                <option value={10}>10</option>
+                                <option value={20}>20</option>
+                                <option value={40}>40</option>
+                                <option value={60}>60</option>
+                                <option value={80}>80</option>
+                                <option value={100}>100</option>
+                            </select>
+
+                            <div className="input-group-append">
+                                <button className="btn btn-outline-info" onClick={() => printJS({
+                                    printable: LottoPintter3(showT3, limitPrice3, limitPrice3todd),
+                                    type: 'json',
+                                    properties: [
+                                        { field: 'numLotto', displayName: '3ตัวบน' },
+                                        { field: 'sumTrong', displayName: 'ตรง' },
+                                        { field: 'sumTodd', displayName: 'โต๊ด' }
+                                    ],
+                                    style: '.custom-h3 { color: red; }',
+                                    font_size: '18pt',
+                                    documentTitle: `ราคาเกิน ${limitPrice3}บาท`
+                                })}>print</button>
+                            </div>
+                        </div>
+
+                        <div style={{ overflow: "auto", maxHeight: "450px" }}>
+                            <table className="table table-sm table-striped ">
+                                <thead className="thead-dark headerTable">
+                                    <tr>
+                                        <th className="headerTable" scope="col">3ตัวบน</th>
+                                        <th className="headerTable" scope="col">ตรง</th>
+                                        <th className="headerTable" scope="col">โต๊ด</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-body-table">
+                                    {showT3.map((element, index) => {
+                                        let limitTodd = limitPrice3todd
+
+                                        if (element.sumTrong - limitPrice3 > 0 || element.sumTodd - limitTodd > 0) {
+                                            return (
+                                                <tr key={index} className="">
+                                                    <td>{element.numLotto}</td>
+                                                    <td>{(element.sumTrong - limitPrice3) > 0 ? element.sumTrong - limitPrice3 : 0}</td>
+                                                    <td>{(element.sumTodd - limitTodd) > 0 ? element.sumTodd - limitTodd : 0} </td>
+                                                </tr>
+                                            )
+                                        }
+
+                                    })}
+                                </tbody>
+                                <tfoot className="bg-light fTable">
+                                    <tr>
+                                        <td className="fTable">รวม</td>
+                                        <td className="fTable">{showT3.reduce((accumulator, currentValue) => accumulator + ((currentValue.sumTrong - limitPrice3) > 0 ? currentValue.sumTrong - limitPrice3 : 0), 0)}</td>
+                                        <td className="fTable">{showT3.reduce((accumulator, currentValue) => accumulator + ((currentValue.sumTodd - limitPrice3todd) > 0 ? currentValue.sumTodd - limitPrice3todd : 0), 0)}</td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+
+                            </table>
+                        </div>
+                    </div>
+
+                    <div className="col-sm-6">
+                        <ExportExcel3 data={sortData(showData3, "name", false)} typeLotto={props.show} />
+
+                        <button className="btn btn-outline-info btn-sm " onClick={() => printJS({
+                            printable: LottoPintter3(showT3, 0),
+                            type: 'json',
+                            properties: [
+                                { field: 'numLotto', displayName: '3ตัวบน' },
+                                { field: 'sumTrong', displayName: 'ตรง' },
+                                { field: 'sumTodd', displayName: 'โต๊ด' }
+                            ],
+                            style: '.custom-h3 { color: red; column-count: 2; column-gap: 40px;}',
+                            font_size: '18pt',
+                            // style:'column-count: 2; column-gap: 40px;',
+                            documentTitle: `ราคาเกิน ${limitPrice3}บาท`
+                        })}>print</button>
+
+                        <h6>
+                            {/* ทั้งหมด {count(showData, props.show)} รายการ */}
+                        </h6>
+                        <div style={{ overflow: "auto", height: "450px" }}>
+                            <table className="table table-sm table-striped">
+                                <thead className="thead-dark headerTable">
+                                    <tr>
+                                        <th className="headerTable" scope="col">3ตัวบน</th>
+                                        <th className="headerTable" scope="col">ตรง</th>
+                                        <th className="headerTable" scope="col">โต๊ด</th>
+                                        <th className="headerTable" scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {showT3.map((element, index) => {
+                                        if (element.numLotto != "") {
+                                            return (
+                                                <tr key={index}>
+                                                    {/* <td>{index + 1}</td> */}
+                                                    <td>{element.numLotto}</td>
+                                                    <td>{element.sumTrong}</td>
+                                                    <td>{element.sumTodd}</td>
+                                                    <td><button className="btn btn-warning btn-sm"
+                                                        data-toggle="modal"
+                                                        data-target="#exampleModal"
+                                                        onClick={() => numberLottoTop3(element.numLotto)}>แก้ไข</button></td>
+                                                    {/* <td>{element.name}</td> */}
+                                                </tr>
+                                            )
+                                        }
+                                        else {
+                                            console.log("err lotto3", index)
+                                        }
+                                    })}
+
+
+                                </tbody>
+                                <tfoot className="bg-light fTable">
+                                    <tr>
+                                        <td className="fTable">รวม</td>
+                                        <td className="fTable">{showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTrong, 0)}</td>
+                                        <td className="fTable">{showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTodd, 0)}</td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+                    {/* <!-- Modal --> */}
+                    <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="exampleModalLabel">รายละเอียด 2ตัวบน </h5>
+                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div className="modal-body">
+                                    <table className="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">ชื่อ</th>
+                                                <th scope="col">3ตัวบน</th>
+                                                <th scope="col">ราคา</th>
+                                                <th scope="col">วันที่</th>
+                                                <th scope="col">เวลา</th>
+                                                <th scope="col"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {dataNumber3.map((ele_num, index) => {
+                                                return (
+                                                    <tr key={index}>
+                                                        <td>{ele_num.name}</td>
+                                                        <td>{ele_num.numLotto}</td>
+                                                        <td>{ele_num.priceLotto1} * {ele_num.priceLotto2}</td>
+                                                        <td>{ele_num.date}</td>
+                                                        <td>{ele_num.time}</td>
+                                                        <td><button className="btn btn-danger btn-sm"
+                                                            onClick={() => deletePriceLotto3(ele_num.id, ele_num.numLotto, ele_num.priceLotto1, ele_num.priceLotto2, index)}>
+                                                            ลบ
+                                                        </button>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         )
 
