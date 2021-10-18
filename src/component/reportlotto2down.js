@@ -7,12 +7,11 @@ const ReportLotto2down = (item) => {
     const [docData, setdocData] = useState([])
     const [reward, setreward] = useState(60)
 
-
-
     useEffect(() => {
+        let numlot = item.result? item.result.number:""
         db.collection("lotto")
             .where("drawDate", "==", item.dateDraw)
-            .where("numLotto", "==", item.result.number)
+            .where("numLotto", "==", numlot)
             .where("typeLotto", "==", 1)
             .get()
             .then((querySnapshot) => {
@@ -31,33 +30,34 @@ const ReportLotto2down = (item) => {
             .catch((error) => {
                 console.log("Error getting documents: ", error);
             });
-    }, [])
+    }, [item])
     return (
         <div>
-            <h1>2ตัวล่าง </h1>
+            <h1>2ตัวล่าง {item.result? item.result.number:""}</h1>
             {/* <p>ขนาด {window.innerHeight}*{window.innerWidth}</p> */}
-            <form className="form-inline">
-                <div className="form-group mb-2">
-                    <div>เลขที่ออก {item.result.number}</div>
-                </div>
-                <div className="form-group mx-sm-3 mb-2">
-                    <div>ราคาจ่ายบาทละ</div>
-                </div>
-                <input onChange={(e) => setreward(e.target.value)} value={reward} type="number"
-                    className="form-control" />
-            </form>
-
-
 
             <div className="row">
                 <div className="col-sm-4">
-                    <DoughnutChart />
+                    {/* <DoughnutChart /> */}
                 </div>
                 <div className="col-sm-4">
-                    <DoughnutChart />
+                    {/* <DoughnutChart /> */}
                 </div>
                 <div className="col-sm-4">
-                    <h5>ข้อมูลที่ถูกรางวัล 2ตัวล่าง</h5>
+                    <div className="row pb-1">
+                        <div className="col-6">
+                            <div>ข้อมูลที่ถูกรางวัล 2ตัวล่าง</div>
+                        </div>
+                        <div className="col-3">
+                            <div className="float-right">บาทละ</div>
+                        </div>
+                        <div className="col-3">
+                            <input onChange={(e) => setreward(e.target.value)} value={reward} type="number"
+                                className="form-control form-control-sm" style={{ width: "75px" }} />
+
+                        </div>
+                    </div>
+
                     <table className="table table-sm " >
                         <thead className="thead-dark">
                             <tr>
@@ -82,7 +82,7 @@ const ReportLotto2down = (item) => {
                         </tbody>
                         <tfoot className="bg-light">
                             <tr>
-                                <td colspan="2">รวม</td>
+                                <td colSpan="2">รวม</td>
                                 <td>{docData.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto, 0)}</td>
                                 <td className="text-danger">{(docData.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto, 0)) * reward}</td>
                             </tr>

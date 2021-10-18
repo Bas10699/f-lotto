@@ -9,9 +9,11 @@ const ReportLotto2Up = (item) => {
     const [check, setcheck] = useState(true)
 
     useEffect(() => {
+        let numlot = item.result ? item.result.number : ""
+        console.log("gg", numlot);
         db.collection("lotto")
             .where("drawDate", "==", item.dateDraw)
-            .where("numLotto", "==", item.result.number)
+            .where("numLotto", "==", numlot)
             .where("typeLotto", "==", 0)
             .get()
             .then((querySnapshot) => {
@@ -30,26 +32,38 @@ const ReportLotto2Up = (item) => {
             .catch((error) => {
                 console.log("Error getting documents: ", error);
             });
-    }, [])
+    }, [item])
 
     return (
         <div>
-            <h1>2ตัวบน {item.result.number}</h1>
+            <h1>2ตัวบน {item.result ? item.result.number : ""}</h1>
             {/* <p>ขนาด {window.innerHeight}*{window.innerWidth}</p> */}
 
             <div className="row">
                 <div className="col-sm-4">
-                    <DoughnutChart />
+                    {/* <DoughnutChart /> */}
                 </div>
                 <div className="col-sm-4">
-                    <DoughnutChart />
+                    {/* <DoughnutChart /> */}
                 </div>
                 <div className="col-sm-4">
-                    <h5>ข้อมูลที่ถูกรางวัล 2ตัวบน</h5>
+                    <div className="row pb-1">
+                        <div className="col-6">
+                            <div>ข้อมูลที่ถูกรางวัล 2ตัวบน</div>
+                        </div>
+                        <div className="col-3">
+                            <div className="float-right">บาทละ</div>
+                        </div>
+                        <div className="col-3">
+                            <input onChange={(e) => setreward(e.target.value)} value={reward} type="number"
+                                className="form-control form-control-sm" style={{ width: "75px" }} />
+
+                        </div>
+                    </div>
                     <table className="table table-sm " >
                         <thead className="thead-dark">
                             <tr>
-                                <th style={{cursor:"pointer"}}
+                                <th style={{ cursor: "pointer" }}
                                     onClick={() => { sortData(lotto2, "name", check) && setcheck(!check) }}
                                 >ชื่อ <i className="fas fa-sort"></i></th>
                                 <th>2ตัวบน</th>
