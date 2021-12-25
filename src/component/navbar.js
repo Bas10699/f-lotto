@@ -28,10 +28,10 @@ const Navbar = () => {
                     </li> */}
 
                     <li className="nav-item">
-                        <NavLink to="/report" className="nav-link">รายงานสรุป</NavLink>
+                        <NavLink to="/report" className="nav-link disabled">รายงานสรุป</NavLink>
                     </li>
                     <li className="nav-item">
-                        <NavLink to="/check_result" className="nav-link" >ผลสลากกินแบ่งรัฐบาล</NavLink>
+                        <NavLink to="/check_result" className="nav-link disabled" >ผลสลากกินแบ่งรัฐบาล</NavLink>
                     </li>
                 </ul>
                 <form className="form-inline my-2 my-lg-0">

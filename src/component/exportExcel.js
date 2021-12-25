@@ -17,7 +17,8 @@ const ExportExcel = (porps) => {
             <ExcelSheet data={porps.data.filter(filterType)} name="Employees">
                 <ExcelColumn label="ชื่อ" value="name" />
                 <ExcelColumn label="เลข" value="numLotto" />
-                <ExcelColumn label="ราคา" value="priceLotto" />
+                <ExcelColumn label="ตรง" value="priceLotto1" />
+                <ExcelColumn label="โต๊ด" value="priceLotto2" />
                 <ExcelColumn label="บน-ล่าง"
                     value={(col) => col.typeLotto ? "ล่าง" : "บน"} />
             </ExcelSheet>

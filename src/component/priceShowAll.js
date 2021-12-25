@@ -27,8 +27,13 @@ const PriceShowAll = (props) => {
 
     const reversedNum = num => num.toString().split('').reverse().join('')
 
-    const sumAllPrice = (item) => {
-
+    const typename = (item) => {
+        console.log("tt",item)
+        switch (item) {
+            case 0: return "พ่อ"
+            case 1: return "แม่"
+            default: return "อื่นๆ"
+        }
     }
 
     const LottoPintter = (item) => {
@@ -73,13 +78,13 @@ const PriceShowAll = (props) => {
         return dataPinter
     }
 
-    const deletePriceLotto = (id, lotto, price1,price2, index) => {
+    const deletePriceLotto = (id, lotto, price1, price2, index) => {
         let dataNum = dataNumber
         console.log("0", dataNum)
 
         Swal.fire({
             title: "ต้องการลบ!",
-            text: 'เลข ' + lotto + " ราคา " + price1+"*"+price2 + ".-",
+            text: 'เลข ' + lotto + " ราคา " + price1 + "*" + price2 + ".-",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -171,9 +176,9 @@ const PriceShowAll = (props) => {
             .where("drawDate", "==", props.dDate).onSnapshot((querySnapshot) => {
                 let shData = []
                 let lotto = []
-                
+
                 querySnapshot.forEach((doc) => {
-console.log("doc",doc.data())
+                    console.log("doc", doc.data())
                     if ((doc.data().numLotto === number || doc.data().numLotto === reversedNum(number)) && (doc.data().typeLotto === typeLotto)) {
 
                         shData.unshift({ id: doc.id, ...doc.data() })
@@ -548,8 +553,8 @@ console.log("doc",doc.data())
                     </div>
 
                     {/* <!-- Modal --> */}
-                    <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div className="modal fade bd-example-modal-lg" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="exampleModalLabel">รายละเอียด 2ตัวล่าง </h5>
@@ -561,6 +566,7 @@ console.log("doc",doc.data())
                                     <table className="table">
                                         <thead>
                                             <tr>
+                                                <th scope="col"></th>
                                                 <th scope="col">ชื่อ</th>
                                                 <th scope="col">2ตัวล่าง</th>
                                                 <th scope="col">ราคา</th>
@@ -573,13 +579,14 @@ console.log("doc",doc.data())
                                             {dataNumber.map((ele_num, index) => {
                                                 return (
                                                     <tr key={index}>
+                                                        <td>{typename(ele_num.typeName)}</td>
                                                         <td>{ele_num.name}</td>
                                                         <td>{ele_num.numLotto}</td>
-                                                        <td>{ele_num.priceLotto1+"*"+ele_num.priceLotto2}</td>
+                                                        <td>{ele_num.priceLotto1 + "*" + ele_num.priceLotto2}</td>
                                                         <td>{ele_num.date}</td>
                                                         <td>{ele_num.time}</td>
                                                         <td><button className="btn btn-danger btn-sm"
-                                                            onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto)}>
+                                                            onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto1, ele_num.priceLotto2)}>
                                                             ลบ
                                                         </button>
                                                         </td>
@@ -709,8 +716,8 @@ console.log("doc",doc.data())
                     </div>
 
                     {/* <!-- Modal --> */}
-                    <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div className="modal fade bd-example-modal-lg" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="exampleModalLabel">รายละเอียด 2ตัวบน </h5>
@@ -722,6 +729,7 @@ console.log("doc",doc.data())
                                     <table className="table">
                                         <thead>
                                             <tr>
+                                                <th scope="col"></th>
                                                 <th scope="col">ชื่อ</th>
                                                 <th scope="col">2ตัวบน</th>
                                                 <th scope="col">ราคา</th>
@@ -734,13 +742,14 @@ console.log("doc",doc.data())
                                             {dataNumber.map((ele_num, index) => {
                                                 return (
                                                     <tr key={index}>
+                                                        <td>{typename(ele_num.typeName)}</td>
                                                         <td>{ele_num.name}</td>
                                                         <td>{ele_num.numLotto}</td>
-                                                        <td>{ele_num.priceLotto1 +"*"+ ele_num.priceLotto2}</td>
+                                                        <td>{ele_num.priceLotto1 + "*" + ele_num.priceLotto2}</td>
                                                         <td>{ele_num.date}</td>
                                                         <td>{ele_num.time}</td>
                                                         <td><button className="btn btn-danger btn-sm"
-                                                            onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto1,ele_num.priceLotto2, index)}>
+                                                            onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto1, ele_num.priceLotto2, index)}>
                                                             ลบ
                                                         </button>
                                                         </td>
@@ -767,9 +776,9 @@ console.log("doc",doc.data())
         return (
             <div>
                 <h4>แสดงข้อมูล <div className="text-danger d-inline">
-                        รับเอง ตรง {addComma(showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTrong, 0) - showT3.reduce((accumulator, currentValue) => accumulator + (currentValue.sumTrong - limitPrice3 > 0 ? currentValue.sumTrong - limitPrice3 : 0), 0))} .-
-                        โต๊ด {addComma(showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTodd, 0) - showT3.reduce((accumulator, currentValue) => accumulator + (currentValue.sumTodd - limitPrice3todd > 0 ? currentValue.sumTodd - limitPrice3todd : 0), 0))} .-
-                    </div>
+                    รับเอง ตรง {addComma(showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTrong, 0) - showT3.reduce((accumulator, currentValue) => accumulator + (currentValue.sumTrong - limitPrice3 > 0 ? currentValue.sumTrong - limitPrice3 : 0), 0))} .-
+                    โต๊ด {addComma(showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTodd, 0) - showT3.reduce((accumulator, currentValue) => accumulator + (currentValue.sumTodd - limitPrice3todd > 0 ? currentValue.sumTodd - limitPrice3todd : 0), 0))} .-
+                </div>
 
                 </h4>
 
@@ -923,8 +932,8 @@ console.log("doc",doc.data())
                     </div>
 
                     {/* <!-- Modal --> */}
-                    <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div className="modal fade bd-example-modal-lg" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="exampleModalLabel">รายละเอียด 2ตัวบน </h5>
@@ -936,6 +945,7 @@ console.log("doc",doc.data())
                                     <table className="table">
                                         <thead>
                                             <tr>
+                                                <th scope="col"></th>
                                                 <th scope="col">ชื่อ</th>
                                                 <th scope="col">3ตัวบน</th>
                                                 <th scope="col">ราคา</th>
@@ -948,6 +958,7 @@ console.log("doc",doc.data())
                                             {dataNumber3.map((ele_num, index) => {
                                                 return (
                                                     <tr key={index}>
+                                                        <td>{typename(ele_num.typeName)}</td>
                                                         <td>{ele_num.name}</td>
                                                         <td>{ele_num.numLotto}</td>
                                                         <td>{ele_num.priceLotto1} * {ele_num.priceLotto2}</td>
