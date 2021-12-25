@@ -49,7 +49,7 @@ const InputLotto2 = () => {
         else {
             return "01/" + moment().add(1, 'months').format("MM/YYYY")
         }
-        // return "01/10/2021"
+        // return "01/12/2021"
     }
     const send_click = async (typeLotto) => {
 
@@ -186,11 +186,12 @@ const InputLotto2 = () => {
                 batch.set(docRef, data)
             }
             else {
-                let numLottoRev = reversedNum(element.numLotto)
+                // let numLottoRev = reversedNum(element.numLotto)
                 let data = {
                     name: element.name,
                     numLotto: element.numLotto,
-                    priceLotto: element.priceLotto1,
+                    priceLotto1: element.priceLotto1,
+                    priceLotto2: element.priceLotto2,
                     date: element.date,
                     time: element.time,
                     typeLotto: element.typeLotto,
@@ -199,20 +200,20 @@ const InputLotto2 = () => {
                 }
                 const docRef = db.collection("lotto").doc(); //automatically generate unique id
                 batch.set(docRef, data)
-                if (element.priceLotto2 > 0 || element.priceLotto2 !== "") {
-                    let data = {
-                        name: element.name,
-                        numLotto: numLottoRev,
-                        priceLotto: element.priceLotto2,
-                        date: element.date,
-                        time: element.time,
-                        typeLotto: element.typeLotto,
-                        drawDate: element.drawDate,
-                        typeName: typeName
-                    }
-                    const docRef = db.collection("lotto").doc(); //automatically generate unique id
-                    batch.set(docRef, data)
-                }
+                // if (element.priceLotto2 > 0 || element.priceLotto2 !== "") {
+                //     let data = {
+                //         name: element.name,
+                //         numLotto: numLottoRev,
+                //         priceLotto: element.priceLotto2,
+                //         date: element.date,
+                //         time: element.time,
+                //         typeLotto: element.typeLotto,
+                //         drawDate: element.drawDate,
+                //         typeName: typeName
+                //     }
+                //     const docRef = db.collection("lotto").doc(); //automatically generate unique id
+                //     batch.set(docRef, data)
+                // }
             }
 
         })
@@ -304,46 +305,6 @@ const InputLotto2 = () => {
                     target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
                 });
             }
-            // let itemSend = inputItemSend
-            // if (checkedSwap === true) {
-            //     swapLotto3(numLotto).map((lotto) => {
-            //         itemSend.push({
-            //             name: name,
-            //             numLotto: lotto,
-            //             priceLotto1: priceLotto1,
-            //             priceLotto2: 0,
-            //             date: dateNow,
-            //             time: timeNow,
-            //             drawDate: drawDate()
-            //         })
-            //         console.log("data", itemSend)
-            //     })
-            // }
-            // else {
-            //     if (priceLotto2 > 0 || priceLotto2 !== "") {
-            //         itemSend.push({
-            //             name: name,
-            //             numLotto: numLotto,
-            //             priceLotto1: priceLotto1,
-            //             priceLotto2: priceLotto2,
-            //             date: dateNow,
-            //             time: timeNow,
-            //             drawDate: drawDate()
-            //         })
-            //     } else {
-            //         itemSend.push({
-            //             name: name,
-            //             numLotto: numLotto,
-            //             priceLotto1: priceLotto1,
-            //             priceLotto2: 0,
-            //             date: dateNow,
-            //             time: timeNow,
-            //             drawDate: drawDate()
-            //         })
-            //     }
-            //     console.log("data", itemSend)
-            // }
-            // setInputItemSend(itemSend)
         }
     }
 

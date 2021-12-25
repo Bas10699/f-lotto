@@ -73,13 +73,13 @@ const PriceShowAll = (props) => {
         return dataPinter
     }
 
-    const deletePriceLotto = (id, lotto, price, index) => {
+    const deletePriceLotto = (id, lotto, price1,price2, index) => {
         let dataNum = dataNumber
         console.log("0", dataNum)
 
         Swal.fire({
-            title: "แน่ใจนะ!",
-            text: 'เลข ' + lotto + " ราคา " + price + ".-",
+            title: "ต้องการลบ!",
+            text: 'เลข ' + lotto + " ราคา " + price1+"*"+price2 + ".-",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -171,8 +171,9 @@ const PriceShowAll = (props) => {
             .where("drawDate", "==", props.dDate).onSnapshot((querySnapshot) => {
                 let shData = []
                 let lotto = []
+                
                 querySnapshot.forEach((doc) => {
-
+console.log("doc",doc.data())
                     if ((doc.data().numLotto === number || doc.data().numLotto === reversedNum(number)) && (doc.data().typeLotto === typeLotto)) {
 
                         shData.unshift({ id: doc.id, ...doc.data() })
@@ -208,7 +209,7 @@ const PriceShowAll = (props) => {
                 let lotto = []
                 querySnapshot.forEach((doc) => {
                     // doc.data() is never undefined for query doc snapshots
-                    // console.log(doc.id, " => ", doc.data());
+                    // console.log("กก => ", doc.data());
                     // shData.unshift({ id: doc.id, ...doc.data() })
                     if ((doc.data().numLotto === number || doc.data().numLotto === reversedNum(number)) && (doc.data().typeLotto === typeLotto)) {
                         shData.unshift({ id: doc.id, ...doc.data() })
@@ -273,7 +274,7 @@ const PriceShowAll = (props) => {
             let lotto = []
             querySnapshot.forEach((doc) => {
                 // doc.data() is never undefined for query doc snapshots
-                // console.log(doc.id, " => ", doc.data());
+                console.log(doc.id, " => ", doc.data());
 
                 shData.unshift({ id: doc.id, ...doc.data() })
 
@@ -296,17 +297,24 @@ const PriceShowAll = (props) => {
             let lottoDown = []
 
             let lottoset = sortReversedData(lotto.sort())
-            // console.log("lot", lottoset)
+            console.log("lot", lottoset)
             lottoset.map((eleLotto) => {
                 let sumTop = 0
                 let sumDown = 0
                 shData.map((eleData) => {
                     if ((eleLotto === eleData.numLotto) && (eleData.typeLotto === 0)) {
-                        sumTop += eleData.priceLotto
+                        sumTop += eleData.priceLotto1
                     }
                     else if ((eleLotto === eleData.numLotto) && (eleData.typeLotto === 1)) {
-                        sumDown += eleData.priceLotto
+                        sumDown += eleData.priceLotto1
                     }
+                    else if ((eleLotto === reversedNum(eleData.numLotto)) && (eleData.typeLotto === 0)) {
+                        sumTop += eleData.priceLotto2
+                    }
+                    else if ((eleLotto === reversedNum(eleData.numLotto)) && (eleData.typeLotto === 1)) {
+                        sumDown += eleData.priceLotto2
+                    }
+
                 })
                 if (sumTop > 0) {
                     lottoTop.push({
@@ -567,7 +575,7 @@ const PriceShowAll = (props) => {
                                                     <tr key={index}>
                                                         <td>{ele_num.name}</td>
                                                         <td>{ele_num.numLotto}</td>
-                                                        <td>{ele_num.priceLotto}</td>
+                                                        <td>{ele_num.priceLotto1+"*"+ele_num.priceLotto2}</td>
                                                         <td>{ele_num.date}</td>
                                                         <td>{ele_num.time}</td>
                                                         <td><button className="btn btn-danger btn-sm"
@@ -728,11 +736,11 @@ const PriceShowAll = (props) => {
                                                     <tr key={index}>
                                                         <td>{ele_num.name}</td>
                                                         <td>{ele_num.numLotto}</td>
-                                                        <td>{ele_num.priceLotto}</td>
+                                                        <td>{ele_num.priceLotto1 +"*"+ ele_num.priceLotto2}</td>
                                                         <td>{ele_num.date}</td>
                                                         <td>{ele_num.time}</td>
                                                         <td><button className="btn btn-danger btn-sm"
-                                                            onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto, index)}>
+                                                            onClick={() => deletePriceLotto(ele_num.id, ele_num.numLotto, ele_num.priceLotto1,ele_num.priceLotto2, index)}>
                                                             ลบ
                                                         </button>
                                                         </td>
