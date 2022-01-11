@@ -28,7 +28,7 @@ const PriceShowAll = (props) => {
     const reversedNum = num => num.toString().split('').reverse().join('')
 
     const typename = (item) => {
-        console.log("tt",item)
+        console.log("tt", item)
         switch (item) {
             case 0: return "พ่อ"
             case 1: return "แม่"
@@ -80,7 +80,7 @@ const PriceShowAll = (props) => {
 
     const deletePriceLotto = (id, lotto, price1, price2, index) => {
         let dataNum = dataNumber
-        console.log("0", dataNum)
+        // console.log("0", dataNum)
 
         Swal.fire({
             title: "ต้องการลบ!",
@@ -113,7 +113,7 @@ const PriceShowAll = (props) => {
     }
     const deletePriceLotto3 = (id, lotto, price1, price2, index) => {
         let dataNum = dataNumber3
-        console.log("0", dataNum)
+        // console.log("0", dataNum)
 
         Swal.fire({
             title: "แน่ใจนะ!",
@@ -157,7 +157,7 @@ const PriceShowAll = (props) => {
 
                         shData.unshift({ id: doc.id, ...doc.data() })
                     } else {
-                        console.log("update: ", doc)
+                        // console.log("update: ", doc)
                     }
                 });
 
@@ -173,17 +173,20 @@ const PriceShowAll = (props) => {
         db.collection("lotto")
             .where("numLotto", "in", [number, reversedNum(number)])
             .where("typeLotto", "==", typeLotto)
-            .where("drawDate", "==", props.dDate).onSnapshot((querySnapshot) => {
+            .where("drawDate", "==", props.dDate)
+            .orderBy("numLotto")
+            .orderBy("time")
+            .onSnapshot((querySnapshot) => {
                 let shData = []
                 let lotto = []
 
                 querySnapshot.forEach((doc) => {
-                    console.log("doc", doc.data())
+                    // console.log("doc", doc.data())
                     if ((doc.data().numLotto === number || doc.data().numLotto === reversedNum(number)) && (doc.data().typeLotto === typeLotto)) {
 
                         shData.unshift({ id: doc.id, ...doc.data() })
                     } else {
-                        console.log("update: ", doc)
+                        // console.log("update: ", doc)
                     }
 
 
@@ -209,6 +212,8 @@ const PriceShowAll = (props) => {
             .where("numLotto", "in", [number, reversedNum(number)])
             .where("typeLotto", "==", typeLotto)
             .where("drawDate", "==", props.dDate)
+            .orderBy("numLotto")
+            .orderBy("time")
             .onSnapshot((querySnapshot) => {
                 let shData = []
                 let lotto = []
@@ -219,7 +224,7 @@ const PriceShowAll = (props) => {
                     if ((doc.data().numLotto === number || doc.data().numLotto === reversedNum(number)) && (doc.data().typeLotto === typeLotto)) {
                         shData.unshift({ id: doc.id, ...doc.data() })
                     } else {
-                        console.log("update: ", doc)
+                        // console.log("update: ", doc)
                     }
 
 
@@ -279,7 +284,7 @@ const PriceShowAll = (props) => {
             let lotto = []
             querySnapshot.forEach((doc) => {
                 // doc.data() is never undefined for query doc snapshots
-                console.log(doc.id, " => ", doc.data());
+                // console.log(doc.id, " => ", doc.data());
 
                 shData.unshift({ id: doc.id, ...doc.data() })
 
@@ -302,7 +307,7 @@ const PriceShowAll = (props) => {
             let lottoDown = []
 
             let lottoset = sortReversedData(lotto.sort())
-            console.log("lot", lottoset)
+            // console.log("lot", lottoset)
             lottoset.map((eleLotto) => {
                 let sumTop = 0
                 let sumDown = 0
@@ -473,9 +478,9 @@ const PriceShowAll = (props) => {
                                         { field: 'sumTrong', displayName: 'ตรง' },
                                         { field: 'sumTodd', displayName: 'โต๊ด' }
                                     ],
-                                    style: '.custom-h3 { color: red; }',
+                                    style: '.custom-h3 { color: red; }  @page {margin-bottom: 0.1cm;}',
                                     font_size: '18pt',
-                                    documentTitle: `ราคาเกิน ${limitPrice}บาท`
+                                    documentTitle: `\xa0`
                                 })}>print</button>
                             </div>
                         </div>
@@ -520,6 +525,18 @@ const PriceShowAll = (props) => {
 
                     <div className="col-sm-6">
                         <ExportExcel data={sortData(showData, "name", false)} typeLotto={props.show} />
+                        <button className="btn btn-sm btn-outline-info" onClick={() => printJS({
+                                    printable: showDown200,
+                                    type: 'json',
+                                    properties: [
+                                        { field: 'numLotto', displayName: '2ตัวล่าง' },
+                                        { field: 'sumTrong', displayName: 'ตรง' },
+                                        { field: 'sumTodd', displayName: 'โต๊ด' }
+                                    ],
+                                    style: '.custom-h3 { color: red; }  @page {margin-bottom: 0.1cm;}',
+                                    font_size: '18pt',
+                                    documentTitle: `\xa0`
+                                })}>print</button>
                         <h6>ทั้งหมด {count(showData, props.show)} รายการ  <div className="float-right">{addComma(showDown.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0))} บาท</div></h6>
                         <div style={{ overflow: "auto", maxHeight: "450px" }}>
                             <table className="table table-sm table-striped">
@@ -635,9 +652,9 @@ const PriceShowAll = (props) => {
                                         { field: 'sumTrong', displayName: 'ตรง' },
                                         { field: 'sumTodd', displayName: 'โต๊ด' }
                                     ],
-                                    style: '.custom-h3 { color: red; }',
+                                    style: '.custom-h3 { color: red; } @page {margin-bottom: 0.1cm;}',
                                     font_size: '18pt',
-                                    documentTitle: `ราคาเกิน ${limitPrice}บาท`
+                                    documentTitle: `\xa0`
                                 })}>print</button>
                             </div>
                         </div>
@@ -820,9 +837,9 @@ const PriceShowAll = (props) => {
                                         { field: 'sumTrong', displayName: 'ตรง' },
                                         { field: 'sumTodd', displayName: 'โต๊ด' }
                                     ],
-                                    style: '.custom-h3 { color: red; }',
+                                    style: '.custom-h3 { color: red; }  @page {margin-bottom: 0.1cm;}',
                                     font_size: '18pt',
-                                    documentTitle: `ราคาเกิน ${limitPrice3}บาท`
+                                    documentTitle: '\xa0'
                                 })}>print</button>
                             </div>
                         </div>
@@ -876,10 +893,10 @@ const PriceShowAll = (props) => {
                                 { field: 'sumTrong', displayName: 'ตรง' },
                                 { field: 'sumTodd', displayName: 'โต๊ด' }
                             ],
-                            style: '.custom-h3 { color: red; column-count: 2; column-gap: 40px;}',
+                            style: '.custom-h3 { color: red; column-count: 2; column-gap: 40px;}  @page {margin-bottom: 0.1cm;}',
                             font_size: '18pt',
                             // style:'column-count: 2; column-gap: 40px;',
-                            documentTitle: `ราคาเกิน ${limitPrice3}บาท`
+                            documentTitle: `\xa0`
                         })}>print</button>
 
                         <h6>
@@ -913,7 +930,7 @@ const PriceShowAll = (props) => {
                                             )
                                         }
                                         else {
-                                            console.log("err lotto3", index)
+                                            // console.log("err lotto3", index)
                                         }
                                     })}
 

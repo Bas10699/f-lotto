@@ -237,8 +237,8 @@ const InputLotto2 = () => {
             item.push({
                 name: name,
                 numLotto: numLotto,
-                priceLotto1: priceLotto1,
-                priceLotto2: priceLotto2,
+                priceLotto1: priceLotto1*1,
+                priceLotto2: priceLotto2*1,
                 date: dateNow,
                 time: timeNow,
                 typeLotto: typeLotto,
@@ -295,7 +295,7 @@ const InputLotto2 = () => {
             setNumLoto('')
             setPriceLoto1('')
             setPriceLoto2('')
-            console.log(item)
+            // console.log(item)
             setInputItem(item)
 
             if (messageEl) {
