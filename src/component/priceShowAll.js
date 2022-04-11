@@ -97,13 +97,6 @@ const PriceShowAll = (props) => {
                     console.log("Document successfully deleted!");
                 }).catch((error) => {
                     console.error("Error removing document: ", error);
-                    if (error.code == "permission-denied") {
-                        Swal.fire(
-                            'แหนะ!',
-                            'บอกแล้วใช่ไหม ดูได้อย่างเดียว',
-                            'error'
-                        )
-                    }
                 });
 
             }
@@ -131,13 +124,6 @@ const PriceShowAll = (props) => {
 
                 }).catch((error) => {
                     console.error("Error removing document: ", error);
-                    if (error.code == "permission-denied") {
-                        Swal.fire(
-                            'แหนะ!',
-                            'บอกแล้วใช่ไหม ดูได้อย่างเดียว',
-                            'error'
-                        )
-                    }
                 });
 
             }

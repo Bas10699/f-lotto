@@ -468,6 +468,7 @@ const InputLotto2 = () => {
                                     <div className="form-group col-4">
                                         <label htmlFor="numlotto1">ตัวเลข</label>
                                         <input
+                                            autoFocus
                                             type="text"
                                             ref={inputNumLottoUp}
                                             maxLength="2"
