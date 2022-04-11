@@ -237,8 +237,8 @@ const InputLotto2 = () => {
             item.push({
                 name: name,
                 numLotto: numLotto,
-                priceLotto1: priceLotto1*1,
-                priceLotto2: priceLotto2*1,
+                priceLotto1: priceLotto1 * 1,
+                priceLotto2: priceLotto2 * 1,
                 date: dateNow,
                 time: timeNow,
                 typeLotto: typeLotto,
@@ -351,6 +351,25 @@ const InputLotto2 = () => {
         )
     }
 
+    const clickshow0 = () => {
+        setTimeout(() => {
+            nextInput(inputNumLottoUp)
+        }, 300);
+        setShow(0)
+    }
+    const clickshow1 = () => {
+        setTimeout(() => {
+            nextInput(inputNumLotto)
+        }, 300);
+        setShow(1)
+    }
+    const clickshow3 = () => {
+        setTimeout(() => {
+            nextInput(inputNumLottoUp3)
+        }, 300);
+        setShow(3)
+    }
+
     return (
         <div className="container">
             <h3 className="pt-3">ระบบการจัดการตัวเลขของเอฟโอเวอร์</h3>
@@ -411,7 +430,7 @@ const InputLotto2 = () => {
                                     id="nav-home-tab"
                                     data-toggle="tab"
                                     href="#nav-home"
-                                    onClick={() => setShow(0)}
+                                    onClick={() => clickshow0()}
                                     role="tab"
                                     aria-controls="nav-home"
                                     aria-selected="true">
@@ -420,22 +439,22 @@ const InputLotto2 = () => {
                                 <a className="nav-link"
                                     id="nav-profile-tab"
                                     data-toggle="tab"
-                                    href="#nav-profile"
-                                    onClick={() => setShow(1)}
-                                    role="tab"
-                                    aria-controls="nav-profile"
-                                    aria-selected="false">
-                                    2ตัวล่าง
-                                </a>
-                                <a className="nav-link"
-                                    id="nav-profile-tab"
-                                    data-toggle="tab"
                                     href="#nav-lotto"
-                                    onClick={() => setShow(3)}
+                                    onClick={() => clickshow3()}
                                     role="tab"
                                     aria-controls="nav-lotto"
                                     aria-selected="false">
                                     3ตัวบน
+                                </a>
+                                <a className="nav-link"
+                                    id="nav-profile-tab"
+                                    data-toggle="tab"
+                                    href="#nav-profile"
+                                    onClick={() => clickshow1()}
+                                    role="tab"
+                                    aria-controls="nav-profile"
+                                    aria-selected="false">
+                                    2ตัวล่าง
                                 </a>
                             </div>
                         </nav>
