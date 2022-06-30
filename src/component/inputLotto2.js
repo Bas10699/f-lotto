@@ -234,7 +234,7 @@ const InputLotto2 = () => {
             let item = inputItem
             let dateNow = moment().format("DD/MM/YYYY")
             let timeNow = moment().format("HH:mm")
-            item.push({
+            item.unshift({
                 name: name,
                 numLotto: numLotto,
                 priceLotto1: priceLotto1 * 1,
@@ -269,7 +269,7 @@ const InputLotto2 = () => {
             let timeNow = moment().format("HH:mm")
             if (checkedSwap === true) {
                 swapLotto3(numLotto).map((lotto) => {
-                    item.push({
+                    item.unshift({
                         name: name,
                         numLotto: lotto,
                         priceLotto1: priceLotto1,
@@ -281,7 +281,7 @@ const InputLotto2 = () => {
                 })
             }
             else {
-                item.push({
+                item.unshift({
                     name: name,
                     numLotto: numLotto,
                     priceLotto1: priceLotto1 * 1,
