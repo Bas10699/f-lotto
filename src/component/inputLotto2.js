@@ -250,12 +250,12 @@ const InputLotto2 = () => {
             // console.log(item)
             setInputItem(item)
 
-            if (messageEl) {
-                messageEl.current.addEventListener('DOMNodeInserted', event => {
-                    const { currentTarget: target } = event;
-                    target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
-                });
-            }
+            // if (messageEl) {
+            //     messageEl.current.addEventListener('DOMNodeInserted', event => {
+            //         const { currentTarget: target } = event;
+            //         target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
+            //     });
+            // }
         }
     }
 
@@ -298,13 +298,13 @@ const InputLotto2 = () => {
             // console.log(item)
             setInputItem(item)
 
-            if (messageEl) {
-                console.log(messageEl)
-                messageEl.current.addEventListener('DOMNodeInserted', event => {
-                    const { currentTarget: target } = event;
-                    target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
-                });
-            }
+            // if (messageEl) {
+            //     console.log(messageEl)
+            //     messageEl.current.addEventListener('DOMNodeInserted', event => {
+            //         const { currentTarget: target } = event;
+            //         target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
+            //     });
+            // }
         }
     }
 
