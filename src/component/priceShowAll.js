@@ -440,8 +440,16 @@ const PriceShowAll = (props) => {
     if (props.show === 1) {
         return (
             <div>
-                <h4>แสดงข้อมูล <div className="text-danger d-inline">รับเอง {addComma(showDown.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0) - showDown.reduce((accumulator, currentValue) => accumulator + (currentValue.sumPrice - limitPrice > 0 ? currentValue.sumPrice - limitPrice : 0), 0))} บาท</div>
-                </h4>
+                <div className='row'>
+                    <div className='col-sm-8'>
+                        <h4>แสดงข้อมูล <div className="text-danger d-inline">รับเอง {addComma(showDown.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0) - showDown.reduce((accumulator, currentValue) => accumulator + (currentValue.sumPrice - limitPrice > 0 ? currentValue.sumPrice - limitPrice : 0), 0))} บาท</div>
+                        </h4>
+                    </div>
+                    <div className='col-sm-4'>
+                        <input type="text" className="form-control form-control-sm" placeholder="ค้นหา" />
+                    </div>
+                </div>
+
 
                 <div className="row">
                     <div className="col-sm-6">
@@ -454,6 +462,9 @@ const PriceShowAll = (props) => {
                                 <option value={300}>300</option>
                                 <option value={400}>400</option>
                                 <option value={500}>500</option>
+                                <option value={600}>600</option>
+                                <option value={800}>800</option>
+                                <option value={1000}>1000</option>
                             </select>
                             <div className="input-group-append">
                                 <button className="btn btn-outline-info" onClick={() => printJS({
@@ -512,17 +523,17 @@ const PriceShowAll = (props) => {
                     <div className="col-sm-6">
                         <ExportExcel data={sortData(showData, "name", false)} typeLotto={props.show} />
                         <button className="btn btn-sm btn-outline-info" onClick={() => printJS({
-                                    printable: showDown200,
-                                    type: 'json',
-                                    properties: [
-                                        { field: 'numLotto', displayName: '2ตัวล่าง' },
-                                        { field: 'sumTrong', displayName: 'ตรง' },
-                                        { field: 'sumTodd', displayName: 'โต๊ด' }
-                                    ],
-                                    style: '.custom-h3 { color: red; }  @page {margin-bottom: 0.1cm;}',
-                                    font_size: '18pt',
-                                    documentTitle: `\xa0`
-                                })}>print</button>
+                            printable: showDown200,
+                            type: 'json',
+                            properties: [
+                                { field: 'numLotto', displayName: '2ตัวล่าง' },
+                                { field: 'sumTrong', displayName: 'ตรง' },
+                                { field: 'sumTodd', displayName: 'โต๊ด' }
+                            ],
+                            style: '.custom-h3 { color: red; }  @page {margin-bottom: 0.1cm;}',
+                            font_size: '18pt',
+                            documentTitle: `\xa0`
+                        })}>print</button>
                         <h6>ทั้งหมด {count(showData, props.show)} รายการ  <div className="float-right">{addComma(showDown.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0))} บาท</div></h6>
                         <div style={{ overflow: "auto", maxHeight: "450px" }}>
                             <table className="table table-sm table-striped">
@@ -615,9 +626,16 @@ const PriceShowAll = (props) => {
     else if (props.show === 0) {
         return (
             <div>
-                <h4>แสดงข้อมูล <div className="text-danger d-inline">
-                    รับเอง {addComma(showTop.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0) - showTop.reduce((accumulator, currentValue) => accumulator + (currentValue.sumPrice - limitPrice > 0 ? currentValue.sumPrice - limitPrice : 0), 0))} บาท</div>
-                </h4>
+                <div className='row'>
+                    <div className='col-sm-8'>
+                        <h4>แสดงข้อมูล <div className="text-danger d-inline">
+                            รับเอง {addComma(showTop.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0) - showTop.reduce((accumulator, currentValue) => accumulator + (currentValue.sumPrice - limitPrice > 0 ? currentValue.sumPrice - limitPrice : 0), 0))} บาท</div>
+                        </h4>
+                    </div>
+                    <div className='col-sm-4'>
+                        <input type="text" className="form-control form-control-sm" placeholder="ค้นหา" />
+                    </div>
+                </div>
                 <div className="row">
                     <div className="col-sm-6">
                         <div className="input-group input-group-sm">
@@ -628,6 +646,9 @@ const PriceShowAll = (props) => {
                                 <option value={300}>300</option>
                                 <option value={400}>400</option>
                                 <option value={500}>500</option>
+                                <option value={600}>600</option>
+                                <option value={800}>800</option>
+                                <option value={1000}>1000</option>
                             </select>
                             <div className="input-group-append">
                                 <button className="btn btn-outline-info" onClick={() => printJS({
@@ -778,12 +799,18 @@ const PriceShowAll = (props) => {
     else {
         return (
             <div>
-                <h4>แสดงข้อมูล <div className="text-danger d-inline">
-                    รับเอง ตรง {addComma(showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTrong, 0) - showT3.reduce((accumulator, currentValue) => accumulator + (currentValue.sumTrong - limitPrice3 > 0 ? currentValue.sumTrong - limitPrice3 : 0), 0))} .-
-                    โต๊ด {addComma(showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTodd, 0) - showT3.reduce((accumulator, currentValue) => accumulator + (currentValue.sumTodd - limitPrice3todd > 0 ? currentValue.sumTodd - limitPrice3todd : 0), 0))} .-
-                </div>
-
-                </h4>
+                {/* <div className='row'>
+                    <div className='col-sm-9'> */}
+                        <h4>แสดงข้อมูล <div className="text-danger d-inline">
+                            รับเอง ตรง {addComma(showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTrong, 0) - showT3.reduce((accumulator, currentValue) => accumulator + (currentValue.sumTrong - limitPrice3 > 0 ? currentValue.sumTrong - limitPrice3 : 0), 0))} .-
+                            โต๊ด {addComma(showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTodd, 0) - showT3.reduce((accumulator, currentValue) => accumulator + (currentValue.sumTodd - limitPrice3todd > 0 ? currentValue.sumTodd - limitPrice3todd : 0), 0))} .-
+                        </div>
+                        </h4>
+                    {/* </div>
+                    <div className='col-sm-3'>
+                        <input type="text" className="form-control form-control-sm" placeholder="ค้นหา" />
+                    </div>
+                </div> */}
 
                 <div className="row">
                     <div className="col-sm-6">
@@ -984,7 +1011,7 @@ const PriceShowAll = (props) => {
                     </div>
 
                 </div>
-            </div>
+            </div >
         )
 
     }

@@ -318,34 +318,43 @@ const InputLotto2 = () => {
                 </div>
                 <div className="card-body " style={{ maxHeight: '40vh', overflow: 'auto' }} ref={messageEl}>
                     {inputItem.length === 0 ? <div>ไม่มีรายการ...</div> :
-                        inputItem.map((item, index) => {
-                            let bg = index % 2 == 0 ? "" : "alert-info"
-                            let bt = index % 2 == 0 ? "btn-outline-danger" : "btn-danger"
-                            let typelot = ""
-                            if (item.typeLotto == 0) {
-                                typelot = "2ตัวบน"
-                            }
-                            else if (item.typeLotto == 1) {
-                                typelot = "2ตัวล่าง"
-                            }
-                            else {
-                                typelot = ""
-                            }
-                            return (
-                                <div className={"row py-1 border-bottom " + bg} key={index} >
-                                    <div className="col" >{item.numLotto}</div>
-                                    <div className="col" >{item.priceLotto1}*{item.priceLotto2}</div>
-                                    <div className="col" >{item.name}</div>
-                                    <div className="col" >{typelot}</div>
-                                    <div className="col" >
-                                        <button className={"btn btn-sm float-right " + bt}
-                                            onClick={() => setInputItem(inputItem => inputItem.filter((item, i) => i !== index))}>
-                                            ลบ
-                                        </button>
+                        <div>
+                            {inputItem.map((item, index) => {
+                                let bg = index % 2 == 0 ? "" : "alert-info"
+                                let bt = index % 2 == 0 ? "btn-outline-danger" : "btn-danger"
+                                let typelot = ""
+                                if (item.typeLotto == 0) {
+                                    typelot = "2ตัวบน"
+                                }
+                                else if (item.typeLotto == 1) {
+                                    typelot = "2ตัวล่าง"
+                                }
+                                else {
+                                    typelot = ""
+                                }
+                                return (
+                                    <div className={"row py-1 border-bottom " + bg} key={index} >
+                                        <div className="col" >{item.numLotto}</div>
+                                        <div className="col" >{item.priceLotto1}*{item.priceLotto2}</div>
+                                        <div className="col" >{item.name}</div>
+                                        <div className="col" >{typelot}</div>
+                                        <div className="col" >
+                                            <button className={"btn btn-sm float-right " + bt}
+                                                onClick={() => setInputItem(inputItem => inputItem.filter((item, i) => i !== index))}>
+                                                ลบ
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                            )
-                        })}
+                                )
+                            })}
+
+                            <div className='row'>
+                                <div className="col" >รวม</div>
+                                {/* <div className="col" >{inputItem.reduce((a, b) => ({ x: a.priceLotto1 + b.priceLotto1 }))}</div> */}
+                            </div>
+                        </div>
+                    }
+
                 </div>
             </div>
         )
