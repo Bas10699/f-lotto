@@ -428,6 +428,25 @@ const PriceShowAll = (props) => {
 
         });
     }
+    const Todd3sum = (item3) => {
+        let toddall = []
+        item3.map((element) => {
+            let sumToddAll = swapLotto3(element.numLotto).sort()[0]
+            let index = toddall.findIndex((elem) => (elem.numLotto === sumToddAll))
+            if (index < 0) {
+                toddall.push({
+                    numLotto: sumToddAll,
+                    sumTodd: element.sumTodd
+                })
+            }
+            else {
+                toddall[index].sumTodd += element.sumTodd
+            }
+            console.log("index", swapLotto3(element.numLotto).sort())
+        })
+        return toddall
+
+    }
 
     useEffect(() => {
         lotto2()
@@ -801,12 +820,12 @@ const PriceShowAll = (props) => {
             <div>
                 {/* <div className='row'>
                     <div className='col-sm-9'> */}
-                        <h4>แสดงข้อมูล <div className="text-danger d-inline">
-                            รับเอง ตรง {addComma(showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTrong, 0) - showT3.reduce((accumulator, currentValue) => accumulator + (currentValue.sumTrong - limitPrice3 > 0 ? currentValue.sumTrong - limitPrice3 : 0), 0))} .-
-                            โต๊ด {addComma(showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTodd, 0) - showT3.reduce((accumulator, currentValue) => accumulator + (currentValue.sumTodd - limitPrice3todd > 0 ? currentValue.sumTodd - limitPrice3todd : 0), 0))} .-
-                        </div>
-                        </h4>
-                    {/* </div>
+                <h4>แสดงข้อมูล <div className="text-danger d-inline">
+                    รับเอง ตรง {addComma(showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTrong, 0) - showT3.reduce((accumulator, currentValue) => accumulator + (currentValue.sumTrong - limitPrice3 > 0 ? currentValue.sumTrong - limitPrice3 : 0), 0))} .-
+                    โต๊ด {addComma(showT3.reduce((accumulator, currentValue) => accumulator + currentValue.sumTodd, 0) - showT3.reduce((accumulator, currentValue) => accumulator + (currentValue.sumTodd - limitPrice3todd > 0 ? currentValue.sumTodd - limitPrice3todd : 0), 0))} .-
+                </div>
+                </h4>
+                {/* </div>
                     <div className='col-sm-3'>
                         <input type="text" className="form-control form-control-sm" placeholder="ค้นหา" />
                     </div>
@@ -819,7 +838,18 @@ const PriceShowAll = (props) => {
                                 <option value={50}>50</option>
                             </select>
                             <div className="input-group-prepend">
-                                <span className="input-group-text" >ตรง</span></div>
+                                <button className="btn btn-outline-info" onClick={() => printJS({
+                                    printable: LottoPintter3(showT3, limitPrice3, limitPrice3todd),
+                                    type: 'json',
+                                    properties: [
+                                        { field: 'numLotto', displayName: '3ตัวตรง' },
+                                        { field: 'sumTrong', displayName: 'ราคา' }
+                                    ],
+                                    style: '.custom-h3 { color: red; }  @page {margin-bottom: 0.1cm;}',
+                                    font_size: '18pt',
+                                    documentTitle: '\xa0'
+                                })}>ตรง</button>
+                            </div>
                             <select className="custom-select" defaultValue={limitPrice3} onChange={(e) => setLimitPrice3(e.target.value)}>
                                 <option value={10}>10</option>
                                 <option value={20}>20</option>
@@ -831,67 +861,107 @@ const PriceShowAll = (props) => {
                                 <option value={500}>500</option>
                             </select>
                             <div className="input-group-prepend">
-                                <span className="input-group-text">โต๊ด</span></div>
-                            <select className="custom-select" defaultValue={limitPrice3todd} onChange={(e) => setLimitPrice3todd(e.target.value)}>
-                                <option value={10}>10</option>
-                                <option value={20}>20</option>
-                                <option value={40}>40</option>
-                                <option value={60}>60</option>
-                                <option value={80}>80</option>
-                                <option value={100}>100</option>
-                            </select>
-
-                            <div className="input-group-append">
                                 <button className="btn btn-outline-info" onClick={() => printJS({
-                                    printable: LottoPintter3(showT3, limitPrice3, limitPrice3todd),
+                                    printable: LottoPintter3(Todd3sum(showT3), limitPrice3, limitPrice3todd),
                                     type: 'json',
                                     properties: [
-                                        { field: 'numLotto', displayName: '3ตัวบน' },
-                                        { field: 'sumTrong', displayName: 'ตรง' },
-                                        { field: 'sumTodd', displayName: 'โต๊ด' }
+                                        { field: 'numLotto', displayName: '3ตัวโต๊ด' },
+                                        { field: 'sumTodd', displayName: 'ราคา' }
                                     ],
                                     style: '.custom-h3 { color: red; }  @page {margin-bottom: 0.1cm;}',
                                     font_size: '18pt',
                                     documentTitle: '\xa0'
-                                })}>print</button>
+                                })}>โต๊ด</button>
                             </div>
+                            <select className="custom-select" defaultValue={limitPrice3todd} onChange={(e) => setLimitPrice3todd(e.target.value)}>
+                                <option value={10}>10</option>
+                                <option value={20}>20</option>
+                                <option value={50}>50</option>
+                                <option value={100}>100</option>
+                                <option value={200}>200</option>
+                                <option value={300}>300</option>
+                                <option value={400}>400</option>
+                                <option value={500}>500</option>
+                            </select>
+
+                            {/* <div className="input-group-append">
+
+
+                            </div> */}
                         </div>
+                        <div className='row'>
+                            <div className='col' style={{ overflow: "auto", maxHeight: "450px" }}>
+                                <table className="table table-sm table-striped ">
+                                    <thead className="thead-dark headerTable">
+                                        <tr>
+                                            <th className="headerTable" scope="col">ตรง</th>
+                                            <th className="headerTable" scope="col">ราคา</th>
 
-                        <div style={{ overflow: "auto", maxHeight: "450px" }}>
-                            <table className="table table-sm table-striped ">
-                                <thead className="thead-dark headerTable">
-                                    <tr>
-                                        <th className="headerTable" scope="col">3ตัวบน</th>
-                                        <th className="headerTable" scope="col">ตรง</th>
-                                        <th className="headerTable" scope="col">โต๊ด</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-body-table">
-                                    {showT3.map((element, index) => {
-                                        let limitTodd = limitPrice3todd
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-body-table">
+                                        {showT3.map((element, index) => {
+                                            let limitTodd = limitPrice3todd
 
-                                        if (element.sumTrong - limitPrice3 > 0 || element.sumTodd - limitTodd > 0) {
-                                            return (
-                                                <tr key={index} className="">
-                                                    <td>{element.numLotto}</td>
-                                                    <td>{(element.sumTrong - limitPrice3) > 0 ? element.sumTrong - limitPrice3 : 0}</td>
-                                                    <td>{(element.sumTodd - limitTodd) > 0 ? element.sumTodd - limitTodd : 0} </td>
-                                                </tr>
-                                            )
-                                        }
+                                            if (element.sumTrong - limitPrice3 > 0 || element.sumTodd - limitTodd > 0) {
+                                                return (
+                                                    <tr key={index} className="">
+                                                        <td>{element.numLotto}</td>
+                                                        <td>{(element.sumTrong - limitPrice3) > 0 ? element.sumTrong - limitPrice3 : 0}</td>
+                                                        {/* <td>{(element.sumTodd - limitTodd) > 0 ? element.sumTodd - limitTodd : 0} </td> */}
+                                                    </tr>
+                                                )
+                                            }
 
-                                    })}
-                                </tbody>
-                                <tfoot className="bg-light fTable">
-                                    <tr>
-                                        <td className="fTable">รวม</td>
-                                        <td className="fTable">{showT3.reduce((accumulator, currentValue) => accumulator + ((currentValue.sumTrong - limitPrice3) > 0 ? currentValue.sumTrong - limitPrice3 : 0), 0)}</td>
-                                        <td className="fTable">{showT3.reduce((accumulator, currentValue) => accumulator + ((currentValue.sumTodd - limitPrice3todd) > 0 ? currentValue.sumTodd - limitPrice3todd : 0), 0)}</td>
-                                        <td></td>
-                                    </tr>
-                                </tfoot>
+                                        })}
+                                    </tbody>
+                                    <tfoot className="bg-light fTable">
+                                        <tr>
+                                            <td className="fTable">รวม</td>
+                                            <td className="fTable">{showT3.reduce((accumulator, currentValue) => accumulator + ((currentValue.sumTrong - limitPrice3) > 0 ? currentValue.sumTrong - limitPrice3 : 0), 0)}</td>
+                                            {/* <td className="fTable">{showT3.reduce((accumulator, currentValue) => accumulator + ((currentValue.sumTodd - limitPrice3todd) > 0 ? currentValue.sumTodd - limitPrice3todd : 0), 0)}</td> */}
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
 
-                            </table>
+                                </table>
+                            </div>
+                            <div className='col' style={{ overflow: "auto", maxHeight: "450px" }}>
+                                <table className="table table-sm table-striped ">
+                                    <thead className="thead-dark headerTable">
+                                        <tr>
+                                            <th className="headerTable" scope="col">โต๊ด</th>
+                                            <th className="headerTable" scope="col">ราคา</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-body-table">
+                                        {Todd3sum(showT3).map((element, index) => {
+                                            let limitTodd = limitPrice3todd
+
+                                            if (element.sumTrong - limitPrice3 > 0 || element.sumTodd - limitTodd > 0) {
+                                                return (
+                                                    <tr key={index} className="">
+                                                        <td>{element.numLotto}</td>
+                                                        {/* <td>{(element.sumTrong - limitPrice3) > 0 ? element.sumTrong - limitPrice3 : 0}</td> */}
+                                                        <td>{(element.sumTodd - limitTodd) > 0 ? element.sumTodd - limitTodd : 0} </td>
+                                                    </tr>
+                                                )
+                                            }
+
+                                        })}
+                                    </tbody>
+                                    <tfoot className="bg-light fTable">
+                                        <tr>
+                                            <td className="fTable">รวม</td>
+                                            {/* <td className="fTable">{showT3.reduce((accumulator, currentValue) => accumulator + ((currentValue.sumTrong - limitPrice3) > 0 ? currentValue.sumTrong - limitPrice3 : 0), 0)}</td> */}
+                                            <td className="fTable">{Todd3sum(showT3).reduce((accumulator, currentValue) => accumulator + ((currentValue.sumTodd - limitPrice3todd) > 0 ? currentValue.sumTodd - limitPrice3todd : 0), 0)}</td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+
+                                </table>
+                            </div>
                         </div>
                     </div>
 

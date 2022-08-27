@@ -273,7 +273,7 @@ const InputLotto2 = () => {
                         name: name,
                         numLotto: lotto,
                         priceLotto1: priceLotto1,
-                        priceLotto2: 0,
+                        priceLotto2: priceLotto2,
                         date: dateNow,
                         time: timeNow,
                         drawDate: drawDate()
