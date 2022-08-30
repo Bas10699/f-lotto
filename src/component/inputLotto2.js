@@ -348,14 +348,21 @@ const InputLotto2 = () => {
                                 )
                             })}
 
-                            <div className='row'>
-                                <div className="col" >รวม</div>
-                                {/* <div className="col" >{inputItem.reduce((a, b) => ({ x: a.priceLotto1 + b.priceLotto1 }))}</div> */}
-                            </div>
+
+
                         </div>
                     }
 
                 </div>
+                <div className='card-footer'> <div className='row'>
+                    <div className="col" >รวม</div>
+                    <div className="col" >{inputItem.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto1, 0)}*
+                        {inputItem.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto2, 0)}</div>
+                    <div className="col" >เป็นเงิน</div>
+                    <div className="col" >{inputItem.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto1, 0) +
+                        inputItem.reduce((accumulator, currentValue) => accumulator + currentValue.priceLotto2, 0)}</div>
+                    <div className="col" >บาท</div>
+                </div></div>
             </div>
         )
     }
