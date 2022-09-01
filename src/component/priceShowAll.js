@@ -61,18 +61,28 @@ const PriceShowAll = (props) => {
 
         return dataPinter
     }
-    const LottoPintter3 = (item, limit, limitTodd) => {
+    const LottoPintter3 = (item, limit, tt) => {
         let dataPinter = []
         item.map((element, index) => {
+            if (tt == 0) {
+                if (element.sumTrong - limit > 0 ) {
+                    dataPinter.push({
+                        numLotto: element.numLotto,
+                        sumTrong: (element.sumTrong - limit) > 0 ? element.sumTrong - limit : 0,
+                    })
 
-            if (element.sumTrong - limit > 0 || element.sumTodd - limitTodd > 0) {
-                dataPinter.push({
-                    numLotto: element.numLotto,
-                    sumTrong: (element.sumTrong - limit) > 0 ? element.sumTrong - limit : 0,
-                    sumTodd: (element.sumTodd - limitTodd) > 0 ? element.sumTodd - limitTodd : 0
-                })
+                }
+            }else{
+                if (element.sumTodd - limit > 0 ) {
+                    dataPinter.push({
+                        numLotto: element.numLotto,
+                        sumTodd: (element.sumTodd - limit) > 0 ? element.sumTodd - limit : 0
+                    })
 
+                }
             }
+                        
+
 
         })
         return dataPinter
@@ -839,7 +849,7 @@ const PriceShowAll = (props) => {
                             </select>
                             <div className="input-group-prepend">
                                 <button className="btn btn-outline-info" onClick={() => printJS({
-                                    printable: LottoPintter3(showT3, limitPrice3, limitPrice3todd),
+                                    printable: LottoPintter3(showT3, limitPrice3, 0),
                                     type: 'json',
                                     properties: [
                                         { field: 'numLotto', displayName: '3ตัวตรง' },
@@ -862,7 +872,7 @@ const PriceShowAll = (props) => {
                             </select>
                             <div className="input-group-prepend">
                                 <button className="btn btn-outline-info" onClick={() => printJS({
-                                    printable: LottoPintter3(Todd3sum(showT3), limitPrice3, limitPrice3todd),
+                                    printable: LottoPintter3(Todd3sum(showT3), limitPrice3todd, 1),
                                     type: 'json',
                                     properties: [
                                         { field: 'numLotto', displayName: '3ตัวโต๊ด' },
@@ -903,7 +913,7 @@ const PriceShowAll = (props) => {
                                         {showT3.map((element, index) => {
                                             let limitTodd = limitPrice3todd
 
-                                            if (element.sumTrong - limitPrice3 > 0 || element.sumTodd - limitTodd > 0) {
+                                            if (element.sumTrong - limitPrice3 > 0) {
                                                 return (
                                                     <tr key={index} className="">
                                                         <td>{element.numLotto}</td>
@@ -939,7 +949,7 @@ const PriceShowAll = (props) => {
                                         {Todd3sum(showT3).map((element, index) => {
                                             let limitTodd = limitPrice3todd
 
-                                            if (element.sumTrong - limitPrice3 > 0 || element.sumTodd - limitTodd > 0) {
+                                            if (element.sumTodd - limitTodd > 0) {
                                                 return (
                                                     <tr key={index} className="">
                                                         <td>{element.numLotto}</td>

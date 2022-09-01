@@ -272,8 +272,8 @@ const InputLotto2 = () => {
                     item.unshift({
                         name: name,
                         numLotto: lotto,
-                        priceLotto1: priceLotto1,
-                        priceLotto2: priceLotto2,
+                        priceLotto1: priceLotto1 * 1,
+                        priceLotto2: priceLotto2 * 1,
                         date: dateNow,
                         time: timeNow,
                         drawDate: drawDate()
